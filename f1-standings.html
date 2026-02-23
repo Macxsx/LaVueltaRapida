@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking F1 | La Vuelta Rápida</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="f1.css">
+</head>
+<body>
+
+<!-- ================= HEADER (IGUAL QUE INDEX) ================= -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <img class="logo-icon" src="Images/LogoBandera.png" alt="Logo">
+      <span class="logo-text">LA VUELTA RÁPIDA</span>
+    </div>
+
+    <nav class="header-nav">
+      <a href="index.html#menu" class="nav-link">MENÚ</a>
+      <a href="index.html#experiencia" class="nav-link">EXPERIENCIA</a>
+      <a href="f1-standings.html" class="nav-link text-red">STANDINGS</a>
+      <a href="index.html#eventos" class="nav-link">EVENTOS F1</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="#" class="btn-login">INICIAR SESIÓN</a>
+      <a href="#" class="btn-order">ORDENAR AHORA</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO RANKING ================= -->
+
+<section class="ranking-hero">
+    <div class="ranking-hero-inner container">
+
+      <div class="hero-grid">
+
+        <div class="hero-left">
+          <span class="next-race-label">PRÓXIMA CARRERA</span>
+          <h1 class="next-race-title">
+            FORMULA 1 QATAR AIRWAYS AUSTRALIAN GRAND PRIX
+          </h1>
+          <p class="next-race-info">
+            Albert Park Circuit · 6 Marzo 2026
+          </p>
+        </div>
+
+        <div class="hero-right">
+          <img src="https://media.formula1.com/image/upload/c_lfill,w_3392/q_auto/v1740000000/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Australia_Circuit.webp" 
+               alt="Circuito Albert Park" 
+               class="circuit-image">
+        </div>
+
+      </div>
+
+    </div>
+</section>
+
+<!-- ================= TOGGLE ================= -->
+
+<section class="ranking-section container">
+
+  <div class="ranking-toggle">
+    <button class="ranking-btn active" data-target="pilotos">
+      PILOTOS
+    </button>
+    <button class="ranking-btn" data-target="constructores">
+      CONSTRUCTORES
+    </button>
+  </div>
+
+  <!-- TABLA PILOTOS -->
+  <div id="pilotos" class="ranking-table active-table">
+    <h2 class="ranking-table-title">Tabla de Pilotos</h2>
+    <div class="table-wrapper">
+      <table class="table-dark-custom">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Piloto</th>
+            <th>Equipo</th>
+            <th>Puntos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="first-place"><td>1</td><td>Lando Norris</td><td>McLaren</td><td>0</td></tr>
+              <tr><td>2</td><td>Max Verstappen</td><td>Red Bull Racing</td><td>0</td></tr>
+              <tr><td>3</td><td>Oscar Piastri</td><td>McLaren</td><td>0</td></tr>
+              <tr><td>4</td><td>George Russell</td><td>Mercedes</td><td>0</td></tr>
+              <tr><td>5</td><td>Charles Leclerc</td><td>Ferrari</td><td>0</td></tr>
+              <tr><td>6</td><td>Lewis Hamilton</td><td>Ferrari</td><td>0</td></tr>
+              <tr><td>7</td><td>Kimi Antonelli</td><td>Mercedes</td><td>0</td></tr>
+              <tr><td>8</td><td>Alexander Albon</td><td>Williams</td><td>0</td></tr>
+              <tr><td>9</td><td>Carlos Sainz</td><td>Williams</td><td>0</td></tr>
+              <tr><td>10</td><td>Fernando Alonso</td><td>Aston Martin</td><td>0</td></tr>
+              <tr><td>11</td><td>Nico Hulkenburg</td><td>Audi</td><td>0</td></tr>
+              <tr><td>12</td><td>Isack Hadjar</td><td>Red Bull Racing</td><td>0</td></tr>
+              <tr><td>13</td><td>Oliver Bearman</td><td>Haas</td><td>0</td></tr>
+              <tr><td>14</td><td>Liam Lawson</td><td>Racing Bulls</td><td>0</td></tr>
+              <tr><td>15</td><td>Esteban Ocon</td><td>Haas</td><td>0</td></tr>
+              <tr><td>16</td><td>Lance Stroll</td><td>Aston Martin</td><td>0</td></tr>
+              <tr><td>17</td><td>Pierre Gasly</td><td>Alpine</td><td>0</td></tr>
+              <tr><td>18</td><td>Gabriel Bortoleto</td><td>Audi</td><td>0</td></tr>
+              <tr><td>19</td><td>Franco Colapinto</td><td>Audi</td><td>0</td></tr>
+              <tr><td>20</td><td>Sergio Perez</td><td>Cadillac</td><td>0</td></tr>
+              <tr><td>21</td><td>Valtteri Bottas</td><td>Cadillac</td><td>0</td></tr>
+              <tr><td>22</td><td>Arvid Lindblad</td><td>Racing Bulls</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TABLA CONSTRUCTORES -->
+  <div id="constructores" class="ranking-table">
+    <h2 class="ranking-table-title">Tabla de Constructores</h2>
+    <div class="table-wrapper">
+      <table class="table-dark-custom">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Equipo</th>
+            <th>Puntos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="first-place"><td>1</td><td>McLaren Mastercard F1</td><td>0</td></tr>
+              <tr><td>2</td><td>Mercedes-AMG PETRONAS F1</td><td>0</td></tr>
+              <tr><td>3</td><td>Oracle Red Bull Racing</td><td>0</td></tr>
+              <tr><td>4</td><td>Scuderia Ferrari HP</td><td>0</td></tr>
+              <tr><td>5</td><td>Atlassian Williams F1</td><td>0</td></tr>
+              <tr><td>6</td><td>Visa Cash App Racing Bulls F1</td><td>0</td></tr>
+              <tr><td>7</td><td>Aston Martin Aramco F1</td><td>0</td></tr>
+              <tr><td>8</td><td>TGR Haas F1</td><td>0</td></tr>
+              <tr><td>9</td><td>Audi Revolut F1</td><td>0</td></tr>
+              <tr><td>10</td><td>BWT Alpine F1</td><td>0</td></tr>
+              <tr><td>11</td><td>Cadillac F1</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <section class="f1-videos container">
+    <h2 class="videos-title">ÚLTIMOS VIDEOS OFICIALES</h2>
+    <div id="videoGrid" class="video-grid"></div>
+  </section>
+
+      <!-- FOOTER -->
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div class="footer-top">
+            <div class="footer-brand">
+              <div class="footer-logo">
+                <img class="logo-icon" src="Images/LogoBandera.png" alt="Logo">
+                <span class="logo-text">LA VUELTA RÁPIDA</span>
+              </div>
+              <p class="footer-brand-desc">
+                La experiencia gastronómica más<br>
+                emocionante de la ciudad. Donde la<br>
+                velocidad se encuentra con el sabor.
+              </p>
+              <div class="social-icons">
+                <a href="#" class="social-link" aria-label="Facebook">
+                  <img src="Images/Facebook.png" alt="Facebook">
+                </a>
+                <a href="#" class="social-link" aria-label="Instagram">
+                  <img src="Images/Instagram.png" alt="Instagram">
+                </a>
+                <a href="#" class="social-link" aria-label="Twitter">
+                  <img src="Images/Twitter.png" alt="Twitter">
+                </a>
+                <a href="#" class="social-link" aria-label="Youtube">
+                  <img src="Images/Youtube.png" alt="Youtube">
+                </a>
+              </div>
+            </div>
+
+            <nav class="footer-col">
+              <h3 class="footer-col-title">MENÚ</h3>
+              <ul class="footer-links">
+                <li><a href="#">Clásicas</a></li>
+                <li><a href="#">Especiales</a></li>
+                <li><a href="#">Picantes</a></li>
+                <li><a href="#">Bebidas</a></li>
+                <li><a href="#">Postres</a></li>
+              </ul>
+            </nav>
+
+            <nav class="footer-col">
+              <h3 class="footer-col-title">EXPERIENCIA</h3>
+              <ul class="footer-links">
+                <li><a href="#">Eventos F1</a></li>
+                <li><a href="#">Ver carreras en vivo</a></li>
+                <li><a href="#">Cumpleaños</a></li>
+                <li><a href="#">Eventos corporativos</a></li>
+                <li><a href="#">Ranking de pilotos</a></li>
+              </ul>
+            </nav>
+
+            <nav class="footer-col">
+              <h3 class="footer-col-title">MARCA</h3>
+              <ul class="footer-links">
+                <li><a href="#">Nuestra historia</a></li>
+                <li><a href="#">Trabaja con nosotros</a></li>
+                <li><a href="#">Franquicias</a></li>
+                <li><a href="#">Contacto</a></li>
+                <li><a href="#">Ubicaciones</a></li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="footer-bottom">
+            <p class="footer-copyright">© 2024 La Vuelta Rápida. Todos los derechos reservados.</p>
+            <div class="footer-legal">
+              <a href="#">Términos y Condiciones</a>
+              <a href="#">Política de Privacidad</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+<script>
+const buttons = document.querySelectorAll(".ranking-btn");
+const tables = document.querySelectorAll(".ranking-table");
+
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    buttons.forEach(b => b.classList.remove("active"));
+    tables.forEach(t => t.classList.remove("active-table"));
+
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.target)
+      .classList.add("active-table");
+  });
+});
+</script>
+
+<script src="videos.js"></script>
+</body>
+</html>
