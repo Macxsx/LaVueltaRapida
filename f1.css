@@ -1,0 +1,252 @@
+
+
+/* ============================= */
+/* ===== RANKING HERO ===== */
+/* ============================= */
+
+.ranking-hero {
+  padding: 140px 0;
+  position: relative;
+  background: url("Images/australia-flag.gif") center/cover no-repeat;
+  overflow: hidden;
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Overlay oscuro */
+.ranking-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* Mantener contenido encima */
+.ranking-hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Grid layout */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 100px;
+}
+
+/* Texto izquierda */
+
+.next-race-label {
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.next-race-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 60px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.next-race-info {
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+/* Imagen circuito */
+
+.hero-right {
+  text-align: center;
+}
+
+.circuit-image {
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(255,255,255,0.3));
+  transition: transform 0.4s ease;
+}
+
+.circuit-image:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .next-race-title {
+    font-size: 42px;
+  }
+}
+
+/* ============================= */
+/* ===== TOGGLE ===== */
+/* ============================= */
+
+.ranking-section {
+  padding-bottom: 100px;
+}
+
+.ranking-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+
+.ranking-btn {
+  padding: 14px 36px;
+  background: transparent;
+  border: 2px solid var(--red);
+  color: var(--red);
+  font-weight: 600;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.ranking-btn:hover {
+  background: var(--red);
+  color: var(--white);
+}
+
+.ranking-btn.active {
+  background: var(--red);
+  color: var(--white);
+}
+
+/* ============================= */
+/* ===== TABLAS ===== */
+/* ============================= */
+
+.ranking-table {
+  display: none;
+  animation: fadeUp 0.3s ease;
+}
+
+.active-table {
+  display: block;
+}
+
+.ranking-table-title {
+  font-family: 'Orbitron', sans-serif;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table-dark-custom {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--dark-alt);
+}
+
+.table-dark-custom th,
+.table-dark-custom td {
+  padding: 14px;
+  border-bottom: 1px solid var(--gray-dark);
+}
+
+.table-dark-custom th {
+  background-color: var(--dark);
+  color: var(--white);
+}
+
+.first-place {
+  background-color: rgb(235, 16, 16,1);
+}
+
+
+.table-dark-custom tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.table-dark-custom tbody tr:hover td {
+  color: #000000;
+}
+
+.first-place td:last-child {
+  color: var(--gold);
+  font-weight: bold;
+}
+
+/* ============================= */
+/* ===== ANIMACION ===== */
+/* ============================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================= */
+/* ===== VIDEOS GRID ===== */
+/* ============================= */
+
+.f1-videos {
+  margin-top: 120px;
+  margin-bottom: 120px;
+}
+
+.videos-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.video-card {
+  background: var(--dark-alt);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 25px rgba(225,6,0,0.6);
+}
+
+.video-thumbnail img {
+  width: 100%;
+  display: block;
+}
+
+.video-info {
+  padding: 20px;
+}
+
+.video-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.video-date {
+  font-size: 14px;
+  opacity: 0.7;
+}
