@@ -1,0 +1,111 @@
+/* HERO */
+.menu-hero {
+  background: linear-gradient(to right, #000000, #8b0000);
+  padding: 140px 0 80px;
+  text-align: center;
+}
+
+.menu-hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 42px;
+  letter-spacing: 2px;
+}
+
+.menu-hero span {
+  color: var(--red);
+}
+
+/* CATEGORÍAS */
+.menu-categories {
+  background: #1a1a1a;
+  padding: 20px 0;
+}
+
+#category-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+#category-buttons button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#category-buttons button.active {
+  background: var(--red);
+}
+
+/* LISTA */
+.menu-list-section {
+  padding: 60px 0 120px;
+}
+
+#category-title {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--red);
+  margin-bottom: 30px;
+}
+
+#menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* ITEM */
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #333;
+  padding-bottom: 20px;
+}
+
+.menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.menu-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.menu-item-info h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.menu-item-info p {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.menu-item-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu-item-price {
+  font-weight: bold;
+  color: var(--gold);
+}
+
+.menu-item button {
+  background: var(--red);
+  border: none;
+  padding: 6px 14px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 4px;
+}
