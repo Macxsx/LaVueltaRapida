@@ -5,7 +5,7 @@
 // ⚠️ API Key
 const API_KEY = "AIzaSyDduusVLhf4BehAD7GnYLLnAeopFPefsdo";
 
-const CHANNEL_ID = "UCB_qr75-ydFVKSF9Dmo6izg"; // Canal oficial Formula 1
+const CHANNEL_ID = "UCB_qr75-ydFVKSF9Dmo6izg"; // Canal Formula 1
 const MAX_RESULTS = 3;
 
 async function loadVideos() {
@@ -19,7 +19,7 @@ async function loadVideos() {
     const response = await fetch(url);
     const data = await response.json();
 
-    data.items.forEach(item => {
+      data.items.slice(0, 8).forEach(item => {
       if (item.id.videoId) {
 
         const videoCard = document.createElement("div");
@@ -51,18 +51,3 @@ async function loadVideos() {
 
 // Ejecutar cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", loadVideos);
-
-
-const buttons = document.querySelectorAll(".ranking-btn");
-const tables = document.querySelectorAll(".ranking-table");
-
-buttons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    buttons.forEach(b => b.classList.remove("active"));
-    tables.forEach(t => t.classList.remove("active-table"));
-
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.target)
-      .classList.add("active-table");
-  });
-});

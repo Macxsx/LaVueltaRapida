@@ -1,0 +1,112 @@
+/* ================================================= */
+/* ================== LAYOUT BASE ================== */
+/* ================================================= */
+
+main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================================= */
+/* ===================== HERO ====================== */
+/* ================================================= */
+
+.menu-hero {
+  padding: 80px 20px;
+  text-align: center;
+  background: linear-gradient(45deg, #1a1a1a, #3a0000);
+}
+
+.menu-hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 40px;
+}
+
+.menu-hero span {
+  color: var(--red);
+}
+
+.menu-hero p {
+  margin-top: 10px;
+  color: var(--gray);
+}
+
+
+
+/* ================================================= */
+/* ================== CATEGORÍAS =================== */
+/* ================================================= */
+
+.menu-category {
+  margin: 80px 0;
+}
+
+.category-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+}
+
+.category-title.red {
+  color: var(--red);
+}
+
+.category-title.yellow {
+  color: var(--gold);
+}
+
+/* ================================================= */
+/* ====================== GRID ===================== */
+/* ================================================= */
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+}
+
+/* ================================================= */
+/* ====================== CARD ===================== */
+/* ================================================= */
+
+.menu-card {
+  background-color: var(--dark-alt);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--gray-dark);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--red);
+  box-shadow: 0 8px 25px rgba(225,6,0,0.3);
+}
+
+.menu-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.menu-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.menu-card p {
+  font-size: 13px;
+  color: var(--gray);
+  min-height: 40px;
+}
+
+.menu-card .price {
+  margin-top: 12px;
+  font-weight: 600;
+  color: var(--gold);
+}
