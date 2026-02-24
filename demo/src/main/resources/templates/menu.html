@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú - La Vuelta Rápida</title>
+    <link rel="stylesheet" href="menu-styles.css">
+</head>
+<body>
+
+<section class="menu-section" id="menu">
+    <div class="menu-container">
+
+        <!-- HEADER -->
+        <div class="menu-header">
+            <h2>NUESTRO <span>MENÚ DESTACADO</span></h2>
+            <p>Saborea cada vuelta llena de sabor</p>
+        </div>
+
+        <!-- GRID DINÁMICO -->
+        <div class="menu-grid">
+
+            <div class="menu-card"
+                 th:each="comida : ${comidas}"
+                 th:if="${comida.available}">
+
+                <!-- Imagen -->
+                <img th:src="@{${comida.image}}"
+                     th:alt="${comida.name}">
+
+                <!-- Nombre -->
+                <h4 th:text="${comida.name}"></h4>
+
+                <!-- Descripción -->
+                <p th:text="${comida.description}"></p>
+
+                <!-- Footer -->
+                <div class="menu-card-footer">
+
+                    <!-- Precio -->
+                    <span class="price"
+                          th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price, 1, 2)}">
+                    </span>
+
+                    <!-- Botón Agregar -->
+                    <form th:action="@{/carrito/agregar}" method="post">
+                        <input type="hidden" name="id" th:value="${comida.id}">
+                        <button type="submit">Agregar</button>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>
