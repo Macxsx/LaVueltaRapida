@@ -91,7 +91,7 @@ main {
 
 /* Botón */
 .btn-primary {
-  color: ;
+  color: black;
   background: var(--red);
   border: none;
   padding: 14px 28px;

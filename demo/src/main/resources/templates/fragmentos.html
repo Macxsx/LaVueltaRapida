@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+   <div th:fragment="header">
+  <header class="site-header">
+    <div class="header-inner">
+
+      <div class="header-logo">
+        <img class="logo-icon" 
+             th:src="@{/Images/LogoBandera.png}" 
+             alt="Logo">
+        <span class="logo-text">LA VUELTA RÁPIDA</span>
+      </div>
+
+      <nav class="header-nav">
+        <a th:href="@{/producto/menu}" class="nav-link">MENÚ</a>
+        <a th:href="@{/#experiencia}" class="nav-link">EXPERIENCIA</a>
+        <a th:href="@{/#ranking}" class="nav-link">RANKINGS</a>
+        <a th:href="@{/#eventos}" class="nav-link">EVENTOS F1</a>
+      </nav>
+
+      <div class="header-actions">
+        <a th:href="@{/login}" class="btn-login">INICIAR SESIÓN</a>
+        <a th:href="@{/producto/menu}" class="btn-order">ORDENAR AHORA</a>
+      </div>
+
+    </div>
+  </header>
+</div>
+
+ <div th:fragment="footer">
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <div class="footer-top">
+
+        <!-- BRAND -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img class="logo-icon" 
+                 th:src="@{/Images/LogoBandera.png}" 
+                 alt="Logo">
+            <span class="logo-text">LA VUELTA RÁPIDA</span>
+          </div>
+
+          <p class="footer-brand-desc">
+            La experiencia gastronómica más<br>
+            emocionante de la ciudad. Donde la<br>
+            velocidad se encuentra con el sabor.
+          </p>
+
+          <div class="social-icons">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <img th:src="@{/Images/Facebook.png}" alt="Facebook">
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <img th:src="@{/Images/Instagram.png}" alt="Instagram">
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter">
+              <img th:src="@{/Images/Twitter.png}" alt="Twitter">
+            </a>
+            <a href="#" class="social-link" aria-label="Youtube">
+              <img th:src="@{/Images/Youtube.png}" alt="Youtube">
+            </a>
+          </div>
+        </div>
+
+        <!-- MENÚ -->
+        <nav class="footer-col">
+          <h3 class="footer-col-title">MENÚ</h3>
+          <ul class="footer-links">
+            <li><a href="#">Clásicas</a></li>
+            <li><a href="#">Especiales</a></li>
+            <li><a href="#">Picantes</a></li>
+            <li><a href="#">Bebidas</a></li>
+            <li><a href="#">Postres</a></li>
+            <li><a th:href="@{/producto/menutabla}">Menu en lista</a></li>
+          </ul>
+        </nav>
+
+        <!-- EXPERIENCIA -->
+        <nav class="footer-col">
+          <h3 class="footer-col-title">EXPERIENCIA</h3>
+          <ul class="footer-links">
+            <li><a href="#">Eventos F1</a></li>
+            <li><a href="#">Ver carreras en vivo</a></li>
+            <li><a href="#">Cumpleaños</a></li>
+            <li><a href="#">Eventos corporativos</a></li>
+            <li><a th:href="@{/f1-standings}">Standings</a></li>
+          </ul>
+        </nav>
+
+        <!-- MARCA -->
+        <nav class="footer-col">
+          <h3 class="footer-col-title">MARCA</h3>
+          <ul class="footer-links">
+            <li><a href="#">Nuestra historia</a></li>
+            <li><a href="#">Trabaja con nosotros</a></li>
+            <li><a href="#">Franquicias</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">Ubicaciones</a></li>
+          </ul>
+        </nav>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2024 La Vuelta Rápida. Todos los derechos reservados.
+        </p>
+
+        <div class="footer-legal">
+          <a href="#">Términos y Condiciones</a>
+          <a href="#">Política de Privacidad</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+</div>
+</body>
+</html>

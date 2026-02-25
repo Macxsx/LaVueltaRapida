@@ -1,49 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
-  <title>Detalle Producto | La Vuelta Rápida</title>
+  <title th:text="${comida.name} + ' | La Vuelta Rápida'">Detalle Producto</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- GLOBAL CSS (SIEMPRE PRIMERO) -->
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- PAGE CSS (SOLO ESTILOS PROPIOS) -->
-  <link rel="stylesheet" href="product.css">
-
+  <!-- CSS -->
+  <link rel="stylesheet" th:href="@{/styles.css}">
+  <link rel="stylesheet" th:href="@{/product.css}">
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header class="site-header">
-    <div class="header-inner">
-
-      <div class="header-logo">
-        <img class="logo-icon" src="Images/LogoBandera.png" alt="Logo">
-        <span class="logo-text">LA VUELTA RÁPIDA</span>
-      </div>
-
-      <nav class="header-nav">
-        <a href="menu.html" class="nav-link">MENÚ</a>
-        <a href="#experiencia" class="nav-link">EXPERIENCIA</a>
-        <a href="#ranking" class="nav-link">RANKINGS</a>
-        <a href="#eventos" class="nav-link">EVENTOS F1</a>
-      </nav>
-
-      <div class="header-actions">
-        <a href="#" class="btn-login">INICIAR SESIÓN</a>
-        <a href="#" class="btn-order">ORDENAR AHORA</a>
-      </div>
-
-    </div>
-  </header>
+  <div th:replace="fragmentos :: header"></div>
 
   <!-- ================= MAIN ================= -->
   <main>
@@ -52,124 +26,78 @@
       <!-- LEFT -->
       <div class="product-left">
         <div class="product-image">
-          <img id="product-image" src="" alt="">
+          <img th:src="@{${comida.image}}"
+               th:alt="${comida.name}">
         </div>
 
         <div class="product-info">
-          <h1 id="product-name"></h1>
-          <p id="product-description"></p>
-          <h2 id="product-price"></h2>
+          <h1 th:text="${comida.name}"></h1>
+          <p th:text="${comida.description}"></p>
+          <h2 th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}"></h2>
         </div>
       </div>
 
       <!-- CENTER -->
       <div class="product-center">
-        <div class="product-options">
 
-          <div class="option-group">
-            <h4>+ Bebidas</h4>
-            <label><input type="checkbox"> Coca-cola</label>
-            <label><input type="checkbox"> Sprite</label>
-            <label><input type="checkbox"> Mr. Tea</label>
+        <form th:action="@{/carrito/agregar}" method="post">
+
+          <input type="hidden" name="id" th:value="${comida.id}">
+
+          <div class="product-options">
+
+            <div class="option-group">
+              <h4>+ Bebidas</h4>
+              <label><input type="checkbox" name="extras" value="Coca-Cola"> Coca-Cola</label>
+              <label><input type="checkbox" name="extras" value="Sprite"> Sprite</label>
+              <label><input type="checkbox" name="extras" value="Mr Tea"> Mr. Tea</label>
+            </div>
+
+            <div class="option-group">
+              <h4>+ Acompañamientos</h4>
+              <label><input type="checkbox" name="extras" value="Pit Rolls"> Pit Rolls</label>
+              <label><input type="checkbox" name="extras" value="Papas"> Papas</label>
+              <label><input type="checkbox" name="extras" value="Alitas"> Alitas</label>
+            </div>
+
           </div>
 
-          <div class="option-group">
-            <h4>+ Acompañamientos</h4>
-            <label><input type="checkbox"> Pit Rolls</label>
-            <label><input type="checkbox"> Sprite</label>
-            <label><input type="checkbox"> Mr. Tea</label>
-          </div>
+          <button type="submit" class="btn-order">
+            AGREGAR AL CARRITO
+          </button>
 
-        </div>
+        </form>
 
-        <button class="btn-order">AGREGAR AL CARRITO</button>
       </div>
 
       <!-- RIGHT -->
       <div class="product-right">
         <div class="recommendations">
           <h3>Recomendaciones</h3>
-          <div id="recommendations-grid"></div>
+
+          <div class="recommendations-grid">
+
+            <div class="recommendation-card"
+                 th:each="rec : ${recomendaciones}"
+                 th:if="${rec.available}">
+
+              <a th:href="@{'/producto/' + ${rec.id}}">
+                <img th:src="@{${rec.image}}" th:alt="${rec.name}">
+                <p th:text="${rec.name}"></p>
+                <span th:text="${rec.currency} + ' ' + ${#numbers.formatDecimal(rec.price,1,2)}"></span>
+              </a>
+
+            </div>
+
+          </div>
+
         </div>
       </div>
 
     </section>
   </main>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-top">
-
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <img class="logo-icon" src="Images/LogoBandera.png" alt="Logo">
-            <span class="logo-text">LA VUELTA RÁPIDA</span>
-          </div>
-
-          <p class="footer-brand-desc">
-            La experiencia gastronómica más<br>
-            emocionante de la ciudad. Donde la<br>
-            velocidad se encuentra con el sabor.
-          </p>
-
-          <div class="social-icons">
-            <a href="#" class="social-link"><img src="Images/Facebook.png" alt=""></a>
-            <a href="#" class="social-link"><img src="Images/Instagram.png" alt=""></a>
-            <a href="#" class="social-link"><img src="Images/Twitter.png" alt=""></a>
-            <a href="#" class="social-link"><img src="Images/Youtube.png" alt=""></a>
-          </div>
-        </div>
-
-        <nav class="footer-col">
-          <h3 class="footer-col-title">MENÚ</h3>
-          <ul class="footer-links">
-            <li><a href="#">Clásicas</a></li>
-            <li><a href="#">Especiales</a></li>
-            <li><a href="#">Picantes</a></li>
-            <li><a href="#">Bebidas</a></li>
-            <li><a href="#">Postres</a></li>
-          </ul>
-        </nav>
-
-        <nav class="footer-col">
-          <h3 class="footer-col-title">EXPERIENCIA</h3>
-          <ul class="footer-links">
-            <li><a href="#">Eventos F1</a></li>
-            <li><a href="#">Ver carreras en vivo</a></li>
-            <li><a href="#">Cumpleaños</a></li>
-            <li><a href="#">Eventos corporativos</a></li>
-            <li><a href="f1-standings.html">Standings</a></li>
-          </ul>
-        </nav>
-
-        <nav class="footer-col">
-          <h3 class="footer-col-title">MARCA</h3>
-          <ul class="footer-links">
-            <li><a href="#">Nuestra historia</a></li>
-            <li><a href="#">Trabaja con nosotros</a></li>
-            <li><a href="#">Franquicias</a></li>
-            <li><a href="#">Contacto</a></li>
-            <li><a href="#">Ubicaciones</a></li>
-          </ul>
-        </nav>
-
-      </div>
-
-      <div class="footer-bottom">
-        <p class="footer-copyright">
-          © 2024 La Vuelta Rápida. Todos los derechos reservados.
-        </p>
-
-        <div class="footer-legal">
-          <a href="#">Términos y Condiciones</a>
-          <a href="#">Política de Privacidad</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <script src="product-detail.js"></script>
-
+  <div th:replace="fragmentos :: footer"></div>
+  
 </body>
 </html>

@@ -8,4 +8,8 @@ public interface ComidaService {
     
     public Collection<Comida> findAll();
 
+    public Comida findById(int id);
+
+    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(int id);
+
 }
