@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Menú Lista | La Vuelta Rápida</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Global -->
+  <link rel="stylesheet" th:href="@{/styles.css}">
+
+  <!-- Page -->
+  <link rel="stylesheet" th:href="@{/menu-list.css}">
+</head>
+
+<body>
+
+<div th:replace="fragmentos :: header"></div>
+
+<!-- ================= HERO ================= -->
+<section class="menu-hero">
+  <div class="container">
+    <h1>NUESTRO <span>MENÚ COMPLETO</span></h1>
+    <p>Saborea una carrera llena de emoción</p>
+  </div>
+</section>
+
+<!-- ================= TABLA POR CATEGORÍAS ================= -->
+<section class="menu-list-section">
+  <div class="container">
+
+    <!-- ================= CLASICAS ================= -->
+    <h2 class="list-category red">CLÁSICAS</h2>
+    <div class="table-responsive">
+      <table class="menu-table">
+        <tbody>
+          <tr th:each="comida : ${comidas}"
+              th:if="${comida.available and comida.category == 'CLASICAS'}"
+              th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
+              class="clickable-row">
+
+            <td>
+              <img th:src="@{${comida.image}}"
+                   th:alt="${comida.name}"
+                   class="table-img">
+            </td>
+
+            <td>
+              <strong th:text="${comida.name}"></strong><br>
+              <span class="desc" th:text="${comida.description}"></span>
+            </td>
+
+            <td class="price-cell"
+                th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
+            </td>
+
+            <td>
+              <form th:action="@{/carrito/agregar}" method="post"
+                    onclick="event.stopPropagation();">
+                <input type="hidden" name="id" th:value="${comida.id}">
+              </form>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= ESPECIALES ================= -->
+    <h2 class="list-category yellow">ESPECIALES</h2>
+    <div class="table-responsive">
+      <table class="menu-table">
+        <tbody>
+          <tr th:each="comida : ${comidas}"
+              th:if="${comida.available and comida.category == 'ESPECIALES'}"
+              th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
+              class="clickable-row">
+
+            <td>
+              <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="table-img">
+            </td>
+
+            <td>
+              <strong th:text="${comida.name}"></strong><br>
+              <span class="desc" th:text="${comida.description}"></span>
+            </td>
+
+            <td class="price-cell"
+                th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
+            </td>
+
+            <td>
+              <form th:action="@{/carrito/agregar}" method="post"
+                    onclick="event.stopPropagation();">
+                <input type="hidden" name="id" th:value="${comida.id}">
+              </form>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= PICANTES ================= -->
+    <h2 class="list-category red">PICANTES</h2>
+    <div class="table-responsive">
+      <table class="menu-table">
+        <tbody>
+          <tr th:each="comida : ${comidas}"
+              th:if="${comida.available and comida.category == 'PICANTES'}"
+              th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
+              class="clickable-row">
+
+            <td>
+              <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="table-img">
+            </td>
+
+            <td>
+              <strong th:text="${comida.name}"></strong><br>
+              <span class="desc" th:text="${comida.description}"></span>
+            </td>
+
+            <td class="price-cell"
+                th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
+            </td>
+
+            <td>
+              <form th:action="@{/carrito/agregar}" method="post"
+                    onclick="event.stopPropagation();">
+                <input type="hidden" name="id" th:value="${comida.id}">
+              </form>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= BEBIDAS ================= -->
+    <h2 class="list-category yellow">BEBIDAS</h2>
+    <div class="table-responsive">
+      <table class="menu-table">
+        <tbody>
+          <tr th:each="comida : ${comidas}"
+              th:if="${comida.available and comida.category == 'BEBIDAS'}"
+              th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
+              class="clickable-row">
+
+            <td>
+              <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="table-img">
+            </td>
+
+            <td>
+              <strong th:text="${comida.name}"></strong><br>
+              <span class="desc" th:text="${comida.description}"></span>
+            </td>
+
+            <td class="price-cell"
+                th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
+            </td>
+
+            <td>
+              <form th:action="@{/carrito/agregar}" method="post"
+                    onclick="event.stopPropagation();">
+                <input type="hidden" name="id" th:value="${comida.id}">
+              </form>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= POSTRES ================= -->
+    <h2 class="list-category red">POSTRES</h2>
+    <div class="table-responsive">
+      <table class="menu-table">
+        <tbody>
+          <tr th:each="comida : ${comidas}"
+              th:if="${comida.available and comida.category == 'POSTRES'}"
+              th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
+              class="clickable-row">
+
+            <td>
+              <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="table-img">
+            </td>
+
+            <td>
+              <strong th:text="${comida.name}"></strong><br>
+              <span class="desc" th:text="${comida.description}"></span>
+            </td>
+
+            <td class="price-cell"
+                th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
+            </td>
+
+            <td>
+              <form th:action="@{/carrito/agregar}" method="post"
+                    onclick="event.stopPropagation();">
+                <input type="hidden" name="id" th:value="${comida.id}">
+              </form>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+
+<div th:replace="fragmentos :: footer"></div>
+
+
+</body>
+</html>

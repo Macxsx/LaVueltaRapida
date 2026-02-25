@@ -1,0 +1,186 @@
+/* ================================================= */
+/* ================= VARIABLES ===================== */
+/* ================================================= */
+
+:root {
+  --red: #e10600;
+  --gold: #ffd700;
+  --gray: #aaa;
+  --dark: #0f0f0f;
+}
+
+/* ================================================= */
+/* =============== CONTENEDOR CENTRAL ============= */
+/* ================================================= */
+
+.menu-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.menu-list-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+
+/* ================================================= */
+/* ========= ALINEACIÓN CONSISTENTE TABLAS ======== */
+/* ================================================= */
+
+.menu-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 50px;
+  table-layout: fixed; /* 🔥 CLAVE para alinear columnas */
+}
+
+/* Definimos ancho fijo por columna */
+.menu-table td:nth-child(1) {
+  width: 110px; /* Imagen */
+}
+
+.menu-table td:nth-child(2) {
+  width: 60%; /* Nombre + descripción */
+}
+
+.menu-table td:nth-child(3) {
+  width: 150px; /* Precio */
+  text-align: right;
+}
+
+.menu-table td:nth-child(4) {
+  width: 40px; /* Columna vacía */
+}
+
+/* ================================================= */
+/* ===================== HERO ====================== */
+/* ================================================= */
+
+.menu-hero {
+  padding: 100px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #0f0f0f, #3a0000);
+  border-bottom: 2px solid var(--red);
+}
+
+.menu-hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 44px;
+  letter-spacing: 2px;
+  font-weight: 100;
+}
+
+.menu-hero span {
+  color: var(--red);
+  font-weight: 100;
+}
+
+.menu-hero p {
+  margin-top: 15px;
+  color: var(--gray);
+  font-size: 15px;
+}
+
+/* ================================================= */
+/* ===================== GRID ====================== */
+/* ================================================= */
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 35px;
+}
+
+/* ================================================= */
+/* ===================== CARD ====================== */
+/* ================================================= */
+
+.menu-card-link {
+  text-decoration: none;
+  color: white;
+}
+
+.menu-card {
+  background-color: #111;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid #1f1f1f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menu-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--red);
+  box-shadow: 0 12px 30px rgba(225, 6, 0, 0.25);
+}
+
+/* ================= IMAGEN ================= */
+
+.menu-card img {
+  width: 100%;
+  height: 200px;          /* Altura fija igual para todas */
+  object-fit: cover;      /* Rellena el espacio recortando */
+  border-radius: 10px;    /* Opcional: estética */
+}
+
+.menu-card:hover img {
+  transform: scale(1.05);
+}
+
+/* ================= TITULO ================= */
+
+.menu-card h4 {
+  padding-top: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 17px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+/* ================= DESCRIPCION ================= */
+
+.menu-card p {
+  font-size: 13px;
+  color: var(--gray);
+  min-height: 38px;
+}
+
+/* ================= PRECIO ================= */
+
+.menu-card .price {
+  margin-top: 15px;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--gold);
+}
+
+/* ================= CATEGORY TITLE ================= */
+
+.menu-category {
+  margin-bottom: 70px;
+}
+
+.category-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 26px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+  border-left: 5px solid var(--red);
+  padding-left: 15px;
+}
+
+.category-title.red {
+  border-color: var(--red);
+}
+
+.category-title.yellow {
+  border-color: var(--gold);
+}

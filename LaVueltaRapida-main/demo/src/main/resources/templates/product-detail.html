@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${comida.name} + ' | La Vuelta Rápida'">Detalle Producto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- CSS -->
+  <link rel="stylesheet" th:href="@{/styles.css}">
+  <link rel="stylesheet" th:href="@{/product.css}">
+</head>
+
+<body>
+
+  <div th:replace="fragmentos :: header"></div>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <section class="product-detail container">
+
+      <!-- LEFT -->
+      <div class="product-left">
+        <div class="product-image">
+          <img th:src="@{${comida.image}}"
+               th:alt="${comida.name}">
+        </div>
+
+        <div class="product-info">
+          <h1 th:text="${comida.name}"></h1>
+          <p th:text="${comida.description}"></p>
+          <h2 th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}"></h2>
+        </div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="product-center">
+
+        <form th:action="@{/carrito/agregar}" method="post">
+
+          <input type="hidden" name="id" th:value="${comida.id}">
+
+          <div class="product-options">
+
+            <div class="option-group">
+              <h4>+ Bebidas</h4>
+              <label><input type="checkbox" name="extras" value="Coca-Cola"> Coca-Cola</label>
+              <label><input type="checkbox" name="extras" value="Sprite"> Sprite</label>
+              <label><input type="checkbox" name="extras" value="Mr Tea"> Mr. Tea</label>
+            </div>
+
+            <div class="option-group">
+              <h4>+ Acompañamientos</h4>
+              <label><input type="checkbox" name="extras" value="Pit Rolls"> Pit Rolls</label>
+              <label><input type="checkbox" name="extras" value="Papas"> Papas</label>
+              <label><input type="checkbox" name="extras" value="Alitas"> Alitas</label>
+            </div>
+
+          </div>
+
+          <button type="submit" class="btn-order">
+            AGREGAR AL CARRITO
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="product-right">
+        <div class="recommendations">
+          <h3>Recomendaciones</h3>
+
+          <div class="recommendations-grid">
+
+            <div class="recommendation-card"
+                 th:each="rec : ${recomendaciones}"
+                 th:if="${rec.available}">
+
+              <a th:href="@{'/producto/' + ${rec.id}}">
+                <img th:src="@{${rec.image}}" th:alt="${rec.name}">
+                <p th:text="${rec.name}"></p>
+                <span th:text="${rec.currency} + ' ' + ${#numbers.formatDecimal(rec.price,1,2)}"></span>
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <div th:replace="fragmentos :: footer"></div>
+  
+</body>
+</html>
