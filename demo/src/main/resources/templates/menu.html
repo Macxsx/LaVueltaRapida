@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú - La Vuelta Rápida</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="menu.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <img class="logo-icon" src="Images/LogoBandera.png" alt="Logo">
+        <span class="logo-text">LA VUELTA RÁPIDA</span>
+      </div>
+
+      <nav class="header-nav">
+        <a href="menu.html" class="nav-link">MENÚ</a>
+        <a href="#experiencia" class="nav-link">EXPERIENCIA</a>
+        <a href="#ranking" class="nav-link">RANKINGS</a>
+        <a href="#eventos" class="nav-link">EVENTOS F1</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#" class="btn-login">INICIAR SESIÓN</a>
+        <a href="#" class="btn-order">ORDENAR AHORA</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="menu-hero">
+    <h1>NUESTRO <span>MENÚ DESTACADO</span></h1>
+    <p>Descubre nuestras especialidades</p>
+  </section>
+
+  <!-- ================= CONTENIDO ================= -->
+  <main class="container">
+
+    <section class="menu-category">
+      <h2 class="category-title red">CLÁSICAS</h2>
+      <div class="menu-grid" id="clasicas-grid"></div>
+    </section>
+
+    <section class="menu-category">
+      <h2 class="category-title yellow">ESPECIALES</h2>
+      <div class="menu-grid" id="especiales-grid"></div>
+    </section>
+
+    <section class="menu-category">
+      <h2 class="category-title red">PICANTES</h2>
+      <div class="menu-grid" id="picantes-grid"></div>
+    </section>
+
+    <section class="menu-category">
+      <h2 class="category-title yellow">BEBIDAS</h2>
+      <div class="menu-grid" id="bebidas-grid"></div>
+    </section>
+
+    <section class="menu-category">
+      <h2 class="category-title red">POSTRES</h2>
+      <div class="menu-grid" id="postres-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img class="logo-icon" src="Images/LogoBandera.png" alt="Logo">
+            <span class="logo-text">LA VUELTA RÁPIDA</span>
+          </div>
+          <p class="footer-brand-desc">
+            La experiencia gastronómica más<br>
+            emocionante de la ciudad. Donde la<br>
+            velocidad se encuentra con el sabor.
+          </p>
+
+          <div class="social-icons">
+            <a href="#" class="social-link"><img src="Images/Facebook.png" alt=""></a>
+            <a href="#" class="social-link"><img src="Images/Instagram.png" alt=""></a>
+            <a href="#" class="social-link"><img src="Images/Twitter.png" alt=""></a>
+            <a href="#" class="social-link"><img src="Images/Youtube.png" alt=""></a>
+          </div>
+        </div>
+
+        <nav class="footer-col">
+          <h3 class="footer-col-title">MENÚ</h3>
+          <ul class="footer-links">
+            <li><a href="#">Clásicas</a></li>
+            <li><a href="#">Especiales</a></li>
+            <li><a href="#">Picantes</a></li>
+            <li><a href="#">Bebidas</a></li>
+            <li><a href="#">Postres</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col">
+          <h3 class="footer-col-title">EXPERIENCIA</h3>
+          <ul class="footer-links">
+            <li><a href="#">Eventos F1</a></li>
+            <li><a href="#">Ver carreras en vivo</a></li>
+            <li><a href="#">Cumpleaños</a></li>
+            <li><a href="#">Eventos corporativos</a></li>
+            <li><a href="f1-standings.html">Standings</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col">
+          <h3 class="footer-col-title">MARCA</h3>
+          <ul class="footer-links">
+            <li><a href="#">Nuestra historia</a></li>
+            <li><a href="#">Trabaja con nosotros</a></li>
+            <li><a href="#">Franquicias</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">Ubicaciones</a></li>
+          </ul>
+        </nav>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2024 La Vuelta Rápida. Todos los derechos reservados.
+        </p>
+        <div class="footer-legal">
+          <a href="#">Términos y Condiciones</a>
+          <a href="#">Política de Privacidad</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="menu.js"></script>
+
+</body>
+</html>
