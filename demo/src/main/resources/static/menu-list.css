@@ -1,0 +1,198 @@
+/* ================================================= */
+/* ================= VARIABLES ===================== */
+/* ================================================= */
+
+:root {
+  --red: #e10600;
+  --gold: #ffd700;
+  --gray: #aaa;
+  --dark: #0f0f0f;
+}
+
+/* ================================================= */
+/* ===================== HERO ====================== */
+/* ================================================= */
+
+.menu-hero {
+  padding: 100px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #0f0f0f, #3a0000);
+  border-bottom: 2px solid var(--red);
+}
+
+.menu-hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 44px;
+  letter-spacing: 2px;
+  font-weight: 100;
+  color: white;
+}
+
+.menu-hero span {
+  color: var(--red);
+  font-weight: 100;
+}
+
+.menu-hero p {
+  margin-top: 15px;
+  color: var(--gray);
+  font-size: 15px;
+}
+
+/* ================================================= */
+/* ================= SECCIÓN LISTA ================= */
+/* ================================================= */
+
+.menu-list-section {
+  padding: 70px 0 120px;
+  background-color: var(--dark);
+  color: white;
+}
+
+/* Centrar contenido y evitar que quede pegado a bordes */
+.menu-list-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+/* ================================================= */
+/* ============== TITULO CATEGORÍA ================ */
+/* ================================================= */
+
+.list-category {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+  letter-spacing: 2px;
+  margin: 60px 0 25px;
+  padding-left: 15px;
+  border-left: 5px solid var(--red);
+}
+
+.list-category.red {
+  border-color: var(--red);
+}
+
+.list-category.yellow {
+  border-color: var(--gold);
+}
+
+/* ================================================= */
+/* ===================== TABLA ===================== */
+/* ================================================= */
+
+.menu-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 50px;
+  table-layout: fixed; /* 🔥 Mantiene alineación entre tablas */
+}
+
+.menu-table tbody tr {
+  border-bottom: 1px solid #1f1f1f;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.menu-table tbody tr:hover {
+  background-color: #161616;
+  transform: scale(1.01);
+}
+
+/* CELDAS */
+
+.menu-table td {
+  padding: 20px 15px;
+  vertical-align: middle;
+}
+
+/* ================================================= */
+/* ========= ANCHO FIJO DE COLUMNAS =============== */
+/* ================================================= */
+
+.menu-table td:nth-child(1) {
+  width: 110px; /* Imagen */
+}
+
+.menu-table td:nth-child(2) {
+  width: 60%; /* Nombre + descripción */
+}
+
+.menu-table td:nth-child(3) {
+  width: 150px; /* Precio */
+  text-align: right;
+}
+
+.menu-table td:nth-child(4) {
+  width: 40px; /* Columna vacía */
+}
+
+/* ================================================= */
+/* ===================== IMAGEN ==================== */
+/* ================================================= */
+
+.table-img {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: 0.3s ease;
+}
+
+.menu-table tr:hover .table-img {
+  transform: scale(1.08);
+}
+
+/* ================================================= */
+/* =================== INFORMACIÓN ================= */
+/* ================================================= */
+
+.menu-table strong {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.desc {
+  display: block;
+  font-size: 13px;
+  color: var(--gray);
+  margin-top: 4px;
+  max-width: 500px;
+}
+
+/* ================================================= */
+/* ===================== PRECIO ==================== */
+/* ================================================= */
+
+.price-cell {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+/* ================================================= */
+/* ================= RESPONSIVE ==================== */
+/* ================================================= */
+
+@media (max-width: 768px) {
+
+  .menu-table td {
+    padding: 15px 8px;
+  }
+
+  .table-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .desc {
+    font-size: 12px;
+  }
+
+  .price-cell {
+    font-size: 14px;
+  }
+
+}
