@@ -9,7 +9,11 @@ public class Comida {
     private String currency;
     private String image;
     private boolean available;
+<<<<<<< HEAD
     private Categoria category;
+=======
+    private String category;
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
 
     // Constructor vacío
     public Comida() {
@@ -17,7 +21,11 @@ public class Comida {
 
     // Constructor completo
     public Comida(int id, String name, String description, float price,
+<<<<<<< HEAD
                   String currency, String image, boolean available, Categoria category) {
+=======
+                  String currency, String image, boolean available, String category) {
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
         this.id = id;
         this.name = name;
         this.description = description;
@@ -51,8 +59,13 @@ public class Comida {
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }
 
+<<<<<<< HEAD
     public Categoria getCategory() { return category; }
     public void setCategory(Categoria category) { this.category = category; }
 
 
+=======
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
 }

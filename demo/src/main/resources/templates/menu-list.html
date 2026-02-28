@@ -40,7 +40,11 @@
       <table class="menu-table">
         <tbody>
           <tr th:each="comida : ${comidas}"
+<<<<<<< HEAD
               th:if="${comida.available and comida.category.getName() == 'Clasicas'}"
+=======
+              th:if="${comida.available and comida.category == 'CLASICAS'}"
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
               th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
               class="clickable-row">
 
@@ -77,7 +81,11 @@
       <table class="menu-table">
         <tbody>
           <tr th:each="comida : ${comidas}"
+<<<<<<< HEAD
               th:if="${comida.available and comida.category.getName() == 'Especiales'}"
+=======
+              th:if="${comida.available and comida.category == 'ESPECIALES'}"
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
               th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
               class="clickable-row">
 
@@ -112,7 +120,11 @@
       <table class="menu-table">
         <tbody>
           <tr th:each="comida : ${comidas}"
+<<<<<<< HEAD
               th:if="${comida.available and comida.category.getName() == 'Picantes'}"
+=======
+              th:if="${comida.available and comida.category == 'PICANTES'}"
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
               th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
               class="clickable-row">
 
@@ -147,7 +159,11 @@
       <table class="menu-table">
         <tbody>
           <tr th:each="comida : ${comidas}"
+<<<<<<< HEAD
               th:if="${comida.available and comida.category.getName() == 'Bebidas'}"
+=======
+              th:if="${comida.available and comida.category == 'BEBIDAS'}"
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
               th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
               class="clickable-row">
 
@@ -182,7 +198,11 @@
       <table class="menu-table">
         <tbody>
           <tr th:each="comida : ${comidas}"
+<<<<<<< HEAD
               th:if="${comida.available and comida.category.getName() == 'Postres'}"
+=======
+              th:if="${comida.available and comida.category == 'POSTRES'}"
+>>>>>>> b9a7d40127bddf9a15ea9fbdde800115b70ff420
               th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
               class="clickable-row">
 
