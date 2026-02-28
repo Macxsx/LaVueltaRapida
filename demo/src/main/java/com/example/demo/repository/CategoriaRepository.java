@@ -20,7 +20,7 @@ public class CategoriaRepository {
         categorias.put(5, new Categoria(5, "Postres"));
     }
 
-    public Categoria findById(int id) {
+    public Categoria findById(Integer id) {
         return categorias.get(id);
     }
 

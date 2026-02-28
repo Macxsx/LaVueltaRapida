@@ -33,5 +33,17 @@ public class ComidaServiceImpl  implements ComidaService{
     public Collection<Comida> Recomendados(int id) {
         return repo.Recomendados(id);
     }
+
+    @Override
+    public void save(Comida comida) {
+        repo.save(comida);
+        
+    }
+
+    @Override
+    public void deleteById(int id) {
+        repo.deleteById(id);
+        
+    }
 }
 

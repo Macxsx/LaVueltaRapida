@@ -2,7 +2,7 @@ package com.example.demo.entitys;
 
 public class Comida {
 
-    private int id;
+    private Integer id;
     private String name;
     private String description;
     private float price;
@@ -16,7 +16,7 @@ public class Comida {
     }
 
     // Constructor completo
-    public Comida(int id, String name, String description, float price,
+    public Comida(Integer id, String name, String description, float price,
                   String currency, String image, boolean available, Categoria category) {
         this.id = id;
         this.name = name;
@@ -30,8 +30,8 @@ public class Comida {
 
     // Getters y Setters
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

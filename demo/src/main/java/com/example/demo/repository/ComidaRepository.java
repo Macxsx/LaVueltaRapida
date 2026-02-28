@@ -12,8 +12,6 @@ public class ComidaRepository {
 
 
     private final Map<Integer, Comida> comidas = new HashMap<>();
-    private final CategoriaRepository categoriaRepository = new CategoriaRepository();
-
     
     public ComidaRepository(CategoriaRepository categoriaRepository) {
     Categoria clasicas = categoriaRepository.findById(1);
@@ -220,11 +218,11 @@ public class ComidaRepository {
         return comidas.values();
     }
 
-    public Comida findById(int id) {
+    public Comida findById(Integer id) {
         return comidas.get(id);
     }
 
-    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(int id){
+    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(Integer id){
         return comidas.values().stream()
                 .filter(comida -> comida.getId() > id)
                 .sorted((c1, c2) -> Integer.compare(c1.getId(), c2.getId()))
@@ -232,7 +230,7 @@ public class ComidaRepository {
                 .toList();
     }
 
-    public Collection<Comida> findTop2ByIdLessThanOrderByIdDesc(int id){
+    public Collection<Comida> findTop2ByIdLessThanOrderByIdDesc(Integer id){
         return comidas.values().stream()
                 .filter(comida -> comida.getId() < id)
                 .sorted((c1, c2) -> Integer.compare(c2.getId(), c1.getId()))
@@ -240,11 +238,11 @@ public class ComidaRepository {
                 .toList();
     }
 
-    public int count() {
+    public Integer count() {
         return comidas.size();
     }
 
-    public Collection<Comida> Recomendados(int id){
+    public Collection<Comida> Recomendados(Integer id){
         if(id >= count()-1){
         return findTop2ByIdLessThanOrderByIdDesc(id);
         }
@@ -253,4 +251,22 @@ public class ComidaRepository {
         }
 
     }
+
+    public void save(Comida comida) {
+        if(comida.getId()== null){
+        Integer tam = count();
+        Integer lastid = comidas.get(tam).getId();
+        comida.setId(lastid + 1);
+        comidas.put(comida.getId(), comida);
+        }
+        else{
+            comidas.put(comida.getId(), comida);
+        }
+    }
+
+    public void deleteById(Integer id) {
+        comidas.remove(id);
+    }
+
+    
 }

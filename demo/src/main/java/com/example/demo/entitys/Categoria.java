@@ -3,14 +3,14 @@ package com.example.demo.entitys;
 
 public class Categoria {
 
-    private int id;
+    private Integer id;
     private String name;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class Categoria {
         this.name = name;
     }
 
-    public Categoria(int id, String name) {
+    public Categoria(Integer id, String name) {
         this.id = id;
         this.name = name;
     }

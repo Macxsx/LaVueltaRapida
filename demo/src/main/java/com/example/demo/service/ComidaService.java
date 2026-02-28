@@ -14,4 +14,7 @@ public interface ComidaService {
 
     public Collection<Comida> Recomendados(int id);
 
+    public void save(Comida comida);
+    public void deleteById(int id);
+
 }

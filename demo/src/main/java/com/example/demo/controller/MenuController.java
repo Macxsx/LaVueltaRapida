@@ -4,10 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.demo.entitys.Comida;
 import com.example.demo.service.ComidaService;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 @RequestMapping("/producto")
@@ -17,19 +22,20 @@ public class MenuController {
     @Autowired
     ComidaService comidaService;
 
-    // http://localhost:8080/
+    // http://localhost:8080/producto
     @GetMapping("/")
     public String home() {
         return "index";
     }
 
-    //http://localhost:8080/menu
+    //http://localhost:8080/producto/menu
     @GetMapping("/menu")
     public String mostrarMenu(Model model) {
     model.addAttribute("comidas", comidaService.findAll());
         return "menu";
     }
 
+    //http://localhost:8080/producto/{id}
     @GetMapping("/{id}")
     public String verProducto(@PathVariable int id, Model model) {
     model.addAttribute("comida", comidaService.findById(id));
@@ -37,11 +43,43 @@ public class MenuController {
     return "product-detail";
     }   
 
+    //http://localhost:8080/producto/menutabla
         @GetMapping("/menutabla")
     public String mostrarMenuTabla(Model model) {
     model.addAttribute("comidas", comidaService.findAll());
         return "menu-list";
     }
+
+    @GetMapping("/delete/{id")
+    public String delete(@RequestParam String param) {
+        int id = Integer.parseInt(param);
+        comidaService.deleteById(id);
+        return "redirect:/producto/menu";
+    }
+
+    @GetMapping("/add")
+    public String MostrarFormularioCrear(Model model) {
+        Comida comida = new Comida(null, "", "", 0.0f, "", "", false, null);
+        model.addAttribute("comida", comida);
+        return "add-product";
+    }
+
+    @PostMapping("/add")
+    public String AdicionarComida(@ModelAttribute("comida") Comida comida) {
+        comidaService.save(comida);
+        return "redirect:/producto/menu";
+    }
+    
+    @GetMapping("/update/{id}")
+    public String ActualizarComida(@PathVariable("id") Integer id, Model model) {
+        Comida comida = comidaService.findById(id);
+        model.addAttribute("comida", comida);
+        return "redirect:/producto/menu";
+
+    }
+    
+    
+    
 }
     
     
