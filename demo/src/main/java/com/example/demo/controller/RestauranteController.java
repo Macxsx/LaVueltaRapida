@@ -18,6 +18,11 @@ public class RestauranteController {
     public String f1Standings() {
         return "f1-standings";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 }
     
     
