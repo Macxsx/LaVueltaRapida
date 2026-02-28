@@ -28,7 +28,16 @@
     <h1>NUESTRO <span>MENÚ COMPLETO</span></h1>
     <p>Saborea una carrera llena de emoción</p>
   </div>
+
+      <div class="hero-action">
+      <a th:href="@{/producto/add}" class="btn-add-hero">
+        + Agregar Producto
+      </a>
+    </div>
+
+    
 </section>
+
 
 <!-- ================= TABLA POR CATEGORÍAS ================= -->
 <section class="menu-list-section">
@@ -65,7 +74,13 @@
                 <input type="hidden" name="id" th:value="${comida.id}">
               </form>
             </td>
-
+            <td>
+              <a th:href="@{/producto/delete/{id}(id=${comida.id})}"
+              class="btn-delete"
+              onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+              Eliminar
+            </a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -100,7 +115,12 @@
                 <input type="hidden" name="id" th:value="${comida.id}">
               </form>
             </td>
-
+            <td>
+              <a th:href="@{/producto/delete/{id}(id=${comida.id})}"
+              class="btn-delete"
+              onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+              Eliminar
+            </a>
           </tr>
         </tbody>
       </table>
@@ -134,6 +154,13 @@
                     onclick="event.stopPropagation();">
                 <input type="hidden" name="id" th:value="${comida.id}">
               </form>
+            </td>
+            <td>
+              <a th:href="@{/producto/delete/{id}(id=${comida.id})}"
+              class="btn-delete"
+              onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+              Eliminar
+            </a>
             </td>
 
           </tr>
@@ -170,6 +197,13 @@
                 <input type="hidden" name="id" th:value="${comida.id}">
               </form>
             </td>
+              <td>
+              <a th:href="@{/producto/delete/{id}(id=${comida.id})}"
+              class="btn-delete"
+              onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+              Eliminar
+            </a>
+            </td>
 
           </tr>
         </tbody>
@@ -204,6 +238,14 @@
                     onclick="event.stopPropagation();">
                 <input type="hidden" name="id" th:value="${comida.id}">
               </form>
+            </td>
+
+            <td>
+              <a th:href="@{/producto/delete/{id}(id=${comida.id})}"
+              class="btn-delete"
+              onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+              Eliminar
+            </a>
             </td>
 
           </tr>

@@ -37,7 +37,7 @@ public class MenuController {
 
     //http://localhost:8080/producto/{id}
     @GetMapping("/{id}")
-    public String verProducto(@PathVariable int id, Model model) {
+    public String verProducto(@PathVariable Integer id, Model model) {
     model.addAttribute("comida", comidaService.findById(id));
     model.addAttribute("recomendaciones", comidaService.Recomendados(id));
     return "product-detail";
@@ -50,11 +50,10 @@ public class MenuController {
         return "menu-list";
     }
 
-    @GetMapping("/delete/{id")
-    public String delete(@RequestParam String param) {
-        int id = Integer.parseInt(param);
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id) {
         comidaService.deleteById(id);
-        return "redirect:/producto/menu";
+        return "redirect:/producto/menutabla";
     }
 
     @GetMapping("/add")

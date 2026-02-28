@@ -20,17 +20,17 @@ public class ComidaServiceImpl  implements ComidaService{
     }
 
     @Override
-    public Comida findById(int id) {
+    public Comida findById(Integer id) {
         return repo.findById(id);
     }
 
     @Override
-    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(int id) {
+    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(Integer id) {
         return repo.findTop2ByIdGreaterThanOrderByIdAsc(id);
     }
 
     @Override
-    public Collection<Comida> Recomendados(int id) {
+    public Collection<Comida> Recomendados(Integer id) {
         return repo.Recomendados(id);
     }
 
@@ -41,7 +41,7 @@ public class ComidaServiceImpl  implements ComidaService{
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
         repo.deleteById(id);
         
     }

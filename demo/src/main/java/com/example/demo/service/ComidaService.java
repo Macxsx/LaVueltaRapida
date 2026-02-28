@@ -8,13 +8,13 @@ public interface ComidaService {
     
     public Collection<Comida> findAll();
 
-    public Comida findById(int id);
+    public Comida findById(Integer id);
 
-    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(int id);
+    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(Integer id);
 
-    public Collection<Comida> Recomendados(int id);
+    public Collection<Comida> Recomendados(Integer id);
 
     public void save(Comida comida);
-    public void deleteById(int id);
+    public void deleteById(Integer id);
 
 }

@@ -14,7 +14,7 @@
 /* ================================================= */
 
 .menu-hero {
-  padding: 100px 20px;
+  padding: 100px 20px 20px 20px;
   text-align: center;
   background: linear-gradient(135deg, #0f0f0f, #3a0000);
   border-bottom: 2px solid var(--red);
@@ -44,7 +44,7 @@
 /* ================================================= */
 
 .menu-list-section {
-  padding: 70px 0 120px;
+  padding: 5px 0 120px;
   background-color: var(--dark);
   color: white;
 }
@@ -173,6 +173,57 @@
 }
 
 /* ================================================= */
+/* ================= BOTON ELIMINAR =============== */
+/* ================================================= */
+
+.btn-delete {
+  background-color: transparent;
+  border: 1px solid #e10600;
+  color: #e10600;
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.btn-delete:hover {
+  background-color: #e10600;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* ================================================= */
+/* ================= HERO BUTTON =================== */
+/* ================================================= */
+
+.hero-action {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-add-hero {
+  background: linear-gradient(135deg, #e10600, #7a0000);
+  color: white;
+  padding: 11px 26px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  text-decoration: none;
+  border: 1px solid #e10600;
+  transition: 0.3s ease;
+}
+
+.btn-add-hero:hover {
+  background: black;
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  transform: translateY(-3px);
+}
+
+/* ================================================= */
 /* ================= RESPONSIVE ==================== */
 /* ================================================= */
 
@@ -196,3 +247,4 @@
   }
 
 }
+
