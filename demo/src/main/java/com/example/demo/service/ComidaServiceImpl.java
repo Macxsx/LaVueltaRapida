@@ -28,5 +28,10 @@ public class ComidaServiceImpl  implements ComidaService{
     public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(int id) {
         return repo.findTop2ByIdGreaterThanOrderByIdAsc(id);
     }
+
+    @Override
+    public Collection<Comida> Recomendados(int id) {
+        return repo.Recomendados(id);
+    }
 }
 

@@ -33,7 +33,7 @@ public class MenuController {
     @GetMapping("/{id}")
     public String verProducto(@PathVariable int id, Model model) {
     model.addAttribute("comida", comidaService.findById(id));
-    model.addAttribute("recomendaciones", comidaService.findTop2ByIdGreaterThanOrderByIdAsc(id));
+    model.addAttribute("recomendaciones", comidaService.Recomendados(id));
     return "product-detail";
     }   
 

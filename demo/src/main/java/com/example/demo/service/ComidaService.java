@@ -12,4 +12,6 @@ public interface ComidaService {
 
     public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(int id);
 
+    public Collection<Comida> Recomendados(int id);
+
 }

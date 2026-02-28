@@ -231,4 +231,26 @@ public class ComidaRepository {
                 .limit(2)
                 .toList();
     }
+
+    public Collection<Comida> findTop2ByIdLessThanOrderByIdDesc(int id){
+        return comidas.values().stream()
+                .filter(comida -> comida.getId() < id)
+                .sorted((c1, c2) -> Integer.compare(c2.getId(), c1.getId()))
+                .limit(2)
+                .toList();
+    }
+
+    public int count() {
+        return comidas.size();
+    }
+
+    public Collection<Comida> Recomendados(int id){
+        if(id >= count()-1){
+        return findTop2ByIdLessThanOrderByIdDesc(id);
+        }
+        else{
+            return findTop2ByIdGreaterThanOrderByIdAsc(id);
+        }
+
+    }
 }
