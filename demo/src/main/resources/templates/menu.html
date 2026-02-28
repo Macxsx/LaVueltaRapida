@@ -33,13 +33,22 @@
 <!-- ================= CONTENIDO ================= -->
 <main class="menu-container my-5">
 
-  <!-- ================= CLASICAS ================= -->
-  <section class="menu-category" id="clasicas">
-    <h2 class="category-title red">CLÁSICAS</h2>
+  <!-- 🔥 ITERAMOS CATEGORÍAS DINÁMICAMENTE -->
+  <section th:each="categoria : ${categorias}"
+           class="menu-category"
+           th:attr="id=${#strings.toLowerCase(categoria.name)}">
+
+    <!-- TÍTULO DINÁMICO -->
+    <h2 class="category-title"
+        th:text="${#strings.toUpperCase(categoria.name)}"
+        th:classappend="${categoria.name == 'Especiales' or categoria.name == 'Bebidas'} ? 'yellow' : 'red'">
+    </h2>
 
     <div class="menu-grid">
+
+      <!-- 🔥 ITERAMOS COMIDAS FILTRADAS -->
       <a th:each="comida : ${comidas}"
-         th:if="${comida.available and comida.category.getName() == 'Clasicas'}"
+         th:if="${comida.available and comida.category.id == categoria.id}"
          th:href="@{'/producto/' + ${comida.id}}"
          class="menu-card-link">
 
@@ -47,109 +56,16 @@
           <img th:src="@{${comida.image}}" th:alt="${comida.name}">
           <h4 th:text="${comida.name}"></h4>
           <p th:text="${comida.description}"></p>
+
           <div class="menu-card-footer">
             <span class="price"
               th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
             </span>
           </div>
         </div>
+
       </a>
-    </div>
-  </section>
 
-  <!-- ================= ESPECIALES ================= -->
-  <section class="menu-category" id="especiales">
-    <h2 class="category-title yellow">ESPECIALES</h2>
-
-    <div class="menu-grid">
-      <a th:each="comida : ${comidas}"
-         th:if="${comida.available and comida.category.getName() == 'Especiales'}"
-         th:href="@{'/producto/' + ${comida.id}}"
-         class="menu-card-link">
-
-        <div class="menu-card">
-          <img th:src="@{${comida.image}}" th:alt="${comida.name}">
-          <h4 th:text="${comida.name}"></h4>
-          <p th:text="${comida.description}"></p>
-          <div class="menu-card-footer">
-            <span class="price"
-              th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
-            </span>
-          </div>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ================= PICANTES ================= -->
-  <section class="menu-category" id="picantes">
-    <h2 class="category-title red">PICANTES</h2>
-
-    <div class="menu-grid">
-      <a th:each="comida : ${comidas}"
-         th:if="${comida.available and comida.category.getName() == 'Picantes'}"
-         th:href="@{'/producto/' + ${comida.id}}"
-         class="menu-card-link">
-
-        <div class="menu-card">
-          <img th:src="@{${comida.image}}" th:alt="${comida.name}">
-          <h4 th:text="${comida.name}"></h4>
-          <p th:text="${comida.description}"></p>
-          <div class="menu-card-footer">
-            <span class="price"
-              th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
-            </span>
-          </div>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ================= BEBIDAS ================= -->
-  <section class="menu-category" id="bebidas">
-    <h2 class="category-title yellow">BEBIDAS</h2>
-
-    <div class="menu-grid">
-      <a th:each="comida : ${comidas}"
-         th:if="${comida.available and comida.category.getName() == 'Bebidas'}"
-         th:href="@{'/producto/' + ${comida.id}}"
-         class="menu-card-link">
-
-        <div class="menu-card">
-          <img th:src="@{${comida.image}}" th:alt="${comida.name}">
-          <h4 th:text="${comida.name}"></h4>
-          <p th:text="${comida.description}"></p>
-          <div class="menu-card-footer">
-            <span class="price"
-              th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
-            </span>
-          </div>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ================= POSTRES ================= -->
-  <section class="menu-category" id="postres">
-    <h2 class="category-title red">POSTRES</h2>
-
-    <div class="menu-grid">
-      <a th:each="comida : ${comidas}"
-         th:if="${comida.available and comida.category.getName() == 'Postres'}"
-         th:href="@{'/producto/' + ${comida.id}}"
-         class="menu-card-link">
-
-        <div class="menu-card">
-          <img th:src="@{${comida.image}}" th:alt="${comida.name}">
-          <h4 th:text="${comida.name}"></h4>
-          <p th:text="${comida.description}"></p>
-          <div class="menu-card-footer">
-            <span class="price"
-              th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
-            </span>
-          </div>
-        </div>
-      </a>
     </div>
   </section>
 

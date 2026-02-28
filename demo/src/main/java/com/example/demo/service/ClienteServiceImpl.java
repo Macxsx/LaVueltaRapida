@@ -3,10 +3,11 @@ package com.example.demo.service;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Service;
 import com.example.demo.entitys.Cliente;
 import com.example.demo.repository.ClienteRepository;
 
+@Service
 public class ClienteServiceImpl implements ClienteService {
     
     @Autowired

@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.example.demo.entitys.Comida;
 import com.example.demo.service.ComidaService;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
+import com.example.demo.service.CategoriaService;
 
 
 
@@ -22,6 +21,9 @@ public class MenuController {
     @Autowired
     ComidaService comidaService;
 
+    @Autowired
+    CategoriaService categoriaService;
+
     // http://localhost:8080/producto
     @GetMapping("/")
     public String home() {
@@ -31,6 +33,7 @@ public class MenuController {
     //http://localhost:8080/producto/menu
     @GetMapping("/menu")
     public String mostrarMenu(Model model) {
+    model.addAttribute("categorias", categoriaService.findAll());
     model.addAttribute("comidas", comidaService.findAll());
         return "menu";
     }
@@ -44,8 +47,9 @@ public class MenuController {
     }   
 
     //http://localhost:8080/producto/menutabla
-        @GetMapping("/menutabla")
+    @GetMapping("/menutabla")
     public String mostrarMenuTabla(Model model) {
+    model.addAttribute("categorias", categoriaService.findAll());
     model.addAttribute("comidas", comidaService.findAll());
         return "menu-list";
     }

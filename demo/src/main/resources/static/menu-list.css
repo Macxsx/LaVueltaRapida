@@ -14,7 +14,7 @@
 /* ================================================= */
 
 .menu-hero {
-  padding: 100px 20px 20px 20px;
+  padding: 100px 20px 50px 20px;
   text-align: center;
   background: linear-gradient(135deg, #0f0f0f, #3a0000);
   border-bottom: 2px solid var(--red);
@@ -115,16 +115,16 @@
 }
 
 .menu-table td:nth-child(2) {
-  width: 60%; /* Nombre + descripción */
+  width: 55%; /* Nombre + descripción */
 }
 
 .menu-table td:nth-child(3) {
-  width: 150px; /* Precio */
+  width: 140px; /* Precio */
   text-align: right;
 }
 
 .menu-table td:nth-child(4) {
-  width: 40px; /* Columna vacía */
+  width: 220px; /* Acciones */
 }
 
 /* ================================================= */
@@ -173,8 +173,54 @@
 }
 
 /* ================================================= */
-/* ================= BOTON ELIMINAR =============== */
+/* ================= COLUMNA PRECIO ================= */
 /* ================================================= */
+
+.price-cell {
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffd700;
+  white-space: nowrap;
+  text-align: right;
+  padding-right: 30px;
+}
+
+/* ================================================= */
+/* ================= ACCIONES ADMIN ================= */
+/* ================================================= */
+
+.actions-cell {
+  vertical-align: middle;
+  width: 200px;
+}
+
+.actions-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+/* EDITAR */
+
+.btn-edit {
+  background-color: transparent;
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: #ffd700;
+  color: black;
+  transform: translateY(-2px);
+}
+
+/* ELIMINAR */
 
 .btn-delete {
   background-color: transparent;
@@ -190,7 +236,7 @@
 .btn-delete:hover {
   background-color: #e10600;
   color: white;
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
 
 /* ================================================= */
