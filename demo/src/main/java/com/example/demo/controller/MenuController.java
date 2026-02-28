@@ -17,7 +17,11 @@ public class MenuController {
     @Autowired
     ComidaService comidaService;
 
-
+    // http://localhost:8080/
+    @GetMapping("/")
+    public String home() {
+        return "index";
+    }
 
     //http://localhost:8080/menu
     @GetMapping("/menu")

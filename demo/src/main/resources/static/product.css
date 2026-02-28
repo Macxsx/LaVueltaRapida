@@ -3,10 +3,12 @@
 /* ================================================= */
 
 .product-detail.container {
-  background-color: black;
-  max-width: 1200px;   /* controla qué tan centrado */
-  margin: 0 auto;      /* centra horizontalmente */
-  padding: 60px 20px 60px; /* espacio superior e inferior */
+  background-color: #0f0f0f;
+  max-width: 1200px;
+  margin: 60px auto 100px; /* 🔥 separación arriba */
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
 /* ================================================= */
@@ -14,7 +16,6 @@
 /* ================================================= */
 
 main {
-  
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,33 +23,8 @@ main {
 }
 
 /* ================================================= */
-/* ===================== HERO ====================== */
+/* ================= PRODUCT GRID ================== */
 /* ================================================= */
-
-.menu-hero {
-  padding: 80px 20px;
-  text-align: center;
-  background: linear-gradient(45deg, #1a1a1a, #3a0000);
-}
-
-.menu-hero h1 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 40px;
-}
-
-.menu-hero span {
-  color: var(--red);
-}
-
-.menu-hero p {
-  margin-top: 10px;
-  color: var(--gray);
-}
-
-
-/* =====================================================
-   🔥 GRID DE 3 COLUMNAS (PRODUCTO)
-===================================================== */
 
 .product-detail {
   display: grid;
@@ -66,44 +42,52 @@ main {
   max-width: 500px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
 .product-info {
-  margin-top: 25px;
+  margin-top: 30px;
 }
 
 .product-info h1 {
   font-size: 32px;
   margin-bottom: 15px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
 }
 
 .product-info p {
   color: var(--gray);
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  max-width: 500px;
 }
 
 .product-info h2 {
-  color: var(--yellow);
+  color: var(--gold); /* 🟡 precio gold */
   margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 /* Botón */
 .btn-primary {
-  color: black;
   background: var(--red);
+  color: white;
   border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
+  padding: 14px 32px;
+  border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: 250px;
+  margin-top: 100px;
+  box-shadow: 0 8px 25px rgba(225, 6, 0, 0.4);
 }
 
 .btn-primary:hover {
   background: var(--red-dark);
+  transform: translateY(-2px);
 }
 
 /* =========================
@@ -113,25 +97,28 @@ main {
 .product-options {
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 40px;
+  padding-top: 40px;
 }
 
 .option-group h4 {
   margin-bottom: 15px;
+  font-size: 16px;
+  letter-spacing: 1px;
 }
 
 .option-group label {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: var(--gray);
   cursor: pointer;
   transition: 0.2s;
 }
 
 .option-group label:hover {
-  color: var(--white);
+  color: white;
 }
 
 /* =========================
@@ -139,66 +126,81 @@ main {
 ========================= */
 
 .recommendations {
-  background: var(--black-2);
-  padding: 25px;
-  border-radius: 16px;
+  background: #141414;
+  padding: 30px;
+  border-radius: 18px;
+  border: 1px solid #1f1f1f;
 }
 
 .recommendations h3 {
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
 }
 
 #recommendations-grid {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 30px; /* 🔥 más separación entre cards */
 }
 
 .recommendation-card {
+  margin-top: 25px;
   background: #1b1b22;
-  border-radius: 14px;
-  padding: 15px;
-  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #242424;
   transition: 0.3s;
   cursor: pointer;
 }
 
 .recommendation-card:hover {
   border-color: var(--red);
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
 .recommendation-card img {
   width: 100%;
-  height: 110px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 12px;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
 .recommendation-card h4 {
   margin-bottom: 8px;
   font-size: 15px;
+  color: --gold;
 }
 
 .recommendation-card p {
   font-size: 13px;
   color: var(--gray);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  line-height: 1.4;
 }
 
 .recommendation-card span {
-  color: var(--yellow);
-  font-weight: 600;
+  color: var(--gold); /* 🟡 precio gold */
+  font-weight: 700;
+  font-size: 14px;
 }
 
-/* =====================================================
-   RESPONSIVE
-===================================================== */
+/* ================================================= */
+/* ================= RESPONSIVE ==================== */
+/* ================================================= */
 
 @media (max-width: 1000px) {
+
+  .product-detail.container {
+    padding: 30px;
+    margin: 40px auto 80px;
+  }
+
   .product-detail {
     grid-template-columns: 1fr;
+    gap: 50px;
   }
 
   .product-image img {
@@ -208,4 +210,5 @@ main {
   .btn-primary {
     width: 100%;
   }
+
 }

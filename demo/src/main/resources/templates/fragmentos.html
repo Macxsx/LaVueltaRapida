@@ -15,13 +15,13 @@
         <img class="logo-icon" 
              th:src="@{/Images/LogoBandera.png}" 
              alt="Logo">
-        <span class="logo-text">LA VUELTA RÁPIDA</span>
+        <a th:href="@{/}" class="logo-text">LA VUELTA RÁPIDA</a>
       </div>
 
       <nav class="header-nav">
         <a th:href="@{/producto/menu}" class="nav-link">MENÚ</a>
         <a th:href="@{/#experiencia}" class="nav-link">EXPERIENCIA</a>
-        <a th:href="@{/#ranking}" class="nav-link">RANKINGS</a>
+        <a th:href="@{/f1-standings}">CAMPEONATO</a>
         <a th:href="@{/#eventos}" class="nav-link">EVENTOS F1</a>
       </nav>
 
@@ -75,11 +75,11 @@
         <nav class="footer-col">
           <h3 class="footer-col-title">MENÚ</h3>
           <ul class="footer-links">
-            <li><a href="#">Clásicas</a></li>
-            <li><a href="#">Especiales</a></li>
-            <li><a href="#">Picantes</a></li>
-            <li><a href="#">Bebidas</a></li>
-            <li><a href="#">Postres</a></li>
+            <a th:href="@{/producto/menu#clasicas}">Clásicas</a>
+            <a th:href="@{/producto/menu#especiales}">Especiales</a>
+            <a th:href="@{/producto/menu#picantes}">Picantes</a>
+            <a th:href="@{/producto/menu#bebidas}">Bebidas</a>
+            <a th:href="@{/producto/menu#postres}">Postres</a>
             <li><a th:href="@{/producto/menutabla}">Menu en lista</a></li>
           </ul>
         </nav>
@@ -92,7 +92,6 @@
             <li><a href="#">Ver carreras en vivo</a></li>
             <li><a href="#">Cumpleaños</a></li>
             <li><a href="#">Eventos corporativos</a></li>
-            <li><a th:href="@{/f1-standings}">Standings</a></li>
           </ul>
         </nav>
 
@@ -100,11 +99,11 @@
         <nav class="footer-col">
           <h3 class="footer-col-title">MARCA</h3>
           <ul class="footer-links">
-            <li><a href="#">Nuestra historia</a></li>
-            <li><a href="#">Trabaja con nosotros</a></li>
-            <li><a href="#">Franquicias</a></li>
-            <li><a href="#">Contacto</a></li>
-            <li><a href="#">Ubicaciones</a></li>
+          <li><a href="#">Nuestra historia</a></li>
+          <li><a href="#">Trabaja con nosotros</a></li>
+          <li><a href="#">Franquicias</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="#">Ubicaciones</a></li>
           </ul>
         </nav>
 
@@ -112,7 +111,7 @@
 
       <div class="footer-bottom">
         <p class="footer-copyright">
-          © 2024 La Vuelta Rápida. Todos los derechos reservados.
+          © 2026 La Vuelta Rápida. Todos los derechos reservados.
         </p>
 
         <div class="footer-legal">
