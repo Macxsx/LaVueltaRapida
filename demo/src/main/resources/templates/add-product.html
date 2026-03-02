@@ -34,8 +34,10 @@
       <p th:text="${editMode} ? 'Modifica los datos del producto seleccionado' : 'Completa los datos del producto que deseas agregar al menú'"></p>
     </div>
 
-    <form th:action="${editMode} ? @{/producto/update/{id}(id=${comida.id})} : @{/producto/add}"
+    <form th:action="@{/producto/add} "
           th:object="${comida}" method="post" class="product-form">
+
+    <input type="hidden" th:field="*{id}">
 
       <div class="form-grid">
 
