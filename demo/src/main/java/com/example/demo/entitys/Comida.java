@@ -6,7 +6,6 @@ public class Comida {
     private String name;
     private String description;
     private float price;
-    private String currency;
     private String image;
     private boolean available;
     private Categoria category;
@@ -16,13 +15,11 @@ public class Comida {
     }
 
     // Constructor completo
-    public Comida(Integer id, String name, String description, float price,
-                  String currency, String image, boolean available, Categoria category) {
+    public Comida(Integer id, String name, String description, float price, String image, boolean available, Categoria category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.currency = currency;
         this.image = image;
         this.available = available;
         this.category = category;
@@ -41,9 +38,6 @@ public class Comida {
 
     public float getPrice() { return price; }
     public void setPrice(float price) { this.price = price; }
-
-    public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
 
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }

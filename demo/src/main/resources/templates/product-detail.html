@@ -33,7 +33,7 @@
         <div class="product-info">
           <h1 th:text="${comida.name}"></h1>
           <p th:text="${comida.description}"></p>
-          <h2 th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}"></h2>
+          <h2 th:text="COP + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}"></h2>
         </div>
       </div>
 
@@ -84,7 +84,7 @@
               <a th:href="@{'/producto/' + ${rec.id}}">
                 <img th:src="@{${rec.image}}" th:alt="${rec.name}">
                 <p th:text="${rec.name}"></p>
-                <span th:text="${rec.currency} + ' ' + ${#numbers.formatDecimal(rec.price,1,2)}"></span>
+                <span th:text="COP + ' ' + ${#numbers.formatDecimal(rec.price,1,2)}"></span>
               </a>
 
             </div>

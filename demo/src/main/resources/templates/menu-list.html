@@ -74,7 +74,7 @@
               </td>
 
               <td class="price-cell"
-                  th:text="${comida.currency} + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
+                  th:text="COP + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}">
               </td>
 
               <td class="actions-cell" onclick="event.stopPropagation();">

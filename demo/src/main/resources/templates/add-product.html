@@ -66,29 +66,20 @@
           </select>
         </div>
 
-        <div class="form-group full-width">
+        <div class="form-group">
           <label for="image">URL de la imagen</label>
           <input type="url" id="image" th:field="*{image}"
                  placeholder="https://ejemplo.com/imagen.jpg" required>
         </div>
 
         <div class="form-group">
-          <label for="currency">Moneda</label>
-          <select id="currency" th:field="*{currency}">
-            <option value="COP">COP - Peso Colombiano</option>
-            <option value="USD">USD - Dólar</option>
-            <option value="EUR">EUR - Euro</option>
-          </select>
-        </div>
-
-        <div class="form-group">
           <label class="toggle-label">Disponibilidad</label>
           <div class="toggle-wrapper">
             <label class="toggle-switch">
-              <input type="checkbox" th:field="*{available}">
+              <input type="checkbox" th:field="*{available}" id="availableToggle">
               <span class="toggle-slider"></span>
             </label>
-            <span class="toggle-text">Disponible en el menú</span>
+            <span class="toggle-text" id="toggleText">Disponible en el menú</span>
           </div>
         </div>
 
@@ -140,6 +131,25 @@
       placeholder.style.display = 'flex';
     }
   });
+
+  const toggle = document.getElementById('availableToggle');
+  const toggleText = document.getElementById('toggleText');
+  const toggleWrapper = toggle.closest('.toggle-wrapper');
+
+  function updateToggleState() {
+    if (toggle.checked) {
+      toggleText.textContent = 'Disponible en el menú';
+      toggleWrapper.classList.remove('toggle-off');
+      toggleWrapper.classList.add('toggle-on');
+    } else {
+      toggleText.textContent = 'No disponible';
+      toggleWrapper.classList.remove('toggle-on');
+      toggleWrapper.classList.add('toggle-off');
+    }
+  }
+
+  toggle.addEventListener('change', updateToggleState);
+  updateToggleState();
 </script>
 
 </body>

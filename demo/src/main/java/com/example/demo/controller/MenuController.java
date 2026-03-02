@@ -62,7 +62,7 @@ public class MenuController {
 
     @GetMapping("/add")
     public String MostrarFormularioCrear(Model model) {
-        Comida comida = new Comida(null, "", "", 0.0f, "COP", "", true, null);
+        Comida comida = new Comida(null, "", "", 0.0f, "", true, null);
         model.addAttribute("comida", comida);
         model.addAttribute("categorias", categoriaService.findAll());
         return "add-product";
