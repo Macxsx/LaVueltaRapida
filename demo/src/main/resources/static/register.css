@@ -196,6 +196,18 @@
   box-shadow: 0 12px 30px rgba(225, 6, 0, 0.4);
 }
 
+.password-error {
+  display: none;
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.input-error {
+  border-color: #ff4d4d !important;
+  box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.15) !important;
+}
+
 .register-footer {
   text-align: center;
   padding: 0 40px 32px;
