@@ -57,9 +57,11 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String registerPost(@ModelAttribute Cliente cliente) {
+    public String registerPost(@ModelAttribute Cliente cliente, HttpSession session) {
         clienteService.save(cliente);
-        return "redirect:/login";
+        session.setAttribute("loggedUser", cliente.getName());
+        session.setAttribute("loggedUserId", cliente.getId());
+        return "redirect:/";
     }
 
 @GetMapping("/perfil")
