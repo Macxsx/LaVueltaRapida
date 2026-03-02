@@ -31,8 +31,21 @@
           <a th:href="@{/register}" class="btn">REGISTRARSE</a>
         </div>
         <div th:if="${session.loggedUser != null}" class="header-user">
-          <span class="user-name" th:text="${session.loggedUser}"></span>
+
+          <!-- Nombre Usuario (ahora es link) -->
+          <a th:href="@{/perfil}" class="user-name-link">
+            <span th:text="${session.loggedUser}"></span>
+          </a>
+
+                    <!-- Carrito -->
+          <a th:href="@{/carrito}" class="cart-btn">
+            🛒
+            <span class="cart-badge" th:text="${cartCount} ?: 0"></span>
+          </a>
+
+          <!-- Logout -->
           <a th:href="@{/logout}" class="btn btn-logout">CERRAR SESIÓN</a>
+
         </div>
       </div>
 

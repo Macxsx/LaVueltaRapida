@@ -62,11 +62,12 @@ public class LoginController {
         return "redirect:/login";
     }
 
-    @GetMapping("/perfil")
-    public String Perfil(Model model, @RequestParam int id) {
-        model.addAttribute("cliente", clienteService.findById(id)); 
-        return "perfil";
-    }
+@GetMapping("/perfil")
+public String perfil(Model model, HttpSession session) {
+    Integer id = (Integer) session.getAttribute("loggedUserId");
+    model.addAttribute("cliente", clienteService.findById(id));
+    return "perfil";
+}
     
 
     @GetMapping("/perfil/delete")
