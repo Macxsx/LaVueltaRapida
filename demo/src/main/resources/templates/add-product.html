@@ -74,12 +74,10 @@
 
         <div class="form-group">
           <label class="toggle-label">Disponibilidad</label>
-          <div class="toggle-wrapper">
-            <label class="toggle-switch">
-              <input type="checkbox" th:field="*{available}" id="availableToggle">
-              <span class="toggle-slider"></span>
-            </label>
-            <span class="toggle-text" id="toggleText">Disponible en el menú</span>
+          <div class="form-check form-switch mt-2">
+            <input class="form-check-input" type="checkbox" role="switch"
+                   th:field="*{available}" id="availableToggle">
+            <label class="form-check-label" id="toggleText" for="availableToggle">Disponible en el menú</label>
           </div>
         </div>
 
@@ -134,17 +132,16 @@
 
   const toggle = document.getElementById('availableToggle');
   const toggleText = document.getElementById('toggleText');
-  const toggleWrapper = toggle.closest('.toggle-wrapper');
 
   function updateToggleState() {
     if (toggle.checked) {
       toggleText.textContent = 'Disponible en el menú';
-      toggleWrapper.classList.remove('toggle-off');
-      toggleWrapper.classList.add('toggle-on');
+      toggleText.classList.remove('toggle-off');
+      toggleText.classList.add('toggle-on');
     } else {
       toggleText.textContent = 'No disponible';
-      toggleWrapper.classList.remove('toggle-on');
-      toggleWrapper.classList.add('toggle-off');
+      toggleText.classList.remove('toggle-on');
+      toggleText.classList.add('toggle-off');
     }
   }
 
