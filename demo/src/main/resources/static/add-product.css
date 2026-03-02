@@ -196,22 +196,16 @@
 }
 
 .form-check.form-switch .form-check-input {
-  background-color: #2a2a2a;
-  border-color: #444;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23888'/%3e%3c/svg%3e");
 }
 
 .form-check.form-switch .form-check-input:checked {
   background-color: #198754;
   border-color: #198754;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 
 .form-check.form-switch .form-check-input:focus {
-  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.25);
-  border-color: #198754;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23888'/%3e%3c/svg%3e");
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
 }
 
 .form-check-label {
