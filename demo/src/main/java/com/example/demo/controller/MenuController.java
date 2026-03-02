@@ -62,13 +62,16 @@ public class MenuController {
 
     @GetMapping("/add")
     public String MostrarFormularioCrear(Model model) {
-        Comida comida = new Comida(null, "", "", 0.0f, "", "", false, null);
+        Comida comida = new Comida(null, "", "", 0.0f, "COP", "", true, null);
         model.addAttribute("comida", comida);
+        model.addAttribute("categorias", categoriaService.findAll());
         return "add-product";
     }
 
     @PostMapping("/add")
-    public String AdicionarComida(@ModelAttribute("comida") Comida comida) {
+    public String AdicionarComida(@ModelAttribute("comida") Comida comida,
+                                  @org.springframework.web.bind.annotation.RequestParam("categoryId") Integer categoryId) {
+        comida.setCategory(categoriaService.findById(categoryId));
         comidaService.save(comida);
         return "redirect:/producto/menu";
     }
