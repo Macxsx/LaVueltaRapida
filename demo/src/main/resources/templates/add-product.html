@@ -69,11 +69,21 @@
       </div>
 
       <div class="image-row">
-        <div class="image-url-col">
+        <div class="image-left-col">
           <div class="form-group">
             <label for="image">URL de la imagen</label>
             <input type="url" id="image" th:field="*{image}"
                    placeholder="https://ejemplo.com/imagen.jpg" required>
+          </div>
+          <div class="form-group">
+            <label class="toggle-label">Disponibilidad</label>
+            <div class="form-check form-switch mt-2">
+              <input class="form-check-input" type="checkbox" role="switch"
+                     th:field="*{available}" id="availableToggle">
+              <label class="form-check-label" for="availableToggle" id="toggleText"
+                     th:text="${comida.available} ? 'Disponible en el menú' : 'No disponible'">
+              </label>
+            </div>
           </div>
         </div>
         <div class="image-preview-col">
@@ -88,17 +98,6 @@
             </div>
             <img id="previewImg" src="" alt="Vista previa" style="display:none;">
           </div>
-        </div>
-      </div>
-
-      <div class="form-group full-width">
-        <label class="toggle-label">Disponibilidad</label>
-        <div class="form-check form-switch mt-2">
-          <input class="form-check-input" type="checkbox" role="switch"
-                 th:field="*{available}" id="availableToggle">
-          <label class="form-check-label" for="availableToggle" id="toggleText"
-                 th:text="${comida.available} ? 'Disponible en el menú' : 'No disponible'">
-          </label>
         </div>
       </div>
 
