@@ -30,13 +30,22 @@
                th:alt="${comida.name}">
         </div>
 
-        <div class="product-info">
-          <h1 th:text="${comida.name}"></h1>
-          <p th:text="${comida.description}"></p>
-          <h2 th:text="COP + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}"></h2>
-        </div>
-      </div>
+      <div class="product-info">
 
+        <!-- 🔴 Categoría arriba -->
+        <span class="category-badge"
+              th:text="${comida.category.name}">
+        </span>
+
+        <!-- Nombre del producto -->
+        <h1 th:text="${comida.name}"></h1>
+
+        <p th:text="${comida.description}"></p>
+
+        <h2 th:text="COP + ' ' + ${#numbers.formatDecimal(comida.price,1,2)}"></h2>
+
+      </div>
+    </div>
       <!-- CENTER -->
       <div class="product-center">
 
@@ -84,7 +93,7 @@
               <a th:href="@{'/producto/' + ${rec.id}}">
                 <img th:src="@{${rec.image}}" th:alt="${rec.name}">
                 <p th:text="${rec.name}"></p>
-                <span th:text="COP + ' ' + ${#numbers.formatDecimal(rec.price,1,2)}"></span>
+                <span th:text="COP + ' ' + ${rec.price}"></span>
               </a>
 
             </div>

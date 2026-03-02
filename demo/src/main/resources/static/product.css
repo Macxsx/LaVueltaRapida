@@ -187,6 +187,19 @@ main {
   font-size: 14px;
 }
 
+.category-badge {
+  display: inline-block;
+  margin: 10px 0 15px 0;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 20px;
+  background-color: #991B1B;
+  color: white;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
 /* ================================================= */
 /* ================= RESPONSIVE ==================== */
 /* ================================================= */
