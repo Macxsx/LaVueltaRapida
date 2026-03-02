@@ -15,6 +15,8 @@ public interface ClienteService {
     public Cliente findById(int id);
 
     public boolean validateCredentials(String username, String password);
+
+    public Cliente findByUsername(String username);
     
     
 }

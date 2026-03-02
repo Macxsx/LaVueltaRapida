@@ -26,8 +26,14 @@
       </nav>
 
       <div class="header-actions">
-        <a th:href="@{/login}" class="btn">INICIAR SESIÓN</a>
-        <a th:href="@{/register}" class="btn">REGISTRARSE</a>
+        <div th:if="${session.loggedUser == null}">
+          <a th:href="@{/login}" class="btn">INICIAR SESIÓN</a>
+          <a th:href="@{/register}" class="btn">REGISTRARSE</a>
+        </div>
+        <div th:if="${session.loggedUser != null}" class="header-user">
+          <span class="user-name" th:text="${session.loggedUser}"></span>
+          <a th:href="@{/logout}" class="btn btn-logout">CERRAR SESIÓN</a>
+        </div>
       </div>
 
     </div>
@@ -80,7 +86,6 @@
             <a th:href="@{/producto/menu#picantes}">Picantes</a>
             <a th:href="@{/producto/menu#bebidas}">Bebidas</a>
             <a th:href="@{/producto/menu#postres}">Postres</a>
-            <li><a th:href="@{/producto/menutabla}">Menu en lista</a></li>
           </ul>
         </nav>
 

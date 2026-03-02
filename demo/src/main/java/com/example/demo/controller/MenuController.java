@@ -25,11 +25,6 @@ public class MenuController {
     @Autowired
     CategoriaService categoriaService;
 
-    // http://localhost:8080/producto
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
 
     //http://localhost:8080/producto/menu
     @GetMapping("/menu")

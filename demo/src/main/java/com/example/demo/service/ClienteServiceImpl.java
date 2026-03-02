@@ -44,5 +44,10 @@ public class ClienteServiceImpl implements ClienteService {
         return false;
     }
 
+    @Override
+    public Cliente findByUsername(String username) {
+        return repo.findByUsername(username);
+    }
+
     
 }

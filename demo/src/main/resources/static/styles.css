@@ -118,6 +118,31 @@ a {
   background-color: var(--red-dark);
 }
 
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--gold);
+}
+
+.btn-logout {
+  background-color: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-size: 13px;
+}
+
+.btn-logout:hover {
+  background-color: var(--red);
+  color: var(--white);
+}
+
 /* ===== HERO SECTION ===== */
 .hero-section {
   position: relative;
