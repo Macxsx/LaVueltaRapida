@@ -13,6 +13,8 @@ public interface ClienteService {
     public void deleteById(int id);
     
     public Cliente findById(int id);
+
+    public boolean validateCredentials(String username, String password);
     
     
 }

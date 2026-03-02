@@ -59,7 +59,7 @@
 
           <div class="menu-card-footer">
             <span class="price"
-              th:text="COP + ' ' + ${comida.price}"></span>
+              th:text="'$ ' + ${#numbers.formatDecimal(comida.price, 0, 'POINT', 0, 'POINT')} + ' COP'"></span>
             </span>
           </div>
         </div>

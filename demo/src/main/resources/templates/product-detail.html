@@ -32,19 +32,24 @@
 
       <div class="product-info">
 
-        <!-- 🔴 Categoría arriba -->
         <span class="category-badge"
               th:text="${comida.category.name}">
         </span>
 
-        <!-- Nombre del producto -->
         <h1 th:text="${comida.name}"></h1>
 
         <p th:text="${comida.description}"></p>
 
-        <h2 th:text="COP + ' ' + ${comida.price}"></h2>
+        <h2 th:text="'$ ' + ${#numbers.formatDecimal(comida.price, 0, 'POINT', 0, 'POINT')} + ' COP'"></h2>
+
+            <input type="hidden" name="id" th:value="${comida.id}">
+            <button type="submit" class="btn-order">
+                <span class="cart-icon">🛒</span>
+                AGREGAR AL CARRITO
+            </button>
 
       </div>
+
     </div>
       <!-- CENTER -->
       <div class="product-center">
@@ -55,25 +60,49 @@
 
           <div class="product-options">
 
-            <div class="option-group">
-              <h4>+ Bebidas</h4>
-              <label><input type="checkbox" name="extras" value="Coca-Cola"> Coca-Cola</label>
-              <label><input type="checkbox" name="extras" value="Sprite"> Sprite</label>
-              <label><input type="checkbox" name="extras" value="Mr Tea"> Mr. Tea</label>
+            <div class="option-card">
+
+              <h4 class="option-title">+ Bebidas</h4>
+
+              <div class="option-item">
+                <input type="checkbox" id="coca" name="extras" value="Coca-Cola">
+                <label for="coca">Coca-Cola</label>
+              </div>
+
+              <div class="option-item">
+                <input type="checkbox" id="sprite" name="extras" value="Sprite">
+                <label for="sprite">Sprite</label>
+              </div>
+
+              <div class="option-item">
+                <input type="checkbox" id="mrtea" name="extras" value="Mr Tea">
+                <label for="mrtea">Mr. Tea</label>
+              </div>
+
             </div>
 
-            <div class="option-group">
-              <h4>+ Acompañamientos</h4>
-              <label><input type="checkbox" name="extras" value="Pit Rolls"> Pit Rolls</label>
-              <label><input type="checkbox" name="extras" value="Papas"> Papas</label>
-              <label><input type="checkbox" name="extras" value="Alitas"> Alitas</label>
+            <div class="option-card">
+
+            <h4 class="option-title">+ Acompañamientos</h4>
+
+            <div class="option-item">
+              <input type="checkbox" id="coca" name="extras" value="Coca-Cola">
+              <label for="coca">Pit Rolls</label>
+            </div>
+
+            <div class="option-item">
+              <input type="checkbox" id="sprite" name="extras" value="Sprite">
+              <label for="sprite">Papas</label>
+            </div>
+
+            <div class="option-item">
+              <input type="checkbox" id="mrtea" name="extras" value="Mr Tea">
+              <label for="mrtea">Alitas</label>
             </div>
 
           </div>
 
-          <button type="submit" class="btn-order">
-            AGREGAR AL CARRITO
-          </button>
+          </div>
 
         </form>
 
@@ -93,7 +122,7 @@
               <a th:href="@{'/producto/' + ${rec.id}}">
                 <img th:src="@{${rec.image}}" th:alt="${rec.name}">
                 <p th:text="${rec.name}"></p>
-                <span th:text="COP + ' ' + ${rec.price}"></span>
+                <span th:text="'$ ' + ${#numbers.formatDecimal(rec.price, 0, 'POINT', 0, 'POINT')} + ' COP'"></span>
               </a>
 
             </div>
@@ -107,6 +136,9 @@
   </main>
 
   <div th:replace="fragmentos :: footer"></div>
-  
+  <div id="toast" class="toast-notification">
+  ✔ Producto agregado al carrito
+</div>
+<script th:src="@{/product-detail.js}"></script>
 </body>
 </html>

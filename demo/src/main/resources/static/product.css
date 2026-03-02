@@ -98,7 +98,6 @@ main {
   display: flex;
   flex-direction: column;
   gap: 40px;
-  padding-top: 40px;
 }
 
 .option-group h4 {
@@ -199,6 +198,159 @@ main {
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
+
+
+/* ================================================= */
+/* ================= BOTÓN PRO ===================== */
+/* ================================================= */
+
+.btn-order {
+  margin-top: 25px;
+  width: 100%;
+  padding: 18px 28px;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  background: linear-gradient(135deg, #e10600, #7a0000);
+  color: white;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  box-shadow: 0 12px 30px rgba(225, 6, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glow dinámico */
+.btn-order::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: 0.6s;
+}
+
+.btn-order:hover::before {
+  left: 100%;
+}
+
+.btn-order:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 18px 45px rgba(225, 6, 0, 0.7);
+  background: linear-gradient(135deg, #ff1a1a, #990000);
+}
+
+.btn-order:active {
+  transform: scale(0.96);
+}
+
+.cart-icon {
+  font-size: 18px;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 rgba(225, 6, 0, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(225, 6, 0, 0.6); }
+  100% { box-shadow: 0 0 0 rgba(225, 6, 0, 0.4); }
+}
+
+.btn-order {
+  animation: pulseGlow 2.5s infinite;
+}
+
+/* ================================================= */
+/* =============== OPTION CARDS ==================== */
+/* ================================================= */
+
+.option-card {
+  background: #141414;
+  padding: 25px;
+  border-radius: 18px;
+  border: 1px solid #1f1f1f;
+  transition: 0.3s ease;
+}
+
+.option-card:hover {
+  border-color: #e10600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+.option-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  color: white;
+}
+
+/* ================================================= */
+/* ============= CHECKBOX PERSONALIZADO =========== */
+/* ================================================= */
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.option-item input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #444;
+  border-radius: 6px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.option-item input[type="checkbox"]:hover {
+  border-color: #e10600;
+}
+
+.option-item input[type="checkbox"]:checked {
+  background-color: #e10600;
+  border-color: #e10600;
+}
+
+.option-item input[type="checkbox"]:checked::after {
+  content: "✔";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+}
+
+.option-item label {
+  color: #aaa;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.option-item:hover label {
+  color: white;
+}
+
+
 
 /* ================================================= */
 /* ================= RESPONSIVE ==================== */

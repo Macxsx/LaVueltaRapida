@@ -58,8 +58,9 @@
 
             <!-- 🔥 ITERAMOS COMIDAS FILTRADAS POR CATEGORÍA -->
             <tr th:each="comida : ${comidas}"
-                th:if="${comida.available and comida.category.id == categoria.id}"
+                th:if="${comida.category.id == categoria.id}"
                 th:onclick="'window.location.href=\'/producto/' + ${comida.id} + '\''"
+                th:classappend="${!comida.available} ? 'row-unavailable' : ''"
                 class="clickable-row">
 
               <td>
@@ -74,7 +75,12 @@
               </td>
 
               <td class="price-cell"
-                  th:text="COP + ' ' + ${comida.price}"></td>
+                  th:text="'$ ' + ${#numbers.formatDecimal(comida.price, 0, 'POINT', 0, 'POINT')} + ' COP'"></td>
+              </td>
+
+              <td class="status-cell"
+                  th:text="${comida.available} ? 'Disponible' : 'No disponible'"
+                  th:classappend="${comida.available} ? ' status-available' : ' status-unavailable'">
               </td>
 
               <td class="actions-cell" onclick="event.stopPropagation();">

@@ -35,5 +35,14 @@ public class ClienteServiceImpl implements ClienteService {
         return repo.findById(id);
     }
 
+    @Override
+    public boolean validateCredentials(String username, String password) {
+        Cliente cliente = repo.findByUsername(username);
+        if (cliente != null && cliente.getPassword().equals(password)) {
+            return true;
+        }
+        return false;
+    }
+
     
 }

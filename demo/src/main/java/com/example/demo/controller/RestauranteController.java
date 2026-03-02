@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
+
 @Controller
 public class RestauranteController {
 
@@ -19,10 +20,10 @@ public class RestauranteController {
         return "f1-standings";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+
+
+    
+
 }
     
     

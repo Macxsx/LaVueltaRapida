@@ -19,6 +19,7 @@ public class ClienteRepository {
         "Pablo",
         "García",
         "PabloGarcia21@gmail.com",
+        "pablo123",
         "123456",
         "Cra 7 #40-62, Bogotá",
         "3001234567"
@@ -29,6 +30,7 @@ public class ClienteRepository {
                 "María",
                 "Gómez",
                 "maria.gomez@email.com",
+                "maria123",
                 "maria2024",
                 "Cl 45 #12-30, Medellín",
                 "3019876543"
@@ -39,6 +41,7 @@ public class ClienteRepository {
                 "Andrés",
                 "Martínez",
                 "andres.martinez@email.com",
+                "andres123",
                 "andres789",
                 "Av 68 #23-10, Cali",
                 "3024567890"
@@ -49,6 +52,7 @@ public class ClienteRepository {
                 "Laura",
                 "Ramírez",
                 "laura.ramirez@email.com",
+                "laura123",
                 "lauraPass",
                 "Cra 15 #88-21, Barranquilla",
                 "3106543210"
@@ -59,6 +63,7 @@ public class ClienteRepository {
                 "Camilo",
                 "Torres",
                 "camilo.torres@email.com",
+                "camilito20",
                 "camilo123",
                 "Cl 100 #19-50, Bucaramanga",
                 "3157891234"
@@ -91,5 +96,12 @@ public class ClienteRepository {
     
     public void deleteById(Integer id) {
         clientes.remove(id);
+    }
+
+    public Cliente findByUsername(String username) {
+        return clientes.values().stream()
+                .filter(cliente -> cliente.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
     }
 }

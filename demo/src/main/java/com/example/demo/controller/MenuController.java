@@ -47,13 +47,14 @@ public class MenuController {
     return "product-detail";
     }   
 
-    //http://localhost:8080/producto/menutabla
+    
     @GetMapping("/menutabla")
     public String mostrarMenuTabla(Model model) {
     model.addAttribute("categorias", categoriaService.findAll());
     model.addAttribute("comidas", comidaService.findAll());
         return "menu-list";
     }
+
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {

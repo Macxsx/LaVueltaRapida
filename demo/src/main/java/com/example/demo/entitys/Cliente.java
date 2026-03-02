@@ -5,15 +5,17 @@ public class Cliente {
     private String name;
     private String Apellido;
     private String email;
+    private String username;
     private String password;
     private String direccion;
     private String telefono;
 
-    public Cliente(Integer id, String name, String apellido, String email, String password, String direccion, String telefono) {
+    public Cliente(Integer id, String name, String apellido, String email, String username, String password, String direccion, String telefono) {
         this.id = id;
         this.name = name;
         Apellido = apellido;
         this.email = email;
+        this.username = username;
         this.password = password;
         this.direccion = direccion;
         this.telefono = telefono;
@@ -76,6 +78,14 @@ public class Cliente {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     

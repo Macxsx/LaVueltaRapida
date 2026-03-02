@@ -97,29 +97,8 @@ a {
   gap: 16px;
 }
 
-.btn-login {
-  height: 42px;
-  padding: 0 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--red);
-  color: var(--red);
-  background: transparent;
-  font-weight: 400;
-  font-size: 16px;
-  letter-spacing: -0.5px;
-  line-height: 20px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
 
-.btn-login:hover {
-  background-color: var(--red);
-  color: var(--white);
-}
-
-.btn-order {
+.btn {
   height: 40px;
   padding: 0 24px;
   display: inline-flex;
@@ -135,7 +114,7 @@ a {
   transition: background-color 0.2s;
 }
 
-.btn-order:hover {
+.btn:hover {
   background-color: var(--red-dark);
 }
 
