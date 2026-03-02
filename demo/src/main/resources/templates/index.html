@@ -142,10 +142,13 @@
         <div class="top-pizzas-grid">
           <a th:each="comida : ${comidas}"
             th:href="@{'/producto/' + ${comida.id}}"
-            class="menu-card-link">
+            class="pizza-card">
+          <div class="pizza-card-img-wrapper">
+            <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="pizza-card-img">
+          </div>
 
-            <div class="menu-card">
-              <img th:src="@{${comida.image}}" th:alt="${comida.name}">
+            <div class="pizza-card-body">
+              <div class="pizza-card-accent"></div>
               <h4 th:text="${comida.name}"></h4>
               <p th:text="${comida.description}"></p>
             </div>
