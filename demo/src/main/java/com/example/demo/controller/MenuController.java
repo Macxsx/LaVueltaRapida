@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Controller;
 
 
 
@@ -63,6 +65,7 @@ public class MenuController {
         Comida comida = new Comida(null, "", "", 0.0f, "", true, null);
         model.addAttribute("comida", comida);
         model.addAttribute("categorias", categoriaService.findAll());
+        model.addAttribute("editMode", false);
         return "add-product";
     }
 
@@ -71,15 +74,26 @@ public class MenuController {
                                   @org.springframework.web.bind.annotation.RequestParam("categoryId") Integer categoryId) {
         comida.setCategory(categoriaService.findById(categoryId));
         comidaService.save(comida);
-        return "redirect:/producto/menu";
+        return "redirect:/producto/menutabla";
     }
     
     @GetMapping("/update/{id}")
     public String ActualizarComida(@PathVariable("id") Integer id, Model model) {
         Comida comida = comidaService.findById(id);
         model.addAttribute("comida", comida);
+        model.addAttribute("categorias", categoriaService.findAll());
+        model.addAttribute("editMode", true);
         return "add-product";
+    }
 
+    @PostMapping("/update/{id}")
+    public String GuardarActualizacion(@PathVariable("id") Integer id,
+                                       @ModelAttribute("comida") Comida comida,
+                                       @org.springframework.web.bind.annotation.RequestParam("categoryId") Integer categoryId) {
+        comida.setId(id);
+        comida.setCategory(categoriaService.findById(categoryId));
+        comidaService.save(comida);
+        return "redirect:/producto/menutabla";
     }
     
     
