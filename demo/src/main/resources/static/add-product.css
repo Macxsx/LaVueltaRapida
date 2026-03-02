@@ -236,11 +236,11 @@
   transition: 0.3s ease;
 }
 
-.toggle-switch input:checked ~ .toggle-slider {
+.toggle-switch input:checked + .toggle-slider {
   background: var(--red);
 }
 
-.toggle-switch input:checked ~ .toggle-slider::before {
+.toggle-switch input:checked + .toggle-slider::before {
   transform: translateX(24px);
   background: white;
 }
