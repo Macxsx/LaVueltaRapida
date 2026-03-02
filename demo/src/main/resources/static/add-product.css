@@ -101,7 +101,7 @@
   text-transform: uppercase;
 }
 
-.form-group input,
+.form-group input:not(.form-check-input),
 .form-group textarea,
 .form-group select {
   background: #1b1b22;
@@ -116,12 +116,12 @@
   width: 100%;
 }
 
-.form-group input::placeholder,
+.form-group input:not(.form-check-input)::placeholder,
 .form-group textarea::placeholder {
   color: #444;
 }
 
-.form-group input:focus,
+.form-group input:not(.form-check-input):focus,
 .form-group textarea:focus,
 .form-group select:focus {
   border-color: var(--red);
