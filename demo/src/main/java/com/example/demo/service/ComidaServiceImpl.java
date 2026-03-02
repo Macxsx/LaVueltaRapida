@@ -45,5 +45,10 @@ public class ComidaServiceImpl  implements ComidaService{
         repo.deleteById(id);
         
     }
+
+    @Override
+    public Collection<Comida> findTop5Available() {
+        return repo.findTop5Available();
+    }
 }
 

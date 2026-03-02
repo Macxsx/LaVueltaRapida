@@ -37,8 +37,9 @@
             <span th:text="${session.loggedUser}"></span>
           </a>
 
-                    <!-- Carrito -->
-          <a th:href="@{/carrito}" class="cart-btn">
+          <a th:if="${session.loggedUser != 'Admin'}"
+            th:href="@{/carrito}" 
+            class="cart-btn">
             🛒
             <span class="cart-badge" th:text="${cartCount} ?: 0"></span>
           </a>

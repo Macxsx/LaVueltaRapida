@@ -502,72 +502,65 @@ a {
   gap: 20px;
 }
 
-.pizza-card {
-  background-color: var(--dark-alt);
-  border-radius: 10px;
-  overflow: hidden;
+/* ================================================= */
+/* ===================== CARD ====================== */
+/* ================================================= */
+
+.menu-card-link {
+  text-decoration: none;
+  color: white;
+}
+
+.menu-card {
+  background-color: #111;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid #1f1f1f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  justify-content: space-between;
 }
 
-.pizza-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+.menu-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--red);
+  box-shadow: 0 12px 30px rgba(225, 6, 0, 0.25);
 }
 
-.pizza-card-img-wrapper {
+/* ================= IMAGEN ================= */
+
+.menu-card img {
   width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
+  height: 200px;          /* Altura fija igual para todas */
+  object-fit: cover;      /* Rellena el espacio recortando */
+  border-radius: 10px;    /* Opcional: estética */
 }
 
-.pizza-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.4s ease;
-}
-
-.pizza-card:hover .pizza-card-img {
+.menu-card:hover img {
   transform: scale(1.05);
 }
 
-.pizza-card-body {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* ================= TITULO ================= */
+
+.menu-card h4 {
+  padding-top: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 17px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
 }
 
-.pizza-card-accent {
-  width: 32px;
-  height: 3px;
-  background-color: var(--red);
-}
+/* ================= DESCRIPCION ================= */
 
-.pizza-card-name {
-  font-family: 'Orbitron', Helvetica, sans-serif;
-  font-weight: 700;
-  color: var(--white);
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  line-height: 20px;
-}
-
-.pizza-card-desc {
-  font-weight: 400;
-  color: var(--gray);
+.menu-card p {
   font-size: 13px;
-  line-height: 20px;
-  letter-spacing: -0.2px;
+  color: var(--gray);
+  min-height: 38px;
 }
+
 
 /* ===== EXPERIENCE SECTION ===== */
 .experience-section {
@@ -794,95 +787,6 @@ a {
   color: var(--gold);
 }
 
-/* ================= USER AREA ================= */
-
-.header-user {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-/* ===== CARRITO ===== */
-.cart-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(145deg, #1a1a1a, #111);
-  border: 1px solid rgba(225, 6, 0, 0.4);
-  border-radius: 8px;
-  font-size: 18px;
-  transition: all 0.25s ease;
-}
-
-.cart-btn:hover {
-  border-color: var(--red);
-  box-shadow: 0 0 12px rgba(225, 6, 0, 0.5);
-  transform: translateY(-2px);
-}
-
-/* Badge contador */
-.cart-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background-color: var(--red);
-  color: white;
-  font-size: 11px;
-  font-weight: bold;
-  padding: 3px 6px;
-  border-radius: 50%;
-  min-width: 18px;
-  text-align: center;
-}
-
-/* ===== USER NAME ===== */
-.user-name-link {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  color: var(--gold);
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  transition: all 0.25s ease;
-}
-
-.user-name-link:hover {
-  border: 1px solid var(--gold);
-  background-color: rgba(255, 215, 0, 0.08);
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-}
-
-/* ===== LOGOUT BUTTON ===== */
-.btn-logout {
-  background-color: transparent;
-  border: 1px solid var(--red);
-  color: var(--red);
-  font-size: 12px;
-  letter-spacing: 1px;
-  padding: 8px 16px;
-  transition: all 0.25s ease;
-}
-
-.btn-logout:hover {
-  background-color: var(--red);
-  color: var(--white);
-  box-shadow: 0 0 15px rgba(225, 6, 0, 0.5);
-}
-
-@keyframes pop {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.25); }
-  100% { transform: scale(1); }
-}
-
-.cart-badge {
-  animation: pop 0.3s ease;
-}
-
 /* ================================================= */
 /* ==================== FOOTER ===================== */
 /* ================================================= */
@@ -1051,3 +955,7 @@ a {
     text-align: center;
   }
 }
+
+
+
+

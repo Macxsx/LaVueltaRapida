@@ -139,63 +139,20 @@
         <div class="top-pizzas-divider"></div>
         <p class="top-pizzas-subtitle">Las cinco pizzas que están marcando el ritmo en la pista</p>
       </header>
+        <div class="top-pizzas-grid">
+          <a th:each="comida : ${comidas}"
+            th:href="@{'/producto/' + ${comida.id}}"
+            class="menu-card-link">
 
-      <div class="top-pizzas-grid">
-        <article class="pizza-card">
-          <div class="pizza-card-img-wrapper">
-            <img src="Images/pizza-margherita.png" alt="Margherita Clásica" class="pizza-card-img">
-          </div>
-          <div class="pizza-card-body">
-            <div class="pizza-card-accent"></div>
-            <h3 class="pizza-card-name">MARGHERITA CLÁSICA</h3>
-            <p class="pizza-card-desc">Mozzarella fresca, albahaca aromática y salsa de tomate artesanal sobre masa tradicional.</p>
-          </div>
-        </article>
+            <div class="menu-card">
+              <img th:src="@{${comida.image}}" th:alt="${comida.name}">
+              <h4 th:text="${comida.name}"></h4>
+              <p th:text="${comida.description}"></p>
+            </div>
 
-        <article class="pizza-card">
-          <div class="pizza-card-img-wrapper">
-            <img src="Images/pizza-pepperoni.png" alt="Pepperoni Suprema" class="pizza-card-img">
-          </div>
-          <div class="pizza-card-body">
-            <div class="pizza-card-accent"></div>
-            <h3 class="pizza-card-name">PEPPERONI SUPREMA</h3>
-            <p class="pizza-card-desc">Pepperoni premium, mozzarella derretida y especias secretas que encienden el motor.</p>
-          </div>
-        </article>
+          </a>
 
-        <article class="pizza-card">
-          <div class="pizza-card-img-wrapper">
-            <img src="Images/pizza-quattro-formaggi.png" alt="Quattro Formaggi" class="pizza-card-img">
-          </div>
-          <div class="pizza-card-body">
-            <div class="pizza-card-accent"></div>
-            <h3 class="pizza-card-name">QUATTRO FORMAGGI</h3>
-            <p class="pizza-card-desc">Mozzarella, gorgonzola, parmesano y ricotta en perfecto armonía sobre masa artesanal.</p>
-          </div>
-        </article>
-
-        <article class="pizza-card">
-          <div class="pizza-card-img-wrapper">
-            <img src="Images/pizza-prosciutto.png" alt="Prosciutto Veloce" class="pizza-card-img">
-          </div>
-          <div class="pizza-card-body">
-            <div class="pizza-card-accent"></div>
-            <h3 class="pizza-card-name">PROSCIUTTO VELOCE</h3>
-            <p class="pizza-card-desc">Prosciutto di Parma, rúcula fresca y parmesano que acelera todos los sentidos.</p>
-          </div>
-        </article>
-
-        <article class="pizza-card">
-          <div class="pizza-card-img-wrapper">
-            <img src="Images/pizza-diavola.png" alt="Diavola Turbo" class="pizza-card-img">
-          </div>
-          <div class="pizza-card-body">
-            <div class="pizza-card-accent"></div>
-            <h3 class="pizza-card-name">DIAVOLA TURBO</h3>
-            <p class="pizza-card-desc">Salami picante, chile jalapeño y mozzarella que libera toda la potencia del sabor.</p>
-          </div>
-        </article>
-      </div>
+        </div>
     </div>
   </section>
 

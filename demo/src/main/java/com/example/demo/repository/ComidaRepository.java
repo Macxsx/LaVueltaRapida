@@ -268,5 +268,12 @@ public class ComidaRepository {
         comidas.remove(id);
     }
 
+
+    public Collection<Comida> findTop5Available(){
+        return comidas.values().stream()
+                .filter(Comida::isAvailable)
+                .limit(5)
+                .toList();
+    }
     
 }

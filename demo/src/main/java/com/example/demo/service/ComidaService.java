@@ -17,4 +17,6 @@ public interface ComidaService {
     public void save(Comida comida);
     public void deleteById(Integer id);
 
+    public Collection<Comida> findTop5Available();
+
 }
