@@ -1,16 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.entitys.Comida;
+import com.example.demo.service.CategoriaService;
+import com.example.demo.service.ComidaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import com.example.demo.entitys.Comida;
-import com.example.demo.service.ComidaService;
 import org.springframework.web.bind.annotation.PostMapping;
-import com.example.demo.service.CategoriaService;
 
 
 
@@ -80,7 +78,7 @@ public class MenuController {
     public String ActualizarComida(@PathVariable("id") Integer id, Model model) {
         Comida comida = comidaService.findById(id);
         model.addAttribute("comida", comida);
-        return "redirect:/producto/menu";
+        return "add-product";
 
     }
     
