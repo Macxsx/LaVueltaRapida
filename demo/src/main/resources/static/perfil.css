@@ -1,0 +1,183 @@
+:root {
+  --red: #e10600;
+  --red-dark: #c10500;
+  --gold: #ffd700;
+  --gray: #aaa;
+  --dark: #0f0f0f;
+}
+
+/* ================= HERO ================= */
+
+.perfil-hero {
+  padding: 100px 20px 50px;
+  text-align: center;
+  background: linear-gradient(135deg, #0f0f0f, #3a0000);
+  border-bottom: 2px solid var(--red);
+}
+
+.perfil-hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 44px;
+  letter-spacing: 2px;
+  font-weight: 100;
+  color: white;
+}
+
+.perfil-hero span {
+  color: var(--red);
+}
+
+.perfil-hero p {
+  margin-top: 15px;
+  color: var(--gray);
+  font-size: 15px;
+}
+
+/* ================= CONTENEDOR ================= */
+
+.perfil-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 20px 120px;
+}
+
+.perfil-card {
+  background: #141414;
+  border-radius: 16px;
+  border: 1px solid #1f1f1f;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ================= GRID ================= */
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.perfil-item label,
+.form-group label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--gray);
+  text-transform: uppercase;
+}
+
+.perfil-item p {
+  margin-top: 6px;
+  color: white;
+  font-size: 16px;
+}
+
+.form-group input {
+  margin-top: 6px;
+  background: #1b1b22;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: white;
+  width: 100%;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.15);
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+/* ================= BOTONES ================= */
+
+.perfil-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.btn-primary {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #e10600, #7a0000);
+  border: 1px solid var(--red);
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ff1a0e, #a00000);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  padding: 14px 28px;
+  background: #333;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #444;
+}
+
+.btn-danger {
+  padding: 14px 28px;
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-danger:hover {
+  background: #000;
+}
+
+/* ================= MENSAJES ================= */
+
+.perfil-success {
+  margin-bottom: 30px;
+  padding: 14px 18px;
+  background: rgba(0, 200, 0, 0.1);
+  border: 1px solid rgba(0, 200, 0, 0.3);
+  border-radius: 8px;
+  color: #4dff88;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .perfil-hero h1 {
+    font-size: 30px;
+  }
+
+  .perfil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
+
+  .perfil-actions {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

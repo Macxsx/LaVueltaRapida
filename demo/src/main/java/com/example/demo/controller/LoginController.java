@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.demo.entitys.Cliente;
 import com.example.demo.service.ClienteService;
+
 import jakarta.servlet.http.HttpSession;
 
 
@@ -65,26 +67,51 @@ public class LoginController {
     }
 
 @GetMapping("/perfil")
-public String perfil(Model model, HttpSession session) {
+public String perfil(
+        @RequestParam(required = false, defaultValue = "false") boolean edit,
+        Model model,
+        HttpSession session) {
+
     Integer id = (Integer) session.getAttribute("loggedUserId");
-    model.addAttribute("cliente", clienteService.findById(id));
+
+    if (id == null) {
+        return "redirect:/login";
+    }
+
+    Cliente cliente = clienteService.findById(id);
+
+    model.addAttribute("cliente", cliente);
+    model.addAttribute("editMode", edit);
+
     return "perfil";
 }
     
 
-    @GetMapping("/perfil/delete")
-    public String deletePerfil(@RequestParam int id) {
-        clienteService.deleteById(id);
-        return "redirect:/index";
-    }
 
-    @GetMapping("/perfil/update")
-    public String updatePerfil(Model model, @RequestParam int id) {
-        model.addAttribute("cliente", clienteService.findById(id));
-        model.addAttribute("editMode", true);
-        return "register";
-    }
-    
+    @PostMapping("/perfil/delete")
+public String deletePerfil(HttpSession session) {
+
+    Integer id = (Integer) session.getAttribute("loggedUserId");
+
+    clienteService.deleteById(id);
+
+    session.invalidate();
+
+    return "redirect:/";
+}
+
+    @PostMapping("/perfil/update")
+public String updatePerfil(@ModelAttribute Cliente cliente, HttpSession session) {
+
+    Integer id = (Integer) session.getAttribute("loggedUserId");
+    cliente.setId(id);
+
+    clienteService.save(cliente);
+
+    session.setAttribute("loggedUser", cliente.getName());
+
+    return "redirect:/perfil?success";
+}  
     
 
     
