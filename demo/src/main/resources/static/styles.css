@@ -917,6 +917,95 @@ a {
   color: #ffffff;
 }
 
+/* ================= USER AREA ================= */
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ===== CARRITO ===== */
+.cart-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(145deg, #1a1a1a, #111);
+  border: 1px solid rgba(225, 6, 0, 0.4);
+  border-radius: 8px;
+  font-size: 18px;
+  transition: all 0.25s ease;
+}
+
+.cart-btn:hover {
+  border-color: var(--red);
+  box-shadow: 0 0 12px rgba(225, 6, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Badge contador */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: var(--red);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ===== USER NAME ===== */
+.user-name-link {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.user-name-link:hover {
+  border: 1px solid var(--gold);
+  background-color: rgba(255, 215, 0, 0.08);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* ===== LOGOUT BUTTON ===== */
+.btn-logout {
+  background-color: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+  transition: all 0.25s ease;
+}
+
+.btn-logout:hover {
+  background-color: var(--red);
+  color: var(--white);
+  box-shadow: 0 0 15px rgba(225, 6, 0, 0.5);
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.cart-badge {
+  animation: pop 0.3s ease;
+}
+
 /* ================= BOTTOM SECTION ================= */
 
 .footer-bottom {
