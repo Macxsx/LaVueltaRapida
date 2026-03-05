@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entitys.Comida;
+import com.example.demo.entitys.Categoria; // Importación explícita para evitar el "missing type"
 import com.example.demo.service.CategoriaService;
 import com.example.demo.service.ComidaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 
-
-
 @RequestMapping("/producto")
 @Controller
 public class MenuController {
@@ -25,31 +24,28 @@ public class MenuController {
     @Autowired
     CategoriaService categoriaService;
 
-
-    //http://localhost:8080/producto/menu
+    // http://localhost:5000/producto/menu
     @GetMapping("/menu")
     public String mostrarMenu(Model model) {
-    model.addAttribute("categorias", categoriaService.findAll());
-    model.addAttribute("comidas", comidaService.findAll());
+        model.addAttribute("categorias", categoriaService.findAll());
+        model.addAttribute("comidas", comidaService.findAll());
         return "menu";
     }
 
-    //http://localhost:8080/producto/{id}
+    // http://localhost:5000/producto/{id}
     @GetMapping("/{id}")
     public String verProducto(@PathVariable Integer id, Model model) {
-    model.addAttribute("comida", comidaService.findById(id));
-    model.addAttribute("recomendaciones", comidaService.Recomendados(id));
-    return "product-detail";
-    }   
-
-    
-    @GetMapping("/menutabla")
-    public String mostrarMenuTabla(Model model) {
-    model.addAttribute("categorias", categoriaService.findAll());
-    model.addAttribute("comidas", comidaService.findAll());
-        return "menu-list";
+        model.addAttribute("comida", comidaService.findById(id));
+        model.addAttribute("recomendaciones", comidaService.Recomendados(id));
+        return "product-detail";
     }
 
+    @GetMapping("/menutabla")
+    public String mostrarMenuTabla(Model model) {
+        model.addAttribute("categorias", categoriaService.findAll());
+        model.addAttribute("comidas", comidaService.findAll());
+        return "menu-list";
+    }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
@@ -59,7 +55,8 @@ public class MenuController {
 
     @GetMapping("/add")
     public String MostrarFormularioCrear(Model model) {
-        Comida comida = new Comida(null, "", "", 0, "", true, null);
+        // Ajustado al constructor manual de Comida: (id, name, description, price, image, available, category)
+        Comida comida = new Comida(null, "", "", 0.0, "", true, null);
         model.addAttribute("comida", comida);
         model.addAttribute("categorias", categoriaService.findAll());
         model.addAttribute("editMode", false);
@@ -72,7 +69,7 @@ public class MenuController {
         comidaService.save(comida);
         return "redirect:/producto/menutabla";
     }
-    
+
     @GetMapping("/update/{id}")
     public String ActualizarComida(@PathVariable("id") Integer id, Model model) {
         Comida comida = comidaService.findById(id);
@@ -81,9 +78,4 @@ public class MenuController {
         model.addAttribute("editMode", true);
         return "add-product";
     }
-
-    
-    
 }
-    
-    

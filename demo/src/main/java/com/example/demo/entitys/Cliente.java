@@ -1,19 +1,34 @@
 package com.example.demo.entitys;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
     private String name;
-    private String Apellido;
+    private String apellido;
     private String email;
     private String username;
     private String password;
     private String direccion;
     private String telefono;
 
+    // Constructor vacío (Obligatorio para JPA)
+    public Cliente() {
+    }
+
+    // Constructor con todos los campos
     public Cliente(Integer id, String name, String apellido, String email, String username, String password, String direccion, String telefono) {
         this.id = id;
         this.name = name;
-        Apellido = apellido;
+        this.apellido = apellido;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -21,9 +36,7 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    public Cliente() {
-    }
-
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -41,11 +54,11 @@ public class Cliente {
     }
 
     public String getApellido() {
-        return Apellido;
+        return apellido;
     }
 
     public void setApellido(String apellido) {
-        Apellido = apellido;
+        this.apellido = apellido;
     }
 
     public String getEmail() {
@@ -54,6 +67,14 @@ public class Cliente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -79,19 +100,4 @@ public class Cliente {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    
 }
-
-
-
-
-
