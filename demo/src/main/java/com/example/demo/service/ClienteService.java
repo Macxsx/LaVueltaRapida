@@ -10,9 +10,9 @@ public interface ClienteService {
     
     public void save(Cliente cliente);
     
-    public void deleteById(int id);
+    public void deleteById(Long id);
     
-    public Cliente findById(int id);
+    public Cliente findById(Long id);
 
     public boolean validateCredentials(String username, String password);
 

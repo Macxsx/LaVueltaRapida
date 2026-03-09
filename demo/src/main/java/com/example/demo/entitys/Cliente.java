@@ -1,5 +1,6 @@
 package com.example.demo.entitys;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,12 +11,17 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    
+    private Long id;
+
+    @Column(name = "nombre", nullable = false, length = 50)
     private String name;
+    @Column(name = "apellido", nullable = false, length = 50)
     private String apellido;
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
+    @Column(nullable = false, length = 30)
     private String username;
+    @Column(name = "contrasena", nullable = false)
     private String password;
     private String direccion;
     private String telefono;
@@ -25,7 +31,7 @@ public class Cliente {
     }
 
     // Constructor con todos los campos
-    public Cliente(Integer id, String name, String apellido, String email, String username, String password, String direccion, String telefono) {
+    public Cliente(Long id, String name, String apellido, String email, String username, String password, String direccion, String telefono) {
         this.id = id;
         this.name = name;
         this.apellido = apellido;
@@ -37,11 +43,11 @@ public class Cliente {
     }
 
     // Getters y Setters
-    public Integer getId() {
-        return id;
+    public Long getId() {
+        return (long) id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

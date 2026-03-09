@@ -72,7 +72,7 @@ public String perfil(
         Model model,
         HttpSession session) {
 
-    Integer id = (Integer) session.getAttribute("loggedUserId");
+    Long id = (Long) session.getAttribute("loggedUserId");
 
     if (id == null) {
         return "redirect:/login";
@@ -91,7 +91,7 @@ public String perfil(
     @PostMapping("/perfil/delete")
 public String deletePerfil(HttpSession session) {
 
-    Integer id = (Integer) session.getAttribute("loggedUserId");
+    Long id = (Long) session.getAttribute("loggedUserId");
 
     clienteService.deleteById(id);
 
@@ -103,7 +103,7 @@ public String deletePerfil(HttpSession session) {
     @PostMapping("/perfil/update")
 public String updatePerfil(@ModelAttribute Cliente cliente, HttpSession session) {
 
-    Integer id = (Integer) session.getAttribute("loggedUserId");
+    Long id = (Long) session.getAttribute("loggedUserId");
     cliente.setId(id);
 
     clienteService.save(cliente);

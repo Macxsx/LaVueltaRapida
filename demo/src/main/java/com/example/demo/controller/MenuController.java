@@ -34,7 +34,7 @@ public class MenuController {
 
     // http://localhost:5000/producto/{id}
     @GetMapping("/{id}")
-    public String verProducto(@PathVariable Integer id, Model model) {
+    public String verProducto(@PathVariable Long id, Model model) {
         model.addAttribute("comida", comidaService.findById(id));
         model.addAttribute("recomendaciones", comidaService.Recomendados(id));
         return "product-detail";
@@ -48,7 +48,7 @@ public class MenuController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Integer id) {
+    public String delete(@PathVariable Long id) {
         comidaService.deleteById(id);
         return "redirect:/producto/menutabla";
     }
@@ -64,14 +64,14 @@ public class MenuController {
     }
 
     @PostMapping("/add")
-    public String AdicionarComida(@ModelAttribute("comida") Comida comida, @RequestParam("categoryId") Integer categoryId) {
+    public String AdicionarComida(@ModelAttribute("comida") Comida comida, @RequestParam("categoryId") Long categoryId) {
         comida.setCategory(categoriaService.findById(categoryId));
         comidaService.save(comida);
         return "redirect:/producto/menutabla";
     }
 
     @GetMapping("/update/{id}")
-    public String ActualizarComida(@PathVariable("id") Integer id, Model model) {
+    public String ActualizarComida(@PathVariable("id") Long id, Model model) {
         Comida comida = comidaService.findById(id);
         model.addAttribute("comida", comida);
         model.addAttribute("categorias", categoriaService.findAll());

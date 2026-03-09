@@ -25,13 +25,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         repo.deleteById(id);
         
     }
 
     @Override
-    public Cliente findById(int id) {
+    public Cliente findById(Long id) {
         return repo.findById(id);
     }
 

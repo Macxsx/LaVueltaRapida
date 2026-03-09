@@ -4,14 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 
 @Entity
 public class Categoria {
 
     @Id
+    //PK
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     
+    // nullable, unique, length 
+    @Column(nullable = false, unique = true, length = 50)
     private String name;
 
     // Constructor vacío (Obligatorio para JPA)
@@ -19,18 +23,18 @@ public class Categoria {
     }
 
     // Constructor completo
-    public Categoria(Integer id, String name) {
+    public Categoria(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
     // --- GETTERS Y SETTERS ---
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

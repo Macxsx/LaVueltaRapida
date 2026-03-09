@@ -10,17 +10,17 @@ import com.example.demo.entitys.Categoria;
 @Repository
 public class CategoriaRepository {
 
-    private final Map<Integer, Categoria> categorias = new HashMap<>();
+    private final Map<Long, Categoria> categorias = new HashMap<>();
 
     public CategoriaRepository() {
-        categorias.put(1, new Categoria(1, "Clasicas"));
-        categorias.put(2, new Categoria(2, "Especiales"));
-        categorias.put(3, new Categoria(3, "Picantes"));
-        categorias.put(4, new Categoria(4, "Bebidas"));
-        categorias.put(5, new Categoria(5, "Postres"));
+        categorias.put(1L, new Categoria(1L, "Clasicas"));
+        categorias.put(2L, new Categoria(2L, "Especiales"));
+        categorias.put(3L, new Categoria(3L, "Picantes"));
+        categorias.put(4L, new Categoria(4L, "Bebidas"));
+        categorias.put(5L, new Categoria(5L, "Postres"));
     }
 
-    public Categoria findById(Integer id) {
+    public Categoria findById(Long id) {
         return categorias.get(id);
     }
 

@@ -17,7 +17,7 @@ public class CategoriaServiceImpl  implements CategoriaService {
     }
 
     @Override
-    public Categoria findById(Integer id) {
+    public Categoria findById(Long id) {
         return repo.findById(id);
     }
 }

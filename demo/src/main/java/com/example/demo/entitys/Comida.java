@@ -1,9 +1,11 @@
 package com.example.demo.entitys;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -11,15 +13,18 @@ public class Comida {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    
+    private Long id;
+    // Restricciones: nullable, length
+    @Column(nullable = false, length = 100)
     private String name;
     private String description;
+    @Column(nullable = false)
     private double price;
     private String image;
     private boolean available;
 
     @ManyToOne // <--- ESTO ES LO QUE FALTABA PARA QUE FUNCIONE CON LA NUEVA CATEGORIA
+    @JoinColumn(nullable = false)
     private Categoria category;
 
     // Constructor vacío
@@ -27,7 +32,7 @@ public class Comida {
     }
 
     // Constructor completo
-    public Comida(Integer id, String name, String description, double price, String image, boolean available, Categoria category) {
+    public Comida(Long id, String name, String description, double price, String image, boolean available, Categoria category) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -38,8 +43,8 @@ public class Comida {
     }
 
     // --- GETTERS Y SETTERS ---
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
