@@ -1,4 +1,5 @@
 package com.example.demo.service;
+
 import org.springframework.stereotype.Service;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,10 +7,10 @@ import com.example.demo.entitys.Categoria;
 import com.example.demo.repository.CategoriaRepository;
 
 @Service
-public class CategoriaServiceImpl  implements CategoriaService {
+public class CategoriaServiceImpl implements CategoriaService {
     
     @Autowired
-    CategoriaRepository repo;
+    private CategoriaRepository repo;
 
     @Override
     public Collection<Categoria> findAll() {
@@ -18,6 +19,6 @@ public class CategoriaServiceImpl  implements CategoriaService {
 
     @Override
     public Categoria findById(Long id) {
-        return repo.findById(id);
+        return repo.findById(id).orElse(null);
     }
 }

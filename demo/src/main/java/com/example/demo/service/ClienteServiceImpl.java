@@ -15,13 +15,14 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Collection<Cliente> findAll() {
+        //return repo.findAll();
         return repo.findAll();
     }
 
     @Override
     public void save(Cliente cliente) {
+        //repo.save(cliente);
         repo.save(cliente);
-        
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente findById(Long id) {
-        return repo.findById(id);
+        return repo.findById(id).get();
     }
 
     @Override

@@ -1,22 +1,21 @@
 package com.example.demo.service;
 
 import java.util.Collection;
-
 import com.example.demo.entitys.Comida;
 
 public interface ComidaService {
     
-    public Collection<Comida> findAll();
+    Collection<Comida> findAll();
 
-    public Comida findById(Long id);
+    Comida findById(Long id);
 
-    public Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(Long id);
+    Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(Long id);
 
-    public Collection<Comida> Recomendados(Long id);
+    Collection<Comida> Recomendados(Long id);
 
-    public void save(Comida comida);
-    public void deleteById(Long id);
+    void save(Comida comida);
 
-    public Collection<Comida> findTop5Available();
+    void deleteById(Long id);
 
+    Collection<Comida> findTop5ByAvailableTrue(); 
 }

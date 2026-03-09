@@ -17,7 +17,7 @@ public class RestauranteController {
     //http://localhost:8080
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("comidas", comidaService.findTop5Available());
+        model.addAttribute("comidas", comidaService.findTop5AvailableTrue());
         return "index";
     }
 

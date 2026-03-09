@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.entitys.Cliente;
 
 @Repository
-public class ClienteRepository {
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+    Cliente findByUsername(String username);
     
+ /* 
     private final Map<Long, Cliente> clientes = new HashMap<>();
 
     public ClienteRepository() {
@@ -103,5 +106,5 @@ public class ClienteRepository {
                 .filter(cliente -> cliente.getUsername().equals(username))
                 .findFirst()
                 .orElse(null);
-    }
+    }*/
 }
