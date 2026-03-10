@@ -15,24 +15,25 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Collection<Cliente> findAll() {
+        //return repo.findAll();
         return repo.findAll();
     }
 
     @Override
     public void save(Cliente cliente) {
+        //repo.save(cliente);
         repo.save(cliente);
-        
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         repo.deleteById(id);
         
     }
 
     @Override
-    public Cliente findById(int id) {
-        return repo.findById(id);
+    public Cliente findById(Long id) {
+        return repo.findById(id).get();
     }
 
     @Override

@@ -6,6 +6,6 @@ public interface CategoriaService {
 
     public Collection<Categoria> findAll();
 
-    public Categoria findById(Integer id);
+    public Categoria findById(Long id);
     
 }

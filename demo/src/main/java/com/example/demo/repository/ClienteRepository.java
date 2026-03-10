@@ -5,17 +5,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.entitys.Cliente;
 
 @Repository
-public class ClienteRepository {
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+    Cliente findByUsername(String username);
     
-    private final Map<Integer, Cliente> clientes = new HashMap<>();
+ /* 
+    private final Map<Long, Cliente> clientes = new HashMap<>();
 
     public ClienteRepository() {
-        clientes.put(1, new Cliente(
-        1,
+        clientes.put(1L, new Cliente(
+        1L,
         "Pablo",
         "García",
         "PabloGarcia21@gmail.com",
@@ -25,8 +28,8 @@ public class ClienteRepository {
         "3001234567"
     ));
 
-        clientes.put(2, new Cliente(
-                2,
+        clientes.put(2L, new Cliente(
+                2L,
                 "María",
                 "Gómez",
                 "maria.gomez@email.com",
@@ -36,8 +39,8 @@ public class ClienteRepository {
                 "3019876543"
         ));
 
-        clientes.put(3, new Cliente(
-                3,
+        clientes.put(3L, new Cliente(
+                3L,
                 "Andrés",
                 "Martínez",
                 "andres.martinez@email.com",
@@ -47,8 +50,8 @@ public class ClienteRepository {
                 "3024567890"
         ));
 
-        clientes.put(4, new Cliente(
-                4,
+        clientes.put(4L, new Cliente(
+                4L,
                 "Laura",
                 "Ramírez",
                 "laura.ramirez@email.com",
@@ -58,8 +61,8 @@ public class ClienteRepository {
                 "3106543210"
         ));
 
-        clientes.put(5, new Cliente(
-                5,
+        clientes.put(5L, new Cliente(
+                5L,
                 "Camilo",
                 "Torres",
                 "camilo.torres@email.com",
@@ -70,7 +73,7 @@ public class ClienteRepository {
         ));
     }
         
-    public Cliente findById(Integer id) {
+    public Cliente findById(Long id) {
         return clientes.get(id);
     }
 
@@ -79,13 +82,13 @@ public class ClienteRepository {
 
     }
 
-    public Integer count() {
-        return clientes.size();
+    public Long count() {
+        return (long) clientes.size();
     }
     public void save(Cliente cliente) {
         if(cliente.getId()== null){
-        Integer tam = count();
-        Integer lastid = clientes.get(tam).getId();
+        Long tam = count();
+        Long lastid = clientes.get(tam).getId();
         cliente.setId(lastid + 1);
         clientes.put(cliente.getId(), cliente);
         }
@@ -94,7 +97,7 @@ public class ClienteRepository {
         }
     }
     
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         clientes.remove(id);
     }
 
@@ -103,5 +106,5 @@ public class ClienteRepository {
                 .filter(cliente -> cliente.getUsername().equals(username))
                 .findFirst()
                 .orElse(null);
-    }
+    }*/
 }
