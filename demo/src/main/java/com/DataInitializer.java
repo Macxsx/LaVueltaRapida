@@ -1,8 +1,10 @@
 package com;
 
 import com.example.demo.entitys.Categoria;
+import com.example.demo.entitys.Cliente;
 import com.example.demo.entitys.Comida;
 import com.example.demo.repository.CategoriaRepository;
+import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.ComidaRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initDatabase(ComidaRepository comidaRepo, CategoriaRepository catRepo) {
+    CommandLineRunner initDatabase(ComidaRepository comidaRepo, CategoriaRepository catRepo, ClienteRepository clienteRepo) {
         return args -> {
             // ==========================================
             // 1. CREACIÓN DE CATEGORÍAS
@@ -81,6 +83,20 @@ public class DataInitializer {
             comidaRepo.save(new Comida(39L, "Aero Apple Tart", "Tarta de manzana fina con láminas dispuestas aerodinámicamente.", 19900, "https://images.unsplash.com/photo-1568571780765-9276ac8b75a2", true, postres));
             comidaRepo.save(new Comida(40L, "Monaco Macarons (Set de 3)", "Macarons de pistacho, frambuesa y limón, elegantes como el paddock.", 24900, "https://images.unsplash.com/photo-1569864358642-9d1619702661", true, postres));
             
+            // ==========================================
+            // 7. CLIENTES (1-10)
+            // ==========================================
+            clienteRepo.save(new Cliente(1L, "Pablo", "García", "PabloGarcia21@gmail.com", "pablo123", "123456", "Cra 7 #40-62, Bogotá", "3001234567"));
+            clienteRepo.save(new Cliente(2L, "María", "Gómez", "maria.gomez@email.com", "maria123", "maria2024", "Cl 45 #12-30, Medellín", "3019876543"));
+            clienteRepo.save(new Cliente(3L, "Andrés", "Martínez", "andres.martinez@email.com", "andres123", "andres789", "Av 68 #23-10, Cali", "3024567890"));
+            clienteRepo.save(new Cliente(4L, "Laura", "Ramírez", "laura.ramirez@email.com", "laura123", "lauraPass", "Cra 15 #88-21, Barranquilla", "3106543210"));
+            clienteRepo.save(new Cliente(5L, "Camilo", "Torres", "camilo.torres@email.com", "camilito20", "camilo123", "Cl 100 #19-50, Bucaramanga", "3157891234"));
+            clienteRepo.save(new Cliente(6L, "Valentina", "López", "valentina.lopez@email.com", "vale456", "valePass1", "Cra 50 #32-15, Pereira", "3201234567"));
+            clienteRepo.save(new Cliente(7L, "Santiago", "Hernández", "santiago.hernandez@email.com", "santi789", "santiClave", "Cl 72 #10-45, Cartagena", "3112345678"));
+            clienteRepo.save(new Cliente(8L, "Daniela", "Castro", "daniela.castro@email.com", "dani321", "daniSecure", "Av 30 #15-80, Manizales", "3009876543"));
+            clienteRepo.save(new Cliente(9L, "Sebastián", "Morales", "sebastian.morales@email.com", "sebas007", "sebasKey", "Cra 25 #60-12, Santa Marta", "3178901234"));
+            clienteRepo.save(new Cliente(10L, "Carolina", "Díaz", "carolina.diaz@email.com", "caro2024", "caroPass", "Cl 85 #42-30, Ibagué", "3145678901"));
+
             System.out.println("🏎️ ¡Semáforo en verde! Base de datos de LaVueltaRapida inicializada correctamente.");
         };
     }
