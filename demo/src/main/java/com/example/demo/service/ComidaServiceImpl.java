@@ -50,7 +50,7 @@ public class ComidaServiceImpl implements ComidaService {
     }
 
     @Override
-    public Collection<Comida> findTop5Available() {
+    public Collection<Comida> findTop5ByAvailableTrue() {
         return repo.findTop5ByAvailableTrue();
     }
 }
