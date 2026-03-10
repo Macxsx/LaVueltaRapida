@@ -79,7 +79,7 @@ public class DataInitializer {
             comidaRepo.save(new Comida("Panna Cotta Pitlane", "Panna cotta con salsa de frutos del bosque.", 17900, "https://images.unsplash.com/photo-1565958011703-44f9829ba187", true, postres));
             comidaRepo.save(new Comida("Chassis Chocolate Cake", "Bizcocho denso de chocolate 70% cacao con estructura de ganache.", 22900, "https://images.unsplash.com/photo-1578985545062-69928b1d9587", true, postres));
             comidaRepo.save(new Comida("Aero Apple Tart", "Tarta de manzana fina con láminas dispuestas aerodinámicamente.", 19900, "https://images.unsplash.com/photo-1568571780765-9276ac8b75a2", true, postres));
-            comidaRepo.save(new Comida("Monaco Macarons (Set de 3)", "Macarons de pistacho, frambuesa y limón, elegantes como el paddock.", 24900, "https://images.unsplash.com/photo-1569864358642-9d1619702661", true, postres));
+            comidaRepo.save(new Comida("Monaco Macarons (Set de 3)", "Macarons de pistacho, frambuesa y limón, elegantes como el paddock.", 24900, "https://www.hola.com/horizon/landscape/f8694228cbe2-macarons-t.jpg", true, postres));
 
             // ==========================================
             // 7. CLIENTES (1-10)
