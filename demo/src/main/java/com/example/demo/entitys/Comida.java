@@ -42,6 +42,15 @@ public class Comida {
         this.category = category;
     }
 
+    public Comida(String name, String description, double price, String image, boolean available, Categoria category) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.image = image;
+        this.available = available;
+        this.category = category;
+    }
+
     // --- GETTERS Y SETTERS ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

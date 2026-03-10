@@ -28,6 +28,10 @@ public class Categoria {
         this.name = name;
     }
 
+    public Categoria(String name) {
+        this.name = name;
+    }
+
     // --- GETTERS Y SETTERS ---
 
     public Long getId() {

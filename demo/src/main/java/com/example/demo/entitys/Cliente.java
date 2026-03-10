@@ -42,6 +42,16 @@ public class Cliente {
         this.telefono = telefono;
     }
 
+    public Cliente(String name, String apellido, String email, String username, String password, String direccion, String telefono) {
+        this.name = name;
+        this.apellido = apellido;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.direccion = direccion;
+        this.telefono = telefono;
+    }
+
     // Getters y Setters
     public Long getId() {
         return (long) id;
