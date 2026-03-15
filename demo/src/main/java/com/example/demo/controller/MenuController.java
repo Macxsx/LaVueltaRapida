@@ -35,8 +35,9 @@ public class MenuController {
     // http://localhost:5000/producto/{id}
     @GetMapping("/{id}")
     public String verProducto(@PathVariable Long id, Model model) {
-        model.addAttribute("comida", comidaService.findById(id));
-        model.addAttribute("recomendaciones", comidaService.Recomendados(id));
+        Comida comida = comidaService.findById(id);
+        model.addAttribute("comida", comida);
+        model.addAttribute("recomendaciones", comidaService.recomendadosPorCategoria(comida.getCategory().getId(), id));
         return "product-detail";
     }
 

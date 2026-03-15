@@ -9,7 +9,7 @@ public interface ComidaService {
 
     Comida findById(Long id);
 
-    Collection<Comida> Recomendados(Long id);
+    Collection<Comida> recomendadosPorCategoria(Long categoryId, Long id);
 
     void save(Comida comida);
 
