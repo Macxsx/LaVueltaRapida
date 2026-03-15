@@ -1,8 +1,7 @@
 /* =====================================================
-   PRODUCT DETAIL — PREMIUM REDESIGN
+   PRODUCT DETAIL — PREMIUM
    ===================================================== */
 
-/* MAIN WRAPPER */
 .pd-main {
   min-height: 100vh;
   background: #0a0a0a;
@@ -13,93 +12,44 @@
 }
 
 /* =====================================================
-   HERO SECTION — IMAGE + INFO
+   HERO WRAPPER
    ===================================================== */
 
 .pd-hero {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 60px 48px 56px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 72px;
-  align-items: center;
-}
-
-/* =====================================================
-   IMAGE PANEL
-   ===================================================== */
-
-.pd-image-wrap {
-  position: relative;
-  padding: 12px;
-}
-
-.pd-image-frame {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(225,6,0,0.15),
-    0 30px 80px rgba(0,0,0,0.8),
-    0 0 60px rgba(225,6,0,0.08);
-}
-
-.pd-image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.6s ease;
-}
-
-.pd-image-wrap:hover .pd-image {
-  transform: scale(1.04);
-}
-
-.pd-image-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(225,6,0,0.06) 0%,
-    transparent 50%,
-    rgba(0,0,0,0.3) 100%
-  );
-  pointer-events: none;
-}
-
-/* Racing corner brackets */
-.pd-corner {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  border-color: #e10600;
-  border-style: solid;
-  border-width: 0;
-}
-
-.pd-corner--tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 4px; }
-.pd-corner--tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 4px; }
-.pd-corner--bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 4px; }
-.pd-corner--br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 4px; }
-
-/* =====================================================
-   INFO PANEL
-   ===================================================== */
-
-.pd-info {
+  padding: 52px 48px 48px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 36px;
 }
 
-/* META ROW — badge + availability */
+/* =====================================================
+   TOP ROW: info left | price right
+   ===================================================== */
+
+.pd-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.pd-info-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.pd-price-right {
+  flex-shrink: 0;
+  width: 300px;
+}
+
+/* META */
 .pd-meta {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .pd-badge {
@@ -128,43 +78,40 @@
 /* TITLE */
 .pd-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(26px, 3vw, 42px);
+  font-size: clamp(24px, 2.8vw, 38px);
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: -0.5px;
   color: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 /* DESCRIPTION */
 .pd-description {
   font-size: 15px;
   line-height: 1.75;
-  color: #8a8a8a;
-  margin-bottom: 32px;
-  max-width: 480px;
+  color: #7a7a7a;
+  max-width: 560px;
 }
 
 /* PRICE BLOCK */
 .pd-price-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 32px;
+  gap: 6px;
   padding: 24px 28px;
-  background: linear-gradient(135deg, rgba(225,6,0,0.06), rgba(0,0,0,0.4));
+  background: linear-gradient(135deg, rgba(225,6,0,0.07), rgba(0,0,0,0.45));
   border: 1px solid rgba(225,6,0,0.2);
   border-radius: 14px;
   position: relative;
   overflow: hidden;
+  height: 100%;
 }
 
 .pd-price-block::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  left: 0; top: 0; bottom: 0;
   width: 3px;
   background: linear-gradient(180deg, #e10600, #7a0000);
   border-radius: 2px 0 0 2px;
@@ -180,30 +127,98 @@
 
 .pd-price {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(22px, 2.5vw, 32px);
+  font-size: clamp(20px, 2vw, 28px);
   font-weight: 700;
   color: #ffd700;
   letter-spacing: 1px;
 }
 
-/* DIVIDER */
-.pd-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(225,6,0,0.3), transparent);
-  margin-bottom: 32px;
-}
-
 /* =====================================================
-   OPTIONS
+   BOTTOM ROW: image left | options right
    ===================================================== */
 
+.pd-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ---- IMAGE ---- */
+.pd-image-wrap {
+  position: relative;
+  padding: 12px;
+}
+
+.pd-image-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(225,6,0,0.15),
+    0 30px 80px rgba(0,0,0,0.8),
+    0 0 60px rgba(225,6,0,0.06);
+}
+
+.pd-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.pd-image-wrap:hover .pd-image {
+  transform: scale(1.04);
+}
+
+.pd-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(225,6,0,0.05) 0%,
+    transparent 50%,
+    rgba(0,0,0,0.25) 100%
+  );
+  pointer-events: none;
+}
+
+/* Corner brackets */
+.pd-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: #e10600;
+  border-style: solid;
+  border-width: 0;
+}
+
+.pd-corner--tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 4px; }
+.pd-corner--tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 4px; }
+.pd-corner--bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 4px; }
+.pd-corner--br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 4px; }
+
+/* ---- OPTIONS PANEL ---- */
+.pd-options-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.pd-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* OPTIONS */
 .pd-options {
-  margin-bottom: 32px;
+  margin-bottom: 8px;
 }
 
 .pd-options-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -256,14 +271,12 @@
   position: relative;
 }
 
-.pd-checkbox:hover {
-  border-color: #e10600;
-}
+.pd-checkbox:hover { border-color: #e10600; }
 
 .pd-checkbox:checked {
   background: #e10600;
   border-color: #e10600;
-  box-shadow: 0 0 10px rgba(225,6,0,0.5);
+  box-shadow: 0 0 10px rgba(225,6,0,0.45);
 }
 
 .pd-checkbox:checked::after {
@@ -303,23 +316,29 @@
   white-space: nowrap;
 }
 
+/* DIVIDER */
+.pd-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(225,6,0,0.25), transparent);
+  margin: 24px 0;
+}
+
 /* =====================================================
    ADD TO CART BUTTON
    ===================================================== */
 
 .pd-btn-order {
   width: 100%;
-  padding: 18px 28px;
+  padding: 18px 24px;
   border-radius: 12px;
   border: none;
-  font-size: 14px;
   font-family: 'Orbitron', sans-serif;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 12px;
   background: linear-gradient(135deg, #e10600 0%, #a00000 100%);
   color: white;
@@ -333,17 +352,13 @@
 .pd-btn-order::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
   background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
   transition: 0.55s ease;
 }
 
-.pd-btn-order:hover::before {
-  left: 100%;
-}
+.pd-btn-order:hover::before { left: 100%; }
 
 .pd-btn-order:hover {
   transform: translateY(-3px);
@@ -351,8 +366,21 @@
   background: linear-gradient(135deg, #ff1a1a 0%, #b80000 100%);
 }
 
-.pd-btn-order:active {
-  transform: scale(0.97);
+.pd-btn-order:active { transform: scale(0.97); }
+
+.btn-label {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-total {
+  font-size: 15px;
+  font-weight: 900;
+  color: #ffd700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 /* =====================================================
@@ -369,7 +397,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
 .pd-recs-line {
@@ -384,7 +412,7 @@
 
 .pd-recs-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -394,13 +422,13 @@
 
 .pd-recs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
 }
 
 .pd-rec-card {
   display: block;
-  border-radius: 16px;
+  border-radius: 14px;
   background: #111;
   border: 1px solid rgba(255,255,255,0.06);
   overflow: hidden;
@@ -422,15 +450,13 @@
 
 .pd-rec-img {
   width: 100%;
-  height: 160px;
+  height: 140px;
   object-fit: cover;
   display: block;
   transition: transform 0.5s ease;
 }
 
-.pd-rec-card:hover .pd-rec-img {
-  transform: scale(1.08);
-}
+.pd-rec-card:hover .pd-rec-img { transform: scale(1.08); }
 
 .pd-rec-overlay {
   position: absolute;
@@ -445,31 +471,29 @@
 
 .pd-rec-overlay span {
   font-family: 'Orbitron', sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
   color: #fff;
   text-transform: uppercase;
 }
 
-.pd-rec-card:hover .pd-rec-overlay {
-  opacity: 1;
-}
+.pd-rec-card:hover .pd-rec-overlay { opacity: 1; }
 
 .pd-rec-body {
-  padding: 16px 18px;
+  padding: 14px 16px;
 }
 
 .pd-rec-name {
   font-size: 13px;
   font-weight: 600;
   color: #e5e7eb;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1.4;
 }
 
 .pd-rec-price {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: #ffd700;
 }
@@ -508,32 +532,40 @@
 
 @media (max-width: 1024px) {
   .pd-hero {
-    grid-template-columns: 1fr;
-    gap: 44px;
     padding: 40px 28px;
+    gap: 28px;
+  }
+
+  .pd-top {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .pd-price-right {
+    width: 100%;
+  }
+
+  .pd-bottom {
+    grid-template-columns: 1fr;
+    gap: 36px;
   }
 
   .pd-recs-section {
     padding: 0 28px 20px;
   }
 
-  .pd-image {
-    aspect-ratio: 4 / 3;
+  .pd-recs-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .pd-hero {
-    padding: 28px 20px;
-    gap: 32px;
+    padding: 24px 16px;
   }
 
   .pd-recs-section {
-    padding: 0 20px 20px;
-  }
-
-  .pd-title {
-    font-size: 26px;
+    padding: 0 16px 20px;
   }
 
   .pd-recs-grid {

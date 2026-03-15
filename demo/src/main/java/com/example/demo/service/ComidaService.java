@@ -9,8 +9,6 @@ public interface ComidaService {
 
     Comida findById(Long id);
 
-    Collection<Comida> findTop2ByIdGreaterThanOrderByIdAsc(Long id);
-
     Collection<Comida> Recomendados(Long id);
 
     void save(Comida comida);
