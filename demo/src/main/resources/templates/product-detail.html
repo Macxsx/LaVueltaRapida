@@ -46,41 +46,46 @@
 
         </div>
 
-        <!-- IMAGE FULL WIDTH -->
-        <div class="pd-image-wrap">
-          <div class="pd-image-frame">
-            <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="pd-image">
-            <div class="pd-image-overlay"></div>
-          </div>
-          <div class="pd-corner pd-corner--tl"></div>
-          <div class="pd-corner pd-corner--tr"></div>
-          <div class="pd-corner pd-corner--bl"></div>
-          <div class="pd-corner pd-corner--br"></div>
-        </div>
+        <!-- IMAGE + OPTIONS SIDE BY SIDE -->
+        <div class="pd-media-row">
 
-        <!-- OPTIONS -->
-        <div class="pd-options" th:if="${!#lists.isEmpty(comida.category.adicionales)}">
-          <h4 class="pd-options-title">
-            <span class="pd-options-icon">⚙</span>
-            Personaliza tu pedido
-          </h4>
-          <div class="pd-options-grid">
-            <div class="pd-option-item"
-                 th:each="adicional : ${comida.category.adicionales}"
-                 th:if="${adicional.available}">
-              <input type="checkbox"
-                     th:id="'adic-' + ${adicional.id}"
-                     name="adicionales"
-                     th:value="${adicional.id}"
-                     th:data-price="${adicional.price}"
-                     class="pd-checkbox">
-              <label th:for="'adic-' + ${adicional.id}" class="pd-option-label">
-                <span class="pd-option-name" th:text="${adicional.name}">Adicional</span>
-                <span class="pd-option-price"
-                      th:text="'+$ ' + ${#numbers.formatDecimal(adicional.price,0,'POINT',0,'POINT')}">+$ 0</span>
-              </label>
+          <!-- IMAGE -->
+          <div class="pd-image-wrap">
+            <div class="pd-image-frame">
+              <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="pd-image">
+              <div class="pd-image-overlay"></div>
+            </div>
+            <div class="pd-corner pd-corner--tl"></div>
+            <div class="pd-corner pd-corner--tr"></div>
+            <div class="pd-corner pd-corner--bl"></div>
+            <div class="pd-corner pd-corner--br"></div>
+          </div>
+
+          <!-- OPTIONS -->
+          <div class="pd-options" th:if="${!#lists.isEmpty(comida.category.adicionales)}">
+            <h4 class="pd-options-title">
+              <span class="pd-options-icon">⚙</span>
+              Personaliza tu pedido
+            </h4>
+            <div class="pd-options-grid">
+              <div class="pd-option-item"
+                   th:each="adicional : ${comida.category.adicionales}"
+                   th:if="${adicional.available}">
+                <input type="checkbox"
+                       th:id="'adic-' + ${adicional.id}"
+                       name="adicionales"
+                       th:value="${adicional.id}"
+                       th:data-price="${adicional.price}"
+                       class="pd-checkbox">
+                <label th:for="'adic-' + ${adicional.id}" class="pd-option-label">
+                  <span class="pd-option-name" th:text="${adicional.name}">Adicional</span>
+                  <span class="pd-option-price"
+                        th:text="'+$ ' + ${#numbers.formatDecimal(adicional.price,0,'POINT',0,'POINT')}">+$ 0</span>
+                </label>
+              </div>
             </div>
           </div>
+
         </div>
 
         <!-- SUBMIT BUTTON -->
