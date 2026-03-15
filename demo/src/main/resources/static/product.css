@@ -350,6 +350,69 @@ main {
   color: white;
 }
 
+/* ================================================= */
+/* ========= ADICIONALES ESTILO PREMIUM ============ */
+/* ================================================= */
+
+.option-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 10px 14px;
+  border-radius: 10px;
+
+  background: rgba(255,255,255,0.02);
+  border: 1px solid transparent;
+
+  transition: all 0.25s ease;
+}
+
+/* Hover tipo tarjeta */
+.option-item:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: #2a2a2a;
+  transform: translateX(3px);
+}
+
+/* Texto */
+.option-item label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* Precio adicional */
+.option-item label span:last-child {
+  color: var(--gold);
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+/* Cuando está seleccionado */
+.option-item input[type="checkbox"]:checked + label {
+  color: white;
+  font-weight: 500;
+}
+
+/* Glow cuando se selecciona */
+.option-item input[type="checkbox"]:checked {
+  box-shadow: 0 0 8px rgba(225,6,0,0.8);
+}
+
+/* Animación de selección */
+.option-item input[type="checkbox"]:checked + label {
+  animation: adicionalSeleccionado 0.25s ease;
+}
+
+@keyframes adicionalSeleccionado {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
 
 
 /* ================================================= */

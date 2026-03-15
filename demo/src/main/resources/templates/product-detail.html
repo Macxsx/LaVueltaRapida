@@ -58,49 +58,33 @@
 
           <input type="hidden" name="id" th:value="${comida.id}">
 
-          <div class="product-options">
+<div class="product-options">
 
-            <div class="option-card">
+  <div class="option-card">
 
-              <h4 class="option-title">+ Bebidas</h4>
+    <h4 class="option-title">+ Adicionales</h4>
 
-              <div class="option-item">
-                <input type="checkbox" id="coca" name="extras" value="Coca-Cola">
-                <label for="coca">Coca-Cola</label>
-              </div>
+    <div class="option-item"
+         th:each="adicional : ${comida.category.adicionales}"
+         th:if="${adicional.available}">
 
-              <div class="option-item">
-                <input type="checkbox" id="sprite" name="extras" value="Sprite">
-                <label for="sprite">Sprite</label>
-              </div>
+      <input type="checkbox"
+             th:id="'adicional-' + ${adicional.id}"
+             name="adicionales"
+             th:value="${adicional.id}">
 
-              <div class="option-item">
-                <input type="checkbox" id="mrtea" name="extras" value="Mr Tea">
-                <label for="mrtea">Mr. Tea</label>
-              </div>
+      <label th:for="'adicional-' + ${adicional.id}">
 
-            </div>
+        <span th:text="${adicional.name}"></span>
+        (+$ <span th:text="${#numbers.formatDecimal(adicional.price,0,'POINT',0,'POINT')}"></span>)
 
-            <div class="option-card">
+      </label>
 
-            <h4 class="option-title">+ Acompañamientos</h4>
+    </div>
 
-            <div class="option-item">
-              <input type="checkbox" id="coca" name="extras" value="Coca-Cola">
-              <label for="coca">Pit Rolls</label>
-            </div>
+  </div>
 
-            <div class="option-item">
-              <input type="checkbox" id="sprite" name="extras" value="Sprite">
-              <label for="sprite">Papas</label>
-            </div>
-
-            <div class="option-item">
-              <input type="checkbox" id="mrtea" name="extras" value="Mr Tea">
-              <label for="mrtea">Alitas</label>
-            </div>
-
-          </div>
+</div>
 
           </div>
 

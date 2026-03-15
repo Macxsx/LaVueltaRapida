@@ -4,8 +4,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
+
+
+@Data
 @Entity
 public class Categoria {
 
@@ -17,6 +29,15 @@ public class Categoria {
     // nullable, unique, length 
     @Column(nullable = false, unique = true, length = 50)
     private String name;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "categoria_adicional",
+        joinColumns = @JoinColumn(name = "categoria_id"),
+        inverseJoinColumns = @JoinColumn(name = "adicional_id")
+    )
+   private List<Adicional> adicionales = new ArrayList<>();
+    
 
     // Constructor vacío (Obligatorio para JPA)
     public Categoria() {
@@ -32,21 +53,5 @@ public class Categoria {
         this.name = name;
     }
 
-    // --- GETTERS Y SETTERS ---
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+   
 }

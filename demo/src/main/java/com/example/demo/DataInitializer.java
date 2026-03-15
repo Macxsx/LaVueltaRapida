@@ -1,11 +1,16 @@
 package com.example.demo;
 
+import com.example.demo.entitys.Adicional;
 import com.example.demo.entitys.Categoria;
 import com.example.demo.entitys.Cliente;
 import com.example.demo.entitys.Comida;
+import com.example.demo.repository.AdicionalRepository;
 import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.ComidaRepository;
+
+import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initDatabase(ComidaRepository comidaRepo, CategoriaRepository catRepo, ClienteRepository clienteRepo) {
+    CommandLineRunner initDatabase(ComidaRepository comidaRepo, CategoriaRepository catRepo, ClienteRepository clienteRepo, AdicionalRepository adicionalRepo) {
         return args -> {
             // ==========================================
             // 1. CREACIÓN DE CATEGORÍAS
@@ -24,6 +29,84 @@ public class DataInitializer {
             Categoria picantes = catRepo.save(new Categoria("Picantes"));
             Categoria bebidas = catRepo.save(new Categoria("Bebidas"));
             Categoria postres = catRepo.save(new Categoria("Postres"));
+
+            // ==========================================
+            // 1.1 ADICIONALES
+            // ==========================================
+
+            // CLASICAS
+            Adicional quesoExtra = adicionalRepo.save(new Adicional("Queso extra", 3000.0, true));
+            Adicional pepperoniExtra = adicionalRepo.save(new Adicional("Pepperoni extra", 3500.0, true));
+            Adicional jamonExtra = adicionalRepo.save(new Adicional("Jamón extra", 3000.0, true));
+            Adicional champinones = adicionalRepo.save(new Adicional("Champiñones", 2500.0, true));
+            Adicional aceitunas = adicionalRepo.save(new Adicional("Aceitunas negras", 2500.0, true));
+            Adicional maiz = adicionalRepo.save(new Adicional("Maíz dulce", 2000.0, true));
+            Adicional pina = adicionalRepo.save(new Adicional("Piña", 2500.0, true));
+            Adicional bordeQueso = adicionalRepo.save(new Adicional("Borde relleno de queso", 4000.0, true));
+            Adicional salsaExtra = adicionalRepo.save(new Adicional("Salsa extra", 1500.0, true));
+
+            // ESPECIALES
+            Adicional tocineta = adicionalRepo.save(new Adicional("Tocineta", 3500.0, true));
+            Adicional pollo = adicionalRepo.save(new Adicional("Pollo desmechado", 3500.0, true));
+            Adicional carne = adicionalRepo.save(new Adicional("Carne molida", 3500.0, true));
+            Adicional bordeCrema = adicionalRepo.save(new Adicional("Borde relleno queso crema", 4500.0, true));
+            Adicional salsaBBQ = adicionalRepo.save(new Adicional("Salsa BBQ", 2000.0, true));
+            Adicional salsaAjo = adicionalRepo.save(new Adicional("Salsa de ajo", 2000.0, true));
+
+            // PICANTES
+            Adicional jalapenos = adicionalRepo.save(new Adicional("Jalapeños", 2500.0, true));
+            Adicional aji = adicionalRepo.save(new Adicional("Ají picante", 1500.0, true));
+            Adicional chorizoPicante = adicionalRepo.save(new Adicional("Chorizo picante", 3500.0, true));
+            Adicional salsaPicante = adicionalRepo.save(new Adicional("Salsa picante", 2000.0, true));
+
+            // BEBIDAS
+            Adicional hielo = adicionalRepo.save(new Adicional("Hielo extra", 0.0, true));
+            Adicional limon = adicionalRepo.save(new Adicional("Rodaja de limón", 500.0, true));
+            Adicional vaso = adicionalRepo.save(new Adicional("Vaso adicional", 0.0, true));
+
+            // POSTRES
+            Adicional heladoVainilla = adicionalRepo.save(new Adicional("Helado de vainilla", 3000.0, true));
+            Adicional heladoChocolate = adicionalRepo.save(new Adicional("Helado de chocolate", 3000.0, true));
+            Adicional salsaChocolate = adicionalRepo.save(new Adicional("Salsa de chocolate", 1500.0, true));
+            Adicional salsaCaramelo = adicionalRepo.save(new Adicional("Salsa de caramelo", 1500.0, true));
+            Adicional cremaBatida = adicionalRepo.save(new Adicional("Crema batida", 2000.0, true));
+            Adicional fresas = adicionalRepo.save(new Adicional("Fresas", 2500.0, true));
+
+            // CLASICAS
+            clasicas.getAdicionales().addAll(List.of(
+                    quesoExtra, pepperoniExtra, jamonExtra, champinones,
+                    aceitunas, maiz, pina, bordeQueso, salsaExtra
+            ));
+
+            // ESPECIALES
+            especiales.getAdicionales().addAll(List.of(
+                    quesoExtra, pepperoniExtra, tocineta, pollo,
+                    carne, bordeQueso, bordeCrema, salsaBBQ, salsaAjo
+            ));
+
+            // PICANTES
+            picantes.getAdicionales().addAll(List.of(
+                    jalapenos, aji, chorizoPicante, salsaPicante,
+                    quesoExtra, tocineta, bordeQueso
+            ));
+
+            // BEBIDAS
+            bebidas.getAdicionales().addAll(List.of(
+                    hielo, limon, vaso
+            ));
+
+            // POSTRES
+            postres.getAdicionales().addAll(List.of(
+                    heladoVainilla, heladoChocolate,
+                    salsaChocolate, salsaCaramelo,
+                    cremaBatida, fresas
+            ));
+
+            catRepo.save(clasicas);
+            catRepo.save(especiales);
+            catRepo.save(picantes);
+            catRepo.save(bebidas);
+            catRepo.save(postres);
 
             // ==========================================
             // 2. CLÁSICAS
@@ -95,7 +178,7 @@ public class DataInitializer {
             clienteRepo.save(new Cliente("Sebastián", "Morales", "sebastian.morales@email.com", "sebas007", "sebasKey", "Cra 25 #60-12, Santa Marta", "3178901234"));
             clienteRepo.save(new Cliente("Carolina", "Díaz", "carolina.diaz@email.com", "caro2024", "caroPass", "Cl 85 #42-30, Ibagué", "3145678901"));
 
-            System.out.println("🏎️ ¡Semáforo en verde! Base de datos de LaVueltaRapida inicializada correctamente.");
+            System.out.println("¡Semáforo en verde! Base de datos de LaVueltaRapida inicializada correctamente.");
         };
     }
 }
