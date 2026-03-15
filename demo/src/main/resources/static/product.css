@@ -2,6 +2,7 @@
    PRODUCT DETAIL — PREMIUM REDESIGN
    ===================================================== */
 
+/* MAIN WRAPPER */
 .pd-main {
   min-height: 100vh;
   background: #0a0a0a;
@@ -12,52 +13,93 @@
 }
 
 /* =====================================================
-   FORM WRAPPER (wraps the hero)
-   ===================================================== */
-
-.pd-form {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 48px;
-}
-
-/* =====================================================
-   HERO — FULL-WIDTH CARD
+   HERO SECTION — IMAGE + INFO
    ===================================================== */
 
 .pd-hero {
-  background: #111;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 24px;
-  overflow: hidden;
-  margin-top: 48px;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 60px 48px 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
 }
 
 /* =====================================================
-   INFO ROW — title/desc left | price right
+   IMAGE PANEL
    ===================================================== */
 
-.pd-info-row {
+.pd-image-wrap {
+  position: relative;
+  padding: 12px;
+}
+
+.pd-image-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(225,6,0,0.15),
+    0 30px 80px rgba(0,0,0,0.8),
+    0 0 60px rgba(225,6,0,0.08);
+}
+
+.pd-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.pd-image-wrap:hover .pd-image {
+  transform: scale(1.04);
+}
+
+.pd-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(225,6,0,0.06) 0%,
+    transparent 50%,
+    rgba(0,0,0,0.3) 100%
+  );
+  pointer-events: none;
+}
+
+/* Racing corner brackets */
+.pd-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #e10600;
+  border-style: solid;
+  border-width: 0;
+}
+
+.pd-corner--tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 4px; }
+.pd-corner--tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 4px; }
+.pd-corner--bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 4px; }
+.pd-corner--br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 4px; }
+
+/* =====================================================
+   INFO PANEL
+   ===================================================== */
+
+.pd-info {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 40px;
-  padding: 40px 44px 32px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-direction: column;
+  gap: 0;
 }
 
-.pd-info-left {
-  flex: 1;
-  min-width: 0;
-}
-
-/* META: badge + availability */
+/* META ROW — badge + availability */
 .pd-meta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
 .pd-badge {
@@ -80,140 +122,83 @@
   text-transform: uppercase;
 }
 
-.pd-avail--on  { color: #22c55e; }
+.pd-avail--on { color: #22c55e; }
 .pd-avail--off { color: #ef4444; }
 
 /* TITLE */
 .pd-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(24px, 2.8vw, 40px);
+  font-size: clamp(26px, 3vw, 42px);
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: -0.5px;
   color: #fff;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 
 /* DESCRIPTION */
 .pd-description {
   font-size: 15px;
   line-height: 1.75;
-  color: #6b7280;
-  max-width: 520px;
+  color: #8a8a8a;
+  margin-bottom: 32px;
+  max-width: 480px;
 }
 
-/* PRICE BLOCK — right side of info row */
+/* PRICE BLOCK */
 .pd-price-block {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-  flex-shrink: 0;
-  padding: 22px 28px;
-  background: linear-gradient(135deg, rgba(225,6,0,0.08), rgba(0,0,0,0.5));
-  border: 1px solid rgba(225,6,0,0.22);
-  border-radius: 16px;
+  gap: 4px;
+  margin-bottom: 32px;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, rgba(225,6,0,0.06), rgba(0,0,0,0.4));
+  border: 1px solid rgba(225,6,0,0.2);
+  border-radius: 14px;
   position: relative;
   overflow: hidden;
-  min-width: 240px;
 }
 
-.pd-price-block::after {
+.pd-price-block::before {
   content: "";
   position: absolute;
-  bottom: 0;
   left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #e10600, transparent);
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #e10600, #7a0000);
+  border-radius: 2px 0 0 2px;
 }
 
 .pd-price-label {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 2.5px;
+  letter-spacing: 2px;
   color: #555;
   text-transform: uppercase;
 }
 
 .pd-price {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(20px, 2vw, 30px);
+  font-size: clamp(22px, 2.5vw, 32px);
   font-weight: 700;
   color: #ffd700;
   letter-spacing: 1px;
-  white-space: nowrap;
+}
+
+/* DIVIDER */
+.pd-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(225,6,0,0.3), transparent);
+  margin-bottom: 32px;
 }
 
 /* =====================================================
-   MEDIA ROW — image left, options right
-   ===================================================== */
-
-.pd-media-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-
-/* =====================================================
-   IMAGE
-   ===================================================== */
-
-.pd-image-wrap {
-  position: relative;
-}
-
-.pd-image-frame {
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-}
-
-.pd-image {
-  width: 100%;
-  height: 100%;
-  min-height: 380px;
-  object-fit: cover;
-  display: block;
-}
-
-.pd-image-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0,0,0,0.15) 0%,
-    transparent 40%,
-    rgba(0,0,0,0.55) 100%
-  );
-  pointer-events: none;
-}
-
-/* Corner brackets */
-.pd-corner {
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  border-color: #e10600;
-  border-style: solid;
-  border-width: 0;
-  z-index: 2;
-}
-
-.pd-corner--tl { top: 8px; left: 8px; border-top-width: 2px; border-left-width: 2px; }
-.pd-corner--tr { top: 8px; right: 8px; border-top-width: 2px; border-right-width: 2px; }
-.pd-corner--bl { bottom: 8px; left: 8px; border-bottom-width: 2px; border-left-width: 2px; }
-.pd-corner--br { bottom: 8px; right: 8px; border-bottom-width: 2px; border-right-width: 2px; }
-
-/* =====================================================
-   OPTIONS — right of image
+   OPTIONS
    ===================================================== */
 
 .pd-options {
-  padding: 36px 40px;
-  border-left: 1px solid rgba(255,255,255,0.05);
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 32px;
 }
 
 .pd-options-title {
@@ -223,7 +208,7 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #fff;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -237,7 +222,7 @@
 .pd-options-grid {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .pd-option-item {
@@ -254,8 +239,8 @@
 
 .pd-option-item:hover {
   background: rgba(225,6,0,0.05);
-  border-color: rgba(225,6,0,0.22);
-  transform: translateX(3px);
+  border-color: rgba(225,6,0,0.2);
+  transform: translateX(4px);
 }
 
 .pd-checkbox {
@@ -271,7 +256,9 @@
   position: relative;
 }
 
-.pd-checkbox:hover   { border-color: #e10600; }
+.pd-checkbox:hover {
+  border-color: #e10600;
+}
 
 .pd-checkbox:checked {
   background: #e10600;
@@ -310,7 +297,7 @@
 
 .pd-option-price {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffd700;
   margin-left: 12px;
   white-space: nowrap;
@@ -321,20 +308,19 @@
    ===================================================== */
 
 .pd-btn-order {
+  width: 100%;
+  padding: 18px 28px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  width: calc(100% - 88px);
-  margin: 36px 44px 44px;
-  padding: 20px 28px;
-  border-radius: 14px;
-  border: none;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
   background: linear-gradient(135deg, #e10600 0%, #a00000 100%);
   color: white;
   cursor: pointer;
@@ -355,21 +341,18 @@
   transition: 0.55s ease;
 }
 
-.pd-btn-order:hover::before { left: 100%; }
+.pd-btn-order:hover::before {
+  left: 100%;
+}
 
 .pd-btn-order:hover {
   transform: translateY(-3px);
-  box-shadow: 0 18px 50px rgba(225,6,0,0.55);
+  box-shadow: 0 16px 48px rgba(225,6,0,0.55);
   background: linear-gradient(135deg, #ff1a1a 0%, #b80000 100%);
 }
 
-.pd-btn-order:active { transform: scale(0.97); }
-
-.pd-btn-subtotal {
-  opacity: 0.85;
-  font-size: 12px;
-  letter-spacing: 1px;
-  font-weight: 600;
+.pd-btn-order:active {
+  transform: scale(0.97);
 }
 
 /* =====================================================
@@ -378,25 +361,25 @@
 
 .pd-recs-section {
   max-width: 1280px;
-  margin: 56px auto 0;
-  padding: 0 48px;
+  margin: 0 auto;
+  padding: 0 48px 20px;
 }
 
 .pd-recs-header {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
 .pd-recs-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(225,6,0,0.35));
+  background: linear-gradient(90deg, transparent, rgba(225,6,0,0.3));
 }
 
 .pd-recs-line:last-child {
-  background: linear-gradient(90deg, rgba(225,6,0,0.35), transparent);
+  background: linear-gradient(90deg, rgba(225,6,0,0.3), transparent);
 }
 
 .pd-recs-title {
@@ -411,8 +394,8 @@
 
 .pd-recs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 24px;
 }
 
 .pd-rec-card {
@@ -429,7 +412,7 @@
 .pd-rec-card:hover {
   border-color: rgba(225,6,0,0.3);
   transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 20px rgba(225,6,0,0.07);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 20px rgba(225,6,0,0.08);
 }
 
 .pd-rec-img-wrap {
@@ -439,18 +422,20 @@
 
 .pd-rec-img {
   width: 100%;
-  height: 150px;
+  height: 160px;
   object-fit: cover;
   display: block;
   transition: transform 0.5s ease;
 }
 
-.pd-rec-card:hover .pd-rec-img { transform: scale(1.08); }
+.pd-rec-card:hover .pd-rec-img {
+  transform: scale(1.08);
+}
 
 .pd-rec-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(200,6,0,0.78);
+  background: rgba(225,6,0,0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -467,17 +452,19 @@
   text-transform: uppercase;
 }
 
-.pd-rec-card:hover .pd-rec-overlay { opacity: 1; }
+.pd-rec-card:hover .pd-rec-overlay {
+  opacity: 1;
+}
 
 .pd-rec-body {
-  padding: 14px 16px;
+  padding: 16px 18px;
 }
 
 .pd-rec-name {
   font-size: 13px;
   font-weight: 600;
   color: #e5e7eb;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   line-height: 1.4;
 }
 
@@ -519,40 +506,35 @@
    RESPONSIVE
    ===================================================== */
 
-@media (max-width: 900px) {
-  .pd-form      { padding: 0 20px; }
-  .pd-hero      { margin-top: 32px; }
-
-  .pd-info-row  {
-    flex-direction: column;
-    padding: 28px 24px 24px;
-    gap: 24px;
-  }
-
-  .pd-price-block {
-    align-items: flex-start;
-    min-width: unset;
-    width: 100%;
-  }
-
-  .pd-media-row {
+@media (max-width: 1024px) {
+  .pd-hero {
     grid-template-columns: 1fr;
+    gap: 44px;
+    padding: 40px 28px;
   }
 
-  .pd-image     { min-height: 260px; height: 260px; }
-
-  .pd-options   {
-    padding: 28px 24px;
-    border-left: none;
-    border-top: 1px solid rgba(255,255,255,0.05);
+  .pd-recs-section {
+    padding: 0 28px 20px;
   }
 
-  .pd-btn-order {
-    width: calc(100% - 48px);
-    margin: 28px 24px 36px;
+  .pd-image {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 600px) {
+  .pd-hero {
+    padding: 28px 20px;
+    gap: 32px;
   }
 
-  .pd-recs-section { padding: 0 20px; }
+  .pd-recs-section {
+    padding: 0 20px 20px;
+  }
+
+  .pd-title {
+    font-size: 26px;
+  }
 
   .pd-recs-grid {
     grid-template-columns: repeat(2, 1fr);

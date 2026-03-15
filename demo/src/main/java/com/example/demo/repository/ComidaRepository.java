@@ -11,5 +11,4 @@ public interface ComidaRepository extends JpaRepository<Comida, Long> {
     List<Comida> findTop2ByIdGreaterThanOrderByIdAsc(Long id);
     List<Comida> findTop2ByIdLessThanOrderByIdDesc(Long id);
     List<Comida> findTop5ByAvailableTrue();
-    List<Comida> findTop5ByAvailableTrueAndIdNot(Long id);
 }

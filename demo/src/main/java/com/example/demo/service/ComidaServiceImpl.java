@@ -33,7 +33,10 @@ public class ComidaServiceImpl implements ComidaService {
 
     @Override
     public Collection<Comida> Recomendados(Long id) {
-        return repo.findTop5ByAvailableTrueAndIdNot(id);
+        List<Comida> recomendados = new ArrayList<>();
+        recomendados.addAll(repo.findTop2ByIdGreaterThanOrderByIdAsc(id));
+        recomendados.addAll(repo.findTop2ByIdLessThanOrderByIdDesc(id));
+        return recomendados;
     }
 
     @Override
