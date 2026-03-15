@@ -28,7 +28,9 @@ public class ComidaServiceImpl implements ComidaService {
 
     @Override
     public Collection<Comida> recomendadosPorCategoria(Long categoryId, Long id) {
-        return repo.findByCategoryIdAndIdNot(categoryId, id);
+        return repo.findByCategoryIdAndIdNot(categoryId, id)
+                   .stream().limit(5)
+                   .collect(java.util.stream.Collectors.toList());
     }
 
     @Override
