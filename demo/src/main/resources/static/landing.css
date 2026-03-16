@@ -501,7 +501,8 @@
 .exp-right-column {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  height: 100%;
   padding-left: 32px;
 }
 
