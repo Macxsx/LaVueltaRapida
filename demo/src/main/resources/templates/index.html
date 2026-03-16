@@ -216,7 +216,8 @@
     <div class="experience-inner">
       <div class="row g-0 align-items-start">
 
-        <div class="col-lg-6">
+        <!-- LEFT: título + lista compacta de features -->
+        <div class="col-lg-5">
           <div class="experience-content">
             <div class="experience-title-block">
               <h2 class="experience-title">
@@ -231,86 +232,89 @@
               </p>
             </div>
 
-            <div class="experience-features">
-              <div class="exp-feature-card">
-                <div class="exp-feature-icon"><img src="Images/Transmision.png" alt="Transmisiones"></div>
-                <div class="exp-feature-text">
-                  <h3>Transmisiones en vivo</h3>
-                  <p>Cada carrera en pantallas HD mientras saboreas tu pizza.</p>
+            <ul class="exp-feature-list">
+              <li class="exp-feature-item">
+                <div class="exp-feat-icon"><img src="Images/Transmision.png" alt="Transmisiones"></div>
+                <div class="exp-feat-text">
+                  <strong>Transmisiones en vivo</strong>
+                  <span>Cada Gran Premio en pantallas HD</span>
                 </div>
-              </div>
-              <div class="exp-feature-card">
-                <div class="exp-feature-icon"><img src="Images/Ambiente.png" alt="Ambiente"></div>
-                <div class="exp-feature-text">
-                  <h3>Ambiente de circuito</h3>
-                  <p>Decoración auténtica que te transporta al paddock.</p>
+              </li>
+              <li class="exp-feature-item">
+                <div class="exp-feat-icon"><img src="Images/Ambiente.png" alt="Ambiente"></div>
+                <div class="exp-feat-text">
+                  <strong>Ambiente de circuito</strong>
+                  <span>Decoración que te lleva al paddock</span>
                 </div>
-              </div>
-              <div class="exp-feature-card">
-                <div class="exp-feature-icon"><img src="Images/Ranking.png" alt="Ranking"></div>
-                <div class="exp-feature-text">
-                  <h3>Ranking de pilotos</h3>
-                  <p>Compite por el primer lugar en nuestro leaderboard.</p>
+              </li>
+              <li class="exp-feature-item">
+                <div class="exp-feat-icon"><img src="Images/Ranking.png" alt="Ranking"></div>
+                <div class="exp-feat-text">
+                  <strong>Ranking de pilotos</strong>
+                  <span>Compite en nuestro leaderboard</span>
                 </div>
-              </div>
-              <div class="exp-feature-card">
-                <div class="exp-feature-icon"><img src="Images/atmosfera.png" alt="Atmósfera"></div>
-                <div class="exp-feature-text">
-                  <h3>Atmósfera competitiva</h3>
-                  <p>Siente la adrenalina de la F1 en cada bocado.</p>
+              </li>
+              <li class="exp-feature-item">
+                <div class="exp-feat-icon"><img src="Images/atmosfera.png" alt="Atmósfera"></div>
+                <div class="exp-feat-text">
+                  <strong>Atmósfera competitiva</strong>
+                  <span>Adrenalina F1 en cada bocado</span>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div class="col-lg-6">
-          <div class="exp-map-panel">
-            <div class="exp-map-header">
-              <div class="exp-map-pin">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                ENCUÉNTRANOS
+        <!-- RIGHT: galería 2×2 arriba + mapa abajo -->
+        <div class="col-lg-7">
+          <div class="exp-right-column">
+
+            <div class="resto-gallery">
+              <div class="resto-gallery-item">
+                <img src="Images/resto-interior.png" alt="Nuestro restaurante" loading="lazy">
+                <div class="resto-gallery-overlay"><span>Nuestro espacio</span></div>
               </div>
-              <p class="exp-map-address">Calle 93 #15-15, Zona Rosa · Bogotá, Colombia</p>
-              <p class="exp-map-hours">Lun – Dom: 11:00 am – 11:00 pm</p>
+              <div class="resto-gallery-item">
+                <img src="Images/resto-horno.png" alt="Horno de leña" loading="lazy">
+                <div class="resto-gallery-overlay"><span>Horno de leña</span></div>
+              </div>
+              <div class="resto-gallery-item">
+                <img src="Images/resto-pizza.png" alt="Nuestras pizzas" loading="lazy">
+                <div class="resto-gallery-overlay"><span>Pizzas artesanales</span></div>
+              </div>
+              <div class="resto-gallery-item">
+                <img src="Images/resto-ambiente.png" alt="El ambiente" loading="lazy">
+                <div class="resto-gallery-overlay"><span>El ambiente</span></div>
+              </div>
             </div>
-            <div class="exp-map-frame">
-              <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-74.060%2C4.670%2C-74.038%2C4.682&amp;layer=mapnik&amp;marker=4.6757%2C-74.0494"
-                title="Ubicación La Vuelta Rápida"
-                loading="lazy"
-                allowfullscreen>
-              </iframe>
+
+            <div class="exp-map-panel">
+              <div class="exp-map-header">
+                <div class="exp-map-pin">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  ENCUÉNTRANOS
+                </div>
+                <p class="exp-map-address">Calle 93 #15-15, Zona Rosa · Bogotá, Colombia</p>
+                <p class="exp-map-hours">Lun – Dom: 11:00 am – 11:00 pm</p>
+              </div>
+              <div class="exp-map-frame">
+                <iframe
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=-74.060%2C4.670%2C-74.038%2C4.682&amp;layer=mapnik&amp;marker=4.6757%2C-74.0494"
+                  title="Ubicación La Vuelta Rápida"
+                  loading="lazy"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <a href="https://www.google.com/maps" target="_blank" class="exp-map-link">
+                Abrir en Google Maps
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
             </div>
-            <a href="https://www.google.com/maps" target="_blank" class="exp-map-link">
-              Abrir en Google Maps
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
+
           </div>
         </div>
 
       </div>
-
-      <!-- RESTAURANT PHOTO GALLERY -->
-      <div class="resto-gallery">
-        <div class="resto-gallery-item">
-          <img src="Images/resto-interior.png" alt="Nuestro restaurante" loading="lazy">
-          <div class="resto-gallery-overlay"><span>Nuestro espacio</span></div>
-        </div>
-        <div class="resto-gallery-item">
-          <img src="Images/resto-horno.png" alt="Horno de leña" loading="lazy">
-          <div class="resto-gallery-overlay"><span>Horno de leña</span></div>
-        </div>
-        <div class="resto-gallery-item">
-          <img src="Images/resto-pizza.png" alt="Nuestras pizzas" loading="lazy">
-          <div class="resto-gallery-overlay"><span>Pizzas artesanales</span></div>
-        </div>
-        <div class="resto-gallery-item">
-          <img src="Images/resto-ambiente.png" alt="Ambiente" loading="lazy">
-          <div class="resto-gallery-overlay"><span>El ambiente</span></div>
-        </div>
-      </div>
-
     </div>
   </section>
 
