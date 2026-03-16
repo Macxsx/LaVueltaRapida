@@ -1004,19 +1004,28 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(145deg, #1a1a1a, #111);
-  border: 1px solid rgba(225, 6, 0, 0.4);
+  width: 50px;
+  height: 38px;
+  background: linear-gradient(145deg, #1c1c1c, #111);
+  border: 1px solid rgba(225, 6, 0, 0.35);
   border-radius: 8px;
-  font-size: 18px;
-  transition: all 0.25s ease;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
 .cart-btn:hover {
+  color: var(--red);
   border-color: var(--red);
-  box-shadow: 0 0 12px rgba(225, 6, 0, 0.5);
+  box-shadow: 0 0 14px rgba(225, 6, 0, 0.45);
   transform: translateY(-2px);
+}
+
+.f1-cart-icon {
+  width: 30px;
+  height: auto;
+  display: block;
+  flex-shrink: 0;
 }
 
 /* Badge contador */
