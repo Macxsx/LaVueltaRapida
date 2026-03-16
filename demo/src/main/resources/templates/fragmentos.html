@@ -41,16 +41,34 @@
              th:href="@{/carrito}"
              class="cart-btn"
              title="Ver carrito">
-            <svg class="f1-cart-icon" viewBox="0 0 38 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <svg class="f1-cart-icon" viewBox="0 0 38 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <!-- Alerón trasero sólido -->
               <rect x="3" y="1" width="2" height="6" rx="1"/>
               <rect x="1" y="1" width="6" height="2.5" rx="1.2"/>
-              <path d="M4 8 L7 6 L27 6 L32 7.5 L32 10 L27 11 L7 11 L4 10 Z"/>
+              <!-- Cuerpo: solo contorno (malla de alambre) -->
+              <path d="M4 8 L7 6 L27 6 L32 7.5 L32 10 L27 11 L7 11 L4 10 Z"
+                    fill="none" stroke="currentColor" stroke-width="1.1"/>
+              <!-- Malla horizontal -->
+              <line x1="7.5" y1="8" x2="30" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="6.5" y1="9.5" x2="31" y2="9.5" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <!-- Malla vertical -->
+              <line x1="10" y1="6.2" x2="10" y2="10.8" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="14" y1="6" x2="14" y2="11" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="18" y1="6" x2="18" y2="11" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="22" y1="6" x2="22" y2="11" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="26" y1="6.2" x2="26" y2="10.8" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <!-- Cono de nariz sólido -->
               <path d="M30 7.5 L37 8.5 L30 10 Z"/>
+              <!-- Halo -->
               <rect x="14" y="4.5" width="9" height="2" rx="1" opacity="0.55"/>
-              <circle cx="9" cy="12.5" r="4.5"/>
-              <circle cx="9" cy="12.5" r="1.8" fill="rgba(0,0,0,0.45)"/>
-              <circle cx="25" cy="12.5" r="3.8"/>
-              <circle cx="25" cy="12.5" r="1.5" fill="rgba(0,0,0,0.45)"/>
+              <!-- Rueda trasera estilo caster de carrito -->
+              <circle cx="9" cy="13.5" r="4.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="9" cy="13.5" r="2.2"/>
+              <circle cx="9" cy="13.5" r="0.9" fill="rgba(0,0,0,0.5)"/>
+              <!-- Rueda delantera estilo caster de carrito -->
+              <circle cx="25" cy="13.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+              <circle cx="25" cy="13.5" r="1.8"/>
+              <circle cx="25" cy="13.5" r="0.7" fill="rgba(0,0,0,0.5)"/>
             </svg>
             <span class="cart-badge" th:text="${cartCount} ?: 0"></span>
           </a>
@@ -88,16 +106,34 @@
              th:href="@{/carrito}"
              class="cart-btn"
              title="Ver carrito">
-            <svg class="f1-cart-icon" viewBox="0 0 38 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <svg class="f1-cart-icon" viewBox="0 0 38 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <!-- Alerón trasero sólido -->
               <rect x="3" y="1" width="2" height="6" rx="1"/>
               <rect x="1" y="1" width="6" height="2.5" rx="1.2"/>
-              <path d="M4 8 L7 6 L27 6 L32 7.5 L32 10 L27 11 L7 11 L4 10 Z"/>
+              <!-- Cuerpo: solo contorno (malla de alambre) -->
+              <path d="M4 8 L7 6 L27 6 L32 7.5 L32 10 L27 11 L7 11 L4 10 Z"
+                    fill="none" stroke="currentColor" stroke-width="1.1"/>
+              <!-- Malla horizontal -->
+              <line x1="7.5" y1="8" x2="30" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="6.5" y1="9.5" x2="31" y2="9.5" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <!-- Malla vertical -->
+              <line x1="10" y1="6.2" x2="10" y2="10.8" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="14" y1="6" x2="14" y2="11" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="18" y1="6" x2="18" y2="11" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="22" y1="6" x2="22" y2="11" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <line x1="26" y1="6.2" x2="26" y2="10.8" stroke="currentColor" stroke-width="0.5" opacity="0.75"/>
+              <!-- Cono de nariz sólido -->
               <path d="M30 7.5 L37 8.5 L30 10 Z"/>
+              <!-- Halo -->
               <rect x="14" y="4.5" width="9" height="2" rx="1" opacity="0.55"/>
-              <circle cx="9" cy="12.5" r="4.5"/>
-              <circle cx="9" cy="12.5" r="1.8" fill="rgba(0,0,0,0.45)"/>
-              <circle cx="25" cy="12.5" r="3.8"/>
-              <circle cx="25" cy="12.5" r="1.5" fill="rgba(0,0,0,0.45)"/>
+              <!-- Rueda trasera estilo caster de carrito -->
+              <circle cx="9" cy="13.5" r="4.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="9" cy="13.5" r="2.2"/>
+              <circle cx="9" cy="13.5" r="0.9" fill="rgba(0,0,0,0.5)"/>
+              <!-- Rueda delantera estilo caster de carrito -->
+              <circle cx="25" cy="13.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+              <circle cx="25" cy="13.5" r="1.8"/>
+              <circle cx="25" cy="13.5" r="0.7" fill="rgba(0,0,0,0.5)"/>
             </svg>
             <span class="cart-badge" th:text="${cartCount} ?: 0"></span>
           </a>
