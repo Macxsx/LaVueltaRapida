@@ -128,49 +128,98 @@
     </div>
   </section>
 
-  <!-- ═══════════════ FEATURE CARDS ═══════════════ -->
-  <section class="feature-cards-section">
-    <div class="feature-cards-inner">
-      <div class="row g-4">
-        <div class="col-lg-6">
-          <div class="feature-card feature-card-red">
-            <div class="feature-card-overlay"></div>
-            <div class="feature-card-content">
-              <span class="feature-badge feature-badge-gold">
-                <img src="Images/Trofeo.png" alt="Trofeo">
-                FIRMA DE LA CASA
-              </span>
-              <h2 class="feature-card-title">LA POLE POSITION</h2>
-              <p class="feature-card-desc">
-                Nuestra pizza insignia. Ingredientes premium, masa madre y el secreto que nos puso en el primer lugar.
-              </p>
-              <a th:href="@{/producto/menu}" class="btn-feature-primary">
-                ORDENAR AHORA
-                <img src="Images/flecha-roja.png" alt="flecha">
-              </a>
+  <!-- ═══════════════ PROCESS SECTION ═══════════════ -->
+  <section class="process-section" id="proceso">
+    <div class="process-inner">
+
+      <header class="process-header">
+        <span class="process-label">NUESTRO PROCESO</span>
+        <h2 class="process-title">ASÍ HACEMOS <span class="text-red">TU PIZZA</span></h2>
+      </header>
+
+      <div class="process-steps">
+
+        <div class="process-step">
+          <div class="process-step-top">
+            <span class="process-num">01</span>
+            <div class="process-icon">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 6C24 6 16 12 16 22C16 27.5 19.5 31 24 31C28.5 31 32 27.5 32 22C32 12 24 6 24 6Z" stroke="#e10600" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M24 31V43" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M18 37H30" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="24" cy="20" r="3" fill="#e10600"/>
+              </svg>
             </div>
           </div>
+          <h3 class="process-step-title">MASA MADRE</h3>
+          <p class="process-step-desc">Fermentación lenta de 72 horas para una textura aireada y un sabor profundo que no se improvisa.</p>
         </div>
 
-        <div class="col-lg-6">
-          <div class="feature-card feature-card-dark">
-            <div class="feature-card-overlay"></div>
-            <div class="feature-card-content">
-              <span class="feature-badge feature-badge-red">
-                <img src="Images/bandera-blanca.png" alt="Bandera">
-                EXPERIENCIA
-              </span>
-              <h2 class="feature-card-title">VIVE LA EXPERIENCIA</h2>
-              <p class="feature-card-desc">
-                Disfruta tu pizza con ambiente de Fórmula 1, pantallas HD y la adrenalina de la competencia en cada visita.
-              </p>
-              <a href="#experiencia" class="btn-feature-secondary">
-                DESCUBRIR MÁS
-                <img src="Images/flecha-blanca.png" alt="flecha">
-              </a>
+        <div class="process-connector">
+          <div class="process-connector-line"></div>
+          <div class="process-connector-dot"></div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-step-top">
+            <span class="process-num">02</span>
+            <div class="process-icon">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="18" r="10" stroke="#e10600" stroke-width="2.5"/>
+                <path d="M24 8V5M24 31V34M34 18H37M11 18H8M31.1 11.1L33.2 9M14.9 26.9L12.8 29M31.1 24.9L33.2 27M14.9 11.1L12.8 9" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M18 40H30M20 43H28" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M24 28V36" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
             </div>
           </div>
+          <h3 class="process-step-title">INGREDIENTES DEL DÍA</h3>
+          <p class="process-step-desc">Seleccionamos cada ingrediente esa misma mañana. Sin conservantes, sin atajos, con todo el sabor.</p>
         </div>
+
+        <div class="process-connector">
+          <div class="process-connector-line"></div>
+          <div class="process-connector-dot"></div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-step-top">
+            <span class="process-num">03</span>
+            <div class="process-icon">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 38H34C35.1 38 36 37.1 36 36V26C36 20.5 30.6 16 24 16C17.4 16 12 20.5 12 26V36C12 37.1 12.9 38 14 38Z" stroke="#e10600" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M8 38H40" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M24 16V10" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M20 10C20 10 21 7 24 7C27 7 28 10 28 10" stroke="#e10600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M24 22C22 24 22 26 24 28C26 30 26 32 24 34" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <h3 class="process-step-title">HORNO DE LEÑA</h3>
+          <p class="process-step-desc">400°C de calor directo. La pizza entra cruda y en 90 segundos sale con el borde dorado perfecto.</p>
+        </div>
+
+        <div class="process-connector">
+          <div class="process-connector-line"></div>
+          <div class="process-connector-dot"></div>
+        </div>
+
+        <div class="process-step">
+          <div class="process-step-top">
+            <span class="process-num">04</span>
+            <div class="process-icon">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="10" width="8" height="28" rx="2" stroke="#e10600" stroke-width="2.5"/>
+                <rect x="20" y="10" width="8" height="28" rx="2" stroke="#e10600" stroke-width="2.5"/>
+                <path d="M6 14H14M6 18H14M6 22H14M6 26H14M20 14H28M20 18H28M20 22H28M20 26H28" stroke="#e10600" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M34 10L42 24L34 38" stroke="#e10600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M34 10V38" stroke="rgba(225,6,0,0.3)" stroke-width="2.5"/>
+              </svg>
+            </div>
+          </div>
+          <h3 class="process-step-title">EN TU MESA</h3>
+          <p class="process-step-desc">Desde las manos del chef hasta tu mesa en menos de 12 minutos. Velocidad de pit stop, calidad de podio.</p>
+        </div>
+
       </div>
     </div>
   </section>
@@ -232,36 +281,44 @@
               </p>
             </div>
 
-            <ul class="exp-feature-list">
-              <li class="exp-feature-item">
-                <div class="exp-feat-icon"><img src="Images/Transmision.png" alt="Transmisiones"></div>
-                <div class="exp-feat-text">
-                  <strong>Transmisiones en vivo</strong>
-                  <span>Cada Gran Premio en pantallas HD</span>
+            <div class="experience-features">
+              <div class="exp-feature-card">
+                <div class="exp-feature-icon">
+                  <img src="Images/Transmision.png" alt="Transmisiones en vivo">
                 </div>
-              </li>
-              <li class="exp-feature-item">
-                <div class="exp-feat-icon"><img src="Images/Ambiente.png" alt="Ambiente"></div>
-                <div class="exp-feat-text">
-                  <strong>Ambiente de circuito</strong>
-                  <span>Decoración que te lleva al paddock</span>
+                <div class="exp-feature-text">
+                  <h3>Transmisiones en vivo</h3>
+                  <p>Disfruta cada carrera en pantallas HD mientras saboreas tu pizza.</p>
                 </div>
-              </li>
-              <li class="exp-feature-item">
-                <div class="exp-feat-icon"><img src="Images/Ranking.png" alt="Ranking"></div>
-                <div class="exp-feat-text">
-                  <strong>Ranking de pilotos</strong>
-                  <span>Compite en nuestro leaderboard</span>
+              </div>
+              <div class="exp-feature-card">
+                <div class="exp-feature-icon">
+                  <img src="Images/Ambiente.png" alt="Ambiente de circuito">
                 </div>
-              </li>
-              <li class="exp-feature-item">
-                <div class="exp-feat-icon"><img src="Images/atmosfera.png" alt="Atmósfera"></div>
-                <div class="exp-feat-text">
-                  <strong>Atmósfera competitiva</strong>
-                  <span>Adrenalina F1 en cada bocado</span>
+                <div class="exp-feature-text">
+                  <h3>Ambiente de circuito</h3>
+                  <p>Decoración auténtica que te transporta al paddock de F1.</p>
                 </div>
-              </li>
-            </ul>
+              </div>
+              <div class="exp-feature-card">
+                <div class="exp-feature-icon">
+                  <img src="Images/Ranking.png" alt="Ranking de pilotos">
+                </div>
+                <div class="exp-feature-text">
+                  <h3>Ranking de pilotos</h3>
+                  <p>Compite con otros clientes por el primer lugar en el leaderboard.</p>
+                </div>
+              </div>
+              <div class="exp-feature-card">
+                <div class="exp-feature-icon">
+                  <img src="Images/atmosfera.png" alt="Atmósfera competitiva">
+                </div>
+                <div class="exp-feature-text">
+                  <h3>Atmósfera competitiva</h3>
+                  <p>Siente la adrenalina de la competencia en cada bocado.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
