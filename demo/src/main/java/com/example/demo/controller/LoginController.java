@@ -60,6 +60,9 @@ public class LoginController {
 
     @PostMapping("/register")
     public String registerPost(@ModelAttribute Cliente cliente, HttpSession session) {
+        if (clienteService.isUsernameTaken(cliente.getUsername())) {
+            return "redirect:/register?usernameTaken";
+        }
         clienteService.save(cliente);
         session.setAttribute("loggedUser", cliente.getName());
         session.setAttribute("loggedUserId", cliente.getId());
@@ -101,17 +104,31 @@ public String deletePerfil(HttpSession session) {
 }
 
     @PostMapping("/perfil/update")
-public String updatePerfil(@ModelAttribute Cliente cliente, HttpSession session) {
+    public String updatePerfil(@ModelAttribute Cliente cliente, HttpSession session) {
 
-    Long id = (Long) session.getAttribute("loggedUserId");
-    cliente.setId(id);
+        Long id = (Long) session.getAttribute("loggedUserId");
+        Cliente stored = clienteService.findById(id);
 
-    clienteService.save(cliente);
+        if (!stored.getPassword().equals(cliente.getPassword())) {
+            return "redirect:/perfil?edit=true&wrongPassword";
+        }
 
-    session.setAttribute("loggedUser", cliente.getName());
+        if (clienteService.isUsernameTakenByOther(cliente.getUsername(), id)) {
+            return "redirect:/perfil?edit=true&usernameTaken";
+        }
 
-    return "redirect:/perfil?success";
-}  
+        stored.setName(cliente.getName());
+        stored.setApellido(cliente.getApellido());
+        stored.setEmail(cliente.getEmail());
+        stored.setUsername(cliente.getUsername());
+        stored.setDireccion(cliente.getDireccion());
+        stored.setTelefono(cliente.getTelefono());
+
+        clienteService.save(stored);
+        session.setAttribute("loggedUser", stored.getName());
+
+        return "redirect:/perfil?success";
+    }
     
 
     

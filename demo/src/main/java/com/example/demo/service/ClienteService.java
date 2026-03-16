@@ -17,6 +17,9 @@ public interface ClienteService {
     public boolean validateCredentials(String username, String password);
 
     public Cliente findByUsername(String username);
-    
+
+    public boolean isUsernameTaken(String username);
+
+    public boolean isUsernameTakenByOther(String username, Long currentId);
     
 }

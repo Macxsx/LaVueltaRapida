@@ -41,6 +41,11 @@
       <p th:text="${editMode} ? 'Modifica la información de tu cuenta' : 'Completa tus datos para unirte al equipo'"></p>
     </div>
 
+    <div th:if="${param.usernameTaken}" class="register-error-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Ese nombre de usuario ya está en uso. Por favor elige otro.
+    </div>
+
     <form th:action="${editMode} ? @{/perfil/update(id=${cliente.id})} : @{/register}"
           th:object="${cliente}" method="post" class="register-form">
 

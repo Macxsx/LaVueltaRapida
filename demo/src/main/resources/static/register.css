@@ -46,6 +46,20 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
+.register-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 40px 4px;
+  padding: 13px 18px;
+  background: rgba(225, 6, 0, 0.10);
+  border: 1px solid rgba(225, 6, 0, 0.35);
+  border-radius: 10px;
+  color: #ff6b6b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .register-header {
   padding: 40px 40px 30px;
   border-bottom: 1px solid #1f1f1f;

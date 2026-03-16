@@ -103,6 +103,22 @@ body {
   font-weight: 500;
 }
 
+/* ── Error banner ── */
+.pf-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 560px;
+  margin: 0 auto 24px;
+  padding: 14px 20px;
+  background: rgba(225, 6, 0, 0.10);
+  border: 1px solid rgba(225, 6, 0, 0.35);
+  border-radius: 10px;
+  color: #ff6b6b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* ══════════════════════════════════════════
    DRIVER CARD
 ══════════════════════════════════════════ */
@@ -128,20 +144,22 @@ body {
   background: linear-gradient(90deg, transparent 0%, var(--pf-red) 40%, var(--pf-red) 60%, transparent 100%);
 }
 
-/* ── Avatar ── */
-.pf-avatar-ring {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  background: conic-gradient(var(--pf-red) 0deg 120deg, transparent 120deg 240deg, var(--pf-red) 240deg 360deg);
-  margin-bottom: 20px;
-  animation: ring-spin 12s linear infinite;
+/* ── Wheel avatar ── */
+.pf-wheel-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 20px;
 }
 
-@keyframes ring-spin {
+.pf-wheel-svg {
+  width: 96px;
+  height: 96px;
+  animation: wheel-spin 7s linear infinite;
+  display: block;
+}
+
+@keyframes wheel-spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
@@ -150,25 +168,37 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 76px;
-  height: 76px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1e0000 0%, #300000 100%);
-  border: 3px solid var(--pf-card);
+  background: transparent;
   font-family: 'Orbitron', sans-serif;
-  font-size: 30px;
+  font-size: 18px;
   font-weight: 700;
-  color: var(--pf-red);
+  color: #fff;
   letter-spacing: -1px;
 }
 
-/* Small avatar for edit mode */
+/* Avatar overlaid on the spinning wheel hub */
+.pf-avatar-on-wheel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Small avatar for edit mode header (no wheel) */
 .pf-avatar-sm {
-  width: 52px;
-  height: 52px;
-  font-size: 20px;
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
   flex-shrink: 0;
-  border: none;
+  background: var(--pf-red-dim);
+  border: 2px solid rgba(225,6,0,0.35);
+  border-radius: 50%;
+  color: var(--pf-red);
 }
 
 /* ── Name & badge ── */
