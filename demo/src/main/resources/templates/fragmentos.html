@@ -8,50 +8,104 @@
 <body>
     
    <div th:fragment="header">
-  <header class="site-header">
+  <header class="site-header" id="siteHeader">
     <div class="header-inner">
 
+      <!-- LOGO -->
       <div class="header-logo">
-        <img class="logo-icon" 
-             th:src="@{/Images/LogoBandera.png}" 
+        <img class="logo-icon"
+             th:src="@{/Images/LogoBandera.png}"
              alt="Logo">
         <a th:href="@{/}" class="logo-text">LA VUELTA RÁPIDA</a>
       </div>
 
+      <!-- NAV (desktop) -->
       <nav class="header-nav">
         <a th:href="@{/producto/menu}" class="nav-link">MENÚ</a>
         <a th:href="@{/#experiencia}" class="nav-link">EXPERIENCIA</a>
-        <a th:href="@{/f1-standings}">CAMPEONATO</a>
+        <a th:href="@{/f1-standings}" class="nav-link">CAMPEONATO</a>
         <a th:href="@{/#eventos}" class="nav-link">EVENTOS F1</a>
       </nav>
 
+      <!-- ACTIONS (desktop) -->
       <div class="header-actions">
-        <div th:if="${session.loggedUser == null}">
-          <a th:href="@{/login}" class="btn">INICIAR SESIÓN</a>
+        <div th:if="${session.loggedUser == null}" class="header-btns">
+          <a th:href="@{/login}" class="btn btn-outline">INICIAR SESIÓN</a>
           <a th:href="@{/register}" class="btn">REGISTRARSE</a>
         </div>
         <div th:if="${session.loggedUser != null}" class="header-user">
-
-          <!-- Nombre Usuario (ahora es link) -->
           <a th:href="@{/perfil}" class="user-name-link">
             <span th:text="${session.loggedUser}"></span>
           </a>
-
           <a th:if="${session.loggedUser != 'Admin'}"
-            th:href="@{/carrito}" 
-            class="cart-btn">
+             th:href="@{/carrito}"
+             class="cart-btn">
             🛒
             <span class="cart-badge" th:text="${cartCount} ?: 0"></span>
           </a>
-
-          <!-- Logout -->
           <a th:href="@{/logout}" class="btn btn-logout">CERRAR SESIÓN</a>
-
         </div>
       </div>
 
+      <!-- HAMBURGER (mobile only) -->
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
     </div>
+
+    <!-- MOBILE PANEL -->
+    <div class="mobile-panel" id="mobilePanel">
+      <nav class="mobile-nav">
+        <a th:href="@{/producto/menu}" class="mobile-nav-link">MENÚ</a>
+        <a th:href="@{/#experiencia}" class="mobile-nav-link">EXPERIENCIA</a>
+        <a th:href="@{/f1-standings}" class="mobile-nav-link">CAMPEONATO</a>
+        <a th:href="@{/#eventos}" class="mobile-nav-link">EVENTOS F1</a>
+      </nav>
+      <div class="mobile-actions">
+        <div th:if="${session.loggedUser == null}" class="mobile-btns">
+          <a th:href="@{/login}" class="btn btn-outline btn-mobile">INICIAR SESIÓN</a>
+          <a th:href="@{/register}" class="btn btn-mobile">REGISTRARSE</a>
+        </div>
+        <div th:if="${session.loggedUser != null}" class="mobile-user">
+          <a th:href="@{/perfil}" class="mobile-nav-link user-name-link">
+            <span th:text="${session.loggedUser}"></span>
+          </a>
+          <a th:if="${session.loggedUser != 'Admin'}"
+             th:href="@{/carrito}"
+             class="cart-btn">
+            🛒 <span class="cart-badge" th:text="${cartCount} ?: 0"></span>
+          </a>
+          <a th:href="@{/logout}" class="btn btn-logout btn-mobile">CERRAR SESIÓN</a>
+        </div>
+      </div>
+    </div>
+
   </header>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById('navToggle');
+      var panel  = document.getElementById('mobilePanel');
+      var header = document.getElementById('siteHeader');
+
+      if (toggle && panel) {
+        toggle.addEventListener('click', function () {
+          var open = panel.classList.toggle('open');
+          header.classList.toggle('menu-open', open);
+          toggle.setAttribute('aria-expanded', open);
+        });
+      }
+
+      window.addEventListener('scroll', function () {
+        if (header) {
+          header.classList.toggle('scrolled', window.scrollY > 10);
+        }
+      }, { passive: true });
+    })();
+  </script>
 </div>
 
  <div th:fragment="footer">
