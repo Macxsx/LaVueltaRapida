@@ -278,57 +278,96 @@
   opacity: 1;
 }
 
-/* ── Compact Feature List ── */
-.exp-feature-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* ── Experience Highlights ── */
+.exp-highlights {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 0;
+  margin-top: 36px;
 }
 
-.exp-feature-item {
+.exp-highlight {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
+  padding: 24px 0 24px 24px;
+  border-left: 3px solid rgba(255,255,255,0.12);
+  position: relative;
+  transition: border-color 0.2s;
 }
 
-.exp-feat-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(225, 6, 0, 0.12);
-  border: 1px solid rgba(225, 6, 0, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+.exp-highlight::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
 }
 
-.exp-feat-icon img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
+.exp-highlight:last-child::after {
+  display: none;
 }
 
-.exp-feat-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.exp-highlight:hover {
+  border-left-color: rgba(225,6,0,0.5);
 }
 
-.exp-feat-text strong {
-  font-size: 14px;
-  font-weight: 700;
+.exp-highlight--accent {
+  border-left-color: #e10600;
+}
+
+.exp-highlight--accent .exp-highlight-number {
+  color: #ffd700;
+}
+
+.exp-highlight-number {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1;
   color: #fff;
-  letter-spacing: 0.3px;
+  min-width: 110px;
+  letter-spacing: -1px;
 }
 
-.exp-feat-text span {
-  font-size: 12px;
+.exp-highlight-unit {
+  font-size: 28px;
+  font-weight: 700;
+  vertical-align: middle;
+  margin-left: 2px;
+  color: #e10600;
+}
+
+.exp-highlight--accent .exp-highlight-unit {
+  color: #ffd700;
+}
+
+.exp-highlight-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.exp-highlight-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e10600;
+  text-transform: uppercase;
+}
+
+.exp-highlight--accent .exp-highlight-label {
+  color: #ffd700;
+}
+
+.exp-highlight-sub {
+  font-size: 13px;
   color: rgba(255,255,255,0.55);
+  line-height: 1.5;
 }
 
 /* ── Experience right column ── */
