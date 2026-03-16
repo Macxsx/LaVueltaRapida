@@ -18,137 +18,203 @@
 
 <div th:replace="fragmentos :: header"></div>
 
-<!-- ================= HERO ================= -->
-<section class="perfil-hero">
-  <h1>MI <span>PERFIL</span></h1>
-  <p>Administra tu información personal</p>
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="pf-page-hero">
+  <div class="pf-hero-inner">
+    <p class="pf-hero-label">ÁREA DEL PILOTO</p>
+    <h1 class="pf-hero-title">MI <span>PERFIL</span></h1>
+    <p class="pf-hero-sub">Gestiona tu información y preferencias</p>
+  </div>
 </section>
 
-<!-- ================= CONTENIDO ================= -->
-<section class="perfil-container">
+<!-- ═══════════════ PÁGINA ═══════════════ -->
+<section class="pf-section">
 
-  <div class="perfil-card">
+  <!-- MENSAJE DE ÉXITO -->
+  <div th:if="${param.success}" class="pf-success-banner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+    Datos actualizados correctamente
+  </div>
 
-    <!-- ÉXITO -->
-    <div th:if="${param.success}" class="perfil-success">
-      Datos actualizados correctamente
-    </div>
+  <!-- ══════════ MODO VISUALIZACIÓN ══════════ -->
+  <div th:if="${!editMode}" class="pf-wrapper">
 
-    <!-- ================= MODO VISUALIZACIÓN ================= -->
-    <div th:if="${!editMode}" class="perfil-view">
+    <!-- TARJETA PILOTO -->
+    <div class="pf-driver-card">
+      <div class="pf-card-stripe"></div>
 
-      <div class="perfil-grid">
-
-        <div class="perfil-item">
-          <label>Nombre</label>
-          <p th:text="${cliente.name}"></p>
+      <!-- AVATAR -->
+      <div class="pf-avatar-ring">
+        <div class="pf-avatar">
+          <span th:text="${#strings.toUpperCase(#strings.substring(cliente.name, 0, 1))}">A</span>
         </div>
-
-        <div class="perfil-item">
-          <label>Apellido</label>
-          <p th:text="${cliente.apellido}"></p>
-        </div>
-
-        <div class="perfil-item">
-          <label>Email</label>
-          <p th:text="${cliente.email}"></p>
-        </div>
-
-        <div class="perfil-item">
-          <label>Usuario</label>
-          <p th:text="${cliente.username}"></p>
-        </div>
-
-        <div class="perfil-item">
-          <label>Dirección</label>
-          <p th:text="${cliente.direccion}"></p>
-        </div>
-
-        <div class="perfil-item">
-          <label>Teléfono</label>
-          <p th:text="${cliente.telefono}"></p>
-        </div>
-
       </div>
 
-      <div class="perfil-actions">
+      <!-- NOMBRE Y BADGE -->
+      <h2 class="pf-full-name"
+          th:text="${cliente.name + ' ' + cliente.apellido}">Nombre Apellido</h2>
+      <div class="pf-username-tag">
+        <span class="pf-at">@</span><span th:text="${cliente.username}">username</span>
+      </div>
+      <div class="pf-pilot-badge">
+        PILOTO &nbsp;<span th:text="'#' + ${cliente.id}">Nº1</span>
+      </div>
 
-        <a th:href="@{/perfil(edit=true)}" class="btn-primary">
-          Editar Información
+      <hr class="pf-card-divider">
+
+      <!-- INFO ROWS -->
+      <ul class="pf-info-list">
+
+        <li class="pf-info-row">
+          <span class="pf-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <div class="pf-info-text">
+            <span class="pf-info-label">Nombre completo</span>
+            <span class="pf-info-value"
+                  th:text="${cliente.name + ' ' + cliente.apellido}">—</span>
+          </div>
+        </li>
+
+        <li class="pf-info-row">
+          <span class="pf-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
+          </span>
+          <div class="pf-info-text">
+            <span class="pf-info-label">Email</span>
+            <span class="pf-info-value" th:text="${cliente.email}">—</span>
+          </div>
+        </li>
+
+        <li class="pf-info-row">
+          <span class="pf-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.9 19.9 0 0 1 3.09 4.18 2 2 0 0 1 5.09 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 23 17z"/></svg>
+          </span>
+          <div class="pf-info-text">
+            <span class="pf-info-label">Teléfono</span>
+            <span class="pf-info-value"
+                  th:text="${cliente.telefono != null and !#strings.isEmpty(cliente.telefono) ? cliente.telefono : '—'}">—</span>
+          </div>
+        </li>
+
+        <li class="pf-info-row">
+          <span class="pf-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <div class="pf-info-text">
+            <span class="pf-info-label">Dirección</span>
+            <span class="pf-info-value"
+                  th:text="${cliente.direccion != null and !#strings.isEmpty(cliente.direccion) ? cliente.direccion : '—'}">—</span>
+          </div>
+        </li>
+
+        <li class="pf-info-row">
+          <span class="pf-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <div class="pf-info-text">
+            <span class="pf-info-label">Usuario</span>
+            <span class="pf-info-value" th:text="'@' + ${cliente.username}">—</span>
+          </div>
+        </li>
+
+      </ul>
+
+      <!-- ACCIONES -->
+      <div class="pf-actions">
+        <a th:href="@{/perfil(edit=true)}" class="pf-btn pf-btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar perfil
         </a>
-
         <form th:action="@{/perfil/delete}" method="post"
-              onsubmit="return confirm('¿Seguro que deseas eliminar tu cuenta?');">
-          <button type="submit" class="btn-danger">
-            Eliminar Cuenta
+              onsubmit="return confirm('¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
+          <button type="submit" class="pf-btn pf-btn-danger">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Eliminar cuenta
           </button>
         </form>
-
       </div>
 
     </div>
 
-    <!-- ================= MODO EDICIÓN ================= -->
-    <form th:if="${editMode}"
-          th:action="@{/perfil/update}"
-          th:object="${cliente}"
-          method="post"
-          class="perfil-form">
+  </div>
 
-      <input type="hidden" th:field="*{id}">
+  <!-- ══════════ MODO EDICIÓN ══════════ -->
+  <div th:if="${editMode}" class="pf-wrapper">
 
-      <div class="perfil-grid">
+    <div class="pf-driver-card pf-edit-card">
+      <div class="pf-card-stripe"></div>
 
-        <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" th:field="*{name}" required>
+      <div class="pf-edit-header">
+        <div class="pf-avatar pf-avatar-sm">
+          <span th:text="${#strings.toUpperCase(#strings.substring(cliente.name, 0, 1))}">A</span>
         </div>
-
-        <div class="form-group">
-          <label>Apellido</label>
-          <input type="text" th:field="*{apellido}" required>
+        <div>
+          <h2 class="pf-edit-title">Editar perfil</h2>
+          <p class="pf-edit-sub">Modifica tus datos y guarda los cambios</p>
         </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" th:field="*{email}" required>
-        </div>
-
-        <div class="form-group">
-          <label>Usuario</label>
-          <input type="text" th:field="*{username}" readonly>
-        </div>
-
-        <div class="form-group">
-          <label>Dirección</label>
-          <input type="text" th:field="*{direccion}">
-        </div>
-
-        <div class="form-group">
-          <label>Teléfono</label>
-          <input type="text" th:field="*{telefono}">
-        </div>
-
-        <div class="form-group full-width">
-          <label>Contraseña</label>
-          <input type="password" th:field="*{password}" required>
-        </div>
-
       </div>
 
-      <div class="perfil-actions">
+      <hr class="pf-card-divider">
 
-        <a th:href="@{/perfil}" class="btn-secondary">
-          Cancelar
-        </a>
+      <form th:action="@{/perfil/update}"
+            th:object="${cliente}"
+            method="post"
+            class="pf-form">
 
-        <button type="submit" class="btn-primary">
-          Confirmar Cambios
-        </button>
+        <input type="hidden" th:field="*{id}">
 
-      </div>
+        <div class="pf-form-grid">
 
-    </form>
+          <div class="pf-field">
+            <label>Nombre</label>
+            <input type="text" th:field="*{name}" required placeholder="Tu nombre">
+          </div>
+
+          <div class="pf-field">
+            <label>Apellido</label>
+            <input type="text" th:field="*{apellido}" required placeholder="Tu apellido">
+          </div>
+
+          <div class="pf-field">
+            <label>Email</label>
+            <input type="email" th:field="*{email}" required placeholder="correo@ejemplo.com">
+          </div>
+
+          <div class="pf-field">
+            <label>Usuario <span class="pf-field-note">(no editable)</span></label>
+            <input type="text" th:field="*{username}" readonly>
+          </div>
+
+          <div class="pf-field">
+            <label>Dirección</label>
+            <input type="text" th:field="*{direccion}" placeholder="Tu dirección de entrega">
+          </div>
+
+          <div class="pf-field">
+            <label>Teléfono</label>
+            <input type="text" th:field="*{telefono}" placeholder="+34 000 000 000">
+          </div>
+
+          <div class="pf-field pf-field-full">
+            <label>Contraseña <span class="pf-field-note">(requerida para confirmar)</span></label>
+            <input type="password" th:field="*{password}" required placeholder="Tu contraseña actual">
+          </div>
+
+        </div>
+
+        <div class="pf-actions">
+          <a th:href="@{/perfil}" class="pf-btn pf-btn-ghost">
+            Cancelar
+          </a>
+          <button type="submit" class="pf-btn pf-btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Confirmar cambios
+          </button>
+        </div>
+
+      </form>
+    </div>
 
   </div>
 
