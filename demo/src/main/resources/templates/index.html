@@ -1,171 +1,221 @@
-  <!DOCTYPE html>
-  <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Vuelta Rápida - Pizzería Racing</title>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Vuelta Rápida - Pizzería Racing</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="landing.css">
+</head>
 
-    <link rel="stylesheet" href="styles.css">
-  </head>
+<body>
 
-  <body>
+<div th:replace="fragmentos :: header"></div>
 
-  <main>
+<main>
 
-  
- <div th:replace="fragmentos :: header"></div>
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="row g-0 align-items-start">
+        <div class="col-lg-6">
+          <div class="hero-content">
+            <div class="hero-title-block">
+              <h1 class="hero-title">
+                PIZZAS<br>
+                ARTESANALES<br>
+                <span class="hero-title-accent">A MÁXIMA</span><br>
+                VELOCIDAD
+              </h1>
+              <p class="hero-subtitle">
+                Ingredientes frescos, masa propia y sabor de podio.<br>
+                Donde cada bocado es una vuelta hacia la perfección.
+              </p>
+            </div>
 
-    <!-- HERO SECTION -->
-    <section class="hero-section">
-      <div class="hero-overlay"></div>
-      <div class="hero-inner">
-        <div class="row g-0 align-items-start">
-          <div class="col-lg-6">
-            <div class="hero-content">
-              <div class="hero-title-block">
-                <h1 class="hero-title">
-                  LA CARRERA <br>
-                  POR EL<br>
-                  <span class="hero-title-accent">MEJOR SABOR</span><br>
-                  COMIENZA AQUÍ
-                </h1>
-                <p class="hero-subtitle">
-                  Pizzas artesanales a máxima velocidad.<br>
-                  Donde cada orden es una nueva vuelta hacia la perfección.
-                </p>
+            <div class="hero-badges">
+              <span class="hero-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                Horno de leña
+              </span>
+              <span class="hero-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8h4v2h-6V7h2v5z"/></svg>
+                Entrega en 30 min
+              </span>
+              <span class="hero-badge hero-badge--gold">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                4.9 en Google
+              </span>
+            </div>
+
+            <div class="hero-buttons">
+              <a th:href="@{/producto/menu}" class="btn-hero-primary">
+                <img class="Iniciar-Pedido-icon" width="14" height="29" src="Images/Iniciar-Pedido.png" alt="pedido">
+                VER EL MENÚ
+              </a>
+              <a href="#menu-carousel" class="btn-hero-secondary">NUESTRAS PIZZAS</a>
+            </div>
+
+            <div class="hero-stats" id="hero-stats">
+              <div class="stat-item">
+                <div class="stat-value" data-target="156" data-suffix="">0</div>
+                <div class="stat-label">CLIENTES HOY</div>
               </div>
-
-              <div class="hero-buttons">
-                <a href="#" class="btn-hero-primary">
-                  <img class="Iniciar-Pedido-icon" width="14" height="29" src="Images/Iniciar-Pedido.png" alt="Logo">
-                  INICIAR PEDIDO
-                </a>
-                <a th:href="@{/producto/menu}" class="btn-hero-secondary">VER EL MENÚ</a>
+              <div class="stat-item">
+                <div class="stat-value" data-target="30" data-suffix="min">0min</div>
+                <div class="stat-label">ENTREGA RÉCORD</div>
               </div>
-
-              <div class="hero-stats">
-                <div class="stat-item">
-                  <div class="stat-value">156</div>
-                  <div class="stat-label">PILOTOS ACTIVOS</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-value">2.3s</div>
-                  <div class="stat-label">TIEMPO RÉCORD</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-value">4.9★</div>
-                  <div class="stat-label">PUNTUACIÓN</div>
-                </div>
+              <div class="stat-item">
+                <div class="stat-value" data-target="4.9" data-suffix="★">0★</div>
+                <div class="stat-label">CALIFICACIÓN</div>
               </div>
-
             </div>
           </div>
+        </div>
 
-          <div class="col-lg-6">
-            <div class="hero-image-wrapper">
-              <img src="Images/HeroLogo.png" alt="Logo" class="hero-image">
-            </div>
+        <div class="col-lg-6">
+          <div class="hero-image-wrapper">
+            <img src="Images/HeroLogo.png" alt="Logo" class="hero-image">
           </div>
-
         </div>
       </div>
+    </div>
 
-      <div class="scroll-indicator">
-        <img src="Images/scroll-indicator.png" alt="scroll-indicator">
-      </div>
-    </section>
-
-    <!-- FEATURE CARDS -->
-    <section class="feature-cards-section">
-      <div class="feature-cards-inner">
-        <div class="row g-4">
-
-          <div class="col-lg-6">
-            <div class="feature-card feature-card-red">
-              <div class="feature-card-overlay"></div>
-              <div class="feature-card-content">
-                <span class="feature-badge feature-badge-gold">
-                  <img src="Images/Trofeo.png" alt="Trofeo">
-                  POLE POSITION
-                </span>
-                <h2 class="feature-card-title">LA POLE POSITION</h2>
-                <p class="feature-card-desc">
-                  Nuestra pizza signature que lidera la parrilla. Ingredientes premium que marcan la diferencia en cada vuelta.
-                </p>
-                <a href="#" class="btn-feature-primary">
-                  ORDENAR AHORA
-                  <img src="Images/flecha-roja.png" alt="flecha">
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="feature-card feature-card-dark">
-              <div class="feature-card-overlay"></div>
-              <div class="feature-card-content">
-                <span class="feature-badge feature-badge-red">
-                  <img src="Images/bandera-blanca.png" alt="Bandera">
-                  EXPERIENCIA
-                </span>
-                <h2 class="feature-card-title">VIVE LA EXPERIENCIA</h2>
-                <p class="feature-card-desc">
-                  Sumérgete en el ambiente F1 más auténtico. Cada detalle diseñado para hacerte sentir en el circuito.
-                </p>
-                <a href="#" class="btn-feature-secondary">
-                  DESCUBRIR MÁS
-                  <img src="Images/flecha-blanca.png" alt="flecha">
-                </a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  <!-- WHY US SECTION -->
-  <section class="top-pizzas-section" id="menu">
-    <div class="top-pizzas-inner">
-      <header class="top-pizzas-header">
-        <h2 class="top-pizzas-title">LAS <span class="text-red">FAVORITAS</span> DE LA TEMPORADA</h2>
-        <div class="top-pizzas-divider"></div>
-        <p class="top-pizzas-subtitle">Las cinco pizzas que están marcando el ritmo en la pista</p>
-      </header>
-        <div class="top-pizzas-grid">
-          <a th:each="comida : ${comidas}"
-            th:href="@{'/producto/' + ${comida.id}}"
-            class="pizza-card">
-          <div class="pizza-card-img-wrapper">
-            <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="pizza-card-img">
-          </div>
-
-            <div class="pizza-card-body">
-              <div class="pizza-card-accent"></div>
-              <h4 th:text="${comida.name}"></h4>
-              <p th:text="${comida.description}"></p>
-            </div>
-
-          </a>
-
-        </div>
+    <div class="scroll-indicator">
+      <img src="Images/scroll-indicator.png" alt="scroll">
     </div>
   </section>
 
-  <!-- EXPERIENCE SECTION -->
+  <!-- ═══════════════ PIZZA SIZE STRIP ═══════════════ -->
+  <div class="size-strip">
+    <div class="size-strip-inner">
+      <span class="size-strip-icon">🍕</span>
+      <span class="size-strip-text">Todas nuestras pizzas son de <strong>tamaño estándar</strong> — <strong>8 porciones</strong> perfectas para compartir</span>
+      <span class="size-strip-sep">|</span>
+      <span class="size-strip-text">Masa fresca elaborada a diario</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 2×1 PROMO ═══════════════ -->
+  <section class="promo-banner" id="promo">
+    <div class="promo-glow"></div>
+    <div class="promo-inner">
+      <div class="promo-flag">
+        <span class="promo-flag-dot"></span>
+        <span class="promo-flag-label">OFERTA ESPECIAL</span>
+        <span class="promo-flag-dot"></span>
+      </div>
+      <div class="promo-deal">
+        <span class="promo-deal-badge">2×1</span>
+        <div class="promo-deal-text">
+          <h2 class="promo-title">LOS MARTES</h2>
+          <p class="promo-subtitle">Válido en pizzas medianas y grandes · Dine-in y para llevar</p>
+        </div>
+      </div>
+      <a th:href="@{/producto/menu}" class="btn-promo">
+        <img src="Images/carrito.png" alt="carrito" width="20">
+        APROVECHAR OFERTA
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FEATURE CARDS ═══════════════ -->
+  <section class="feature-cards-section">
+    <div class="feature-cards-inner">
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="feature-card feature-card-red">
+            <div class="feature-card-overlay"></div>
+            <div class="feature-card-content">
+              <span class="feature-badge feature-badge-gold">
+                <img src="Images/Trofeo.png" alt="Trofeo">
+                FIRMA DE LA CASA
+              </span>
+              <h2 class="feature-card-title">LA POLE POSITION</h2>
+              <p class="feature-card-desc">
+                Nuestra pizza insignia. Ingredientes premium, masa madre y el secreto que nos puso en el primer lugar.
+              </p>
+              <a th:href="@{/producto/menu}" class="btn-feature-primary">
+                ORDENAR AHORA
+                <img src="Images/flecha-roja.png" alt="flecha">
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card feature-card-dark">
+            <div class="feature-card-overlay"></div>
+            <div class="feature-card-content">
+              <span class="feature-badge feature-badge-red">
+                <img src="Images/bandera-blanca.png" alt="Bandera">
+                EXPERIENCIA
+              </span>
+              <h2 class="feature-card-title">VIVE LA EXPERIENCIA</h2>
+              <p class="feature-card-desc">
+                Disfruta tu pizza con ambiente de Fórmula 1, pantallas HD y la adrenalina de la competencia en cada visita.
+              </p>
+              <a href="#experiencia" class="btn-feature-secondary">
+                DESCUBRIR MÁS
+                <img src="Images/flecha-blanca.png" alt="flecha">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MENU CAROUSEL ═══════════════ -->
+  <section class="top-pizzas-section" id="menu-carousel">
+    <div class="top-pizzas-inner">
+      <header class="top-pizzas-header">
+        <h2 class="top-pizzas-title">NUESTRO <span class="text-red">MENÚ</span></h2>
+        <div class="top-pizzas-divider"></div>
+        <p class="top-pizzas-subtitle">Pizzas artesanales con nombres de circuitos legendarios</p>
+      </header>
+
+      <div class="swiper menu-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide" th:each="comida : ${comidas}">
+            <a th:href="@{'/producto/' + ${comida.id}}" class="pizza-card">
+              <div class="pizza-card-img-wrapper">
+                <img th:src="@{${comida.image}}" th:alt="${comida.name}" class="pizza-card-img">
+              </div>
+              <div class="pizza-card-body">
+                <div class="pizza-card-accent"></div>
+                <h4 th:text="${comida.name}"></h4>
+                <p th:text="${comida.description}"></p>
+                <span class="pizza-card-price" th:text="'$ ' + ${#numbers.formatDecimal(comida.price, 0, 'POINT', 0, 'POINT')} + ' COP'"></span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="swiper-button-prev carousel-btn carousel-btn--prev"></div>
+        <div class="swiper-button-next carousel-btn carousel-btn--next"></div>
+        <div class="swiper-pagination carousel-pagination"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ EXPERIENCE + MAP ═══════════════ -->
   <section class="experience-section" id="experiencia">
     <div class="experience-overlay"></div>
-     <img src="Images/experience-pizza-left.png" alt="" class="experience-deco-pizza" aria-hidden="true">
-      <img src="Images/experience-tire-right.png" alt="" class="experience-deco-tire" aria-hidden="true">
+    <img src="Images/experience-pizza-left.png" alt="" class="experience-deco-pizza" aria-hidden="true">
+    <img src="Images/experience-tire-right.png" alt="" class="experience-deco-tire" aria-hidden="true">
+
     <div class="experience-inner">
-      <div class="row g-0 align-items-center">
+      <div class="row g-0 align-items-start">
+
         <div class="col-lg-6">
           <div class="experience-content">
             <div class="experience-title-block">
@@ -176,81 +226,78 @@
                 DE CARRERA.
               </h2>
               <p class="experience-subtitle">
-                Cada visita es una nueva oportunidad de vivir la velocidad, la<br>
-                competencia y la pasión que define el mundo de la Fórmula 1.
+                Pantallas HD, ambiente F1 auténtico y pizzas de podio.<br>
+                Cada visita es una nueva vuelta.
               </p>
             </div>
 
             <div class="experience-features">
               <div class="exp-feature-card">
-                <div class="exp-feature-icon">
-                  <img src="Images/Transmision.png" alt="Transmisiones en vivo">
-                </div>
+                <div class="exp-feature-icon"><img src="Images/Transmision.png" alt="Transmisiones"></div>
                 <div class="exp-feature-text">
                   <h3>Transmisiones en vivo</h3>
-                  <p>Disfruta cada carrera en pantallas HD mientras saboreas tu pizza.</p>
+                  <p>Cada carrera en pantallas HD mientras saboreas tu pizza.</p>
                 </div>
               </div>
               <div class="exp-feature-card">
-                <div class="exp-feature-icon">
-                  <img src="Images/Ambiente.png" alt="Ambiente de circuito">
-                </div>
+                <div class="exp-feature-icon"><img src="Images/Ambiente.png" alt="Ambiente"></div>
                 <div class="exp-feature-text">
                   <h3>Ambiente de circuito</h3>
-                  <p>Decoración auténtica que te transporta al paddock de F1.</p>
+                  <p>Decoración auténtica que te transporta al paddock.</p>
                 </div>
               </div>
               <div class="exp-feature-card">
-                <div class="exp-feature-icon">
-                  <img src="Images/Ranking.png" alt="Ranking de pilotos">
-                </div>
+                <div class="exp-feature-icon"><img src="Images/Ranking.png" alt="Ranking"></div>
                 <div class="exp-feature-text">
                   <h3>Ranking de pilotos</h3>
-                  <p>Compite con otros clientes por el primer lugar en el leaderboard.</p>
+                  <p>Compite por el primer lugar en nuestro leaderboard.</p>
                 </div>
               </div>
               <div class="exp-feature-card">
-                <div class="exp-feature-icon">
-                  <img src="Images/atmosfera.png" alt="Atmósfera competitiva">
-                </div>
+                <div class="exp-feature-icon"><img src="Images/atmosfera.png" alt="Atmósfera"></div>
                 <div class="exp-feature-text">
                   <h3>Atmósfera competitiva</h3>
-                  <p>Siente la adrenalina de la competencia en cada bocado.</p>
+                  <p>Siente la adrenalina de la F1 en cada bocado.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
         <div class="col-lg-6">
-          <div class="experience-image-wrapper">
-            <img src="Images/Experiencia-Carrera.png" alt="Experiencia de carrera" class="experience-image">
-            <div class="experience-image-overlay"></div>
+          <div class="exp-map-panel">
+            <div class="exp-map-header">
+              <div class="exp-map-pin">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                ENCUÉNTRANOS
+              </div>
+              <p class="exp-map-address">Calle 93 #15-15, Zona Rosa · Bogotá, Colombia</p>
+              <p class="exp-map-hours">Lun – Dom: 11:00 am – 11:00 pm</p>
+            </div>
+            <div class="exp-map-frame">
+              <iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-74.060%2C4.670%2C-74.038%2C4.682&amp;layer=mapnik&amp;marker=4.6757%2C-74.0494"
+                title="Ubicación La Vuelta Rápida"
+                loading="lazy"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <a href="https://www.google.com/maps" target="_blank" class="exp-map-link">
+              Abrir en Google Maps
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- SAFETY CAR BANNER -->
-  <section class="safety-car-banner">
-    <div class="safety-car-inner">
-      <div class="safety-car-content">
-        <div class="safety-car-label">
-          <img src="Images/carrito.png" alt="CARRO DE SEGURIDAD">
-          <span class="safety-car-title">SAFETY CAR ACTIVADO:</span>
-        </div>
-        <div class="safety-car-offer">
-          <h2 class="safety-car-deal">2x1 LOS MARTES</h2>
-          <p class="safety-car-detail">| Válido en pizzas medianas y grandes</p>
-        </div>
-        <a href="#" class="btn-safety-car">APROVECHAR OFERTA</a>
-      </div>
-    </div>
-  </section>
+</main>
 
-    </main>
+<div th:replace="fragmentos :: footer"></div>
 
- <div th:replace="fragmentos :: footer"></div>
-
-    </body>
-    </html>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="landing.js"></script>
+</body>
+</html>
