@@ -42,21 +42,6 @@
               </p>
             </div>
 
-            <div class="hero-badges">
-              <span class="hero-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-                Horno de leña
-              </span>
-              <span class="hero-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8h4v2h-6V7h2v5z"/></svg>
-                Entrega en 30 min
-              </span>
-              <span class="hero-badge hero-badge--gold">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                4.9 en Google
-              </span>
-            </div>
-
             <div class="hero-buttons">
               <a th:href="@{/producto/menu}" class="btn-hero-primary">
                 <img class="Iniciar-Pedido-icon" width="14" height="29" src="Images/Iniciar-Pedido.png" alt="pedido">
@@ -90,20 +75,40 @@
       </div>
     </div>
 
-    <div class="scroll-indicator">
-      <img src="Images/scroll-indicator.png" alt="scroll">
-    </div>
   </section>
 
-  <!-- ═══════════════ PIZZA SIZE STRIP ═══════════════ -->
-  <div class="size-strip">
-    <div class="size-strip-inner">
-      <span class="size-strip-icon">🍕</span>
-      <span class="size-strip-text">Todas nuestras pizzas son de <strong>tamaño estándar</strong> — <strong>8 porciones</strong> perfectas para compartir</span>
-      <span class="size-strip-sep">|</span>
-      <span class="size-strip-text">Masa fresca elaborada a diario</span>
+  <!-- ═══════════════ SIZE STATEMENT ═══════════════ -->
+  <section class="size-statement" id="promesa">
+    <div class="size-statement-inner">
+
+      <p class="size-statement-label">NUESTRA PROMESA</p>
+      <h2 class="size-statement-headline">UNA SOLA MEDIDA.<br><span class="text-red">TODO EL SABOR.</span></h2>
+      <p class="size-statement-sub">Sin tamaños pequeños ni grandes. Todas nuestras pizzas son igual de generosas,<br>para que nunca tengas que pensarlo dos veces.</p>
+
+      <div class="size-stats">
+        <div class="size-stat">
+          <span class="size-stat-value">32<span class="size-stat-unit">cm</span></span>
+          <span class="size-stat-label">Diámetro estándar</span>
+        </div>
+        <div class="size-stat-divider"></div>
+        <div class="size-stat">
+          <span class="size-stat-value">8<span class="size-stat-unit">pcs</span></span>
+          <span class="size-stat-label">Porciones por pizza</span>
+        </div>
+        <div class="size-stat-divider"></div>
+        <div class="size-stat">
+          <span class="size-stat-value">72<span class="size-stat-unit">h</span></span>
+          <span class="size-stat-label">Fermentación de la masa</span>
+        </div>
+        <div class="size-stat-divider"></div>
+        <div class="size-stat">
+          <span class="size-stat-value">1<span class="size-stat-unit">precio</span></span>
+          <span class="size-stat-label">Sin sorpresas en la cuenta</span>
+        </div>
+      </div>
+
     </div>
-  </div>
+  </section>
 
   <!-- ═══════════════ 2×1 PROMO ═══════════════ -->
   <section class="promo-banner" id="promo">
@@ -125,102 +130,6 @@
         <img src="Images/carrito.png" alt="carrito" width="20">
         APROVECHAR OFERTA
       </a>
-    </div>
-  </section>
-
-  <!-- ═══════════════ PROCESS SECTION ═══════════════ -->
-  <section class="process-section" id="proceso">
-    <div class="process-inner">
-
-      <header class="process-header">
-        <span class="process-label">NUESTRO PROCESO</span>
-        <h2 class="process-title">ASÍ HACEMOS <span class="text-red">TU PIZZA</span></h2>
-      </header>
-
-      <div class="process-steps">
-
-        <div class="process-step">
-          <div class="process-step-top">
-            <span class="process-num">01</span>
-            <div class="process-icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24 6C24 6 16 12 16 22C16 27.5 19.5 31 24 31C28.5 31 32 27.5 32 22C32 12 24 6 24 6Z" stroke="#e10600" stroke-width="2.5" stroke-linejoin="round"/>
-                <path d="M24 31V43" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M18 37H30" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-                <circle cx="24" cy="20" r="3" fill="#e10600"/>
-              </svg>
-            </div>
-          </div>
-          <h3 class="process-step-title">MASA MADRE</h3>
-          <p class="process-step-desc">Fermentación lenta de 72 horas para una textura aireada y un sabor profundo que no se improvisa.</p>
-        </div>
-
-        <div class="process-connector">
-          <div class="process-connector-line"></div>
-          <div class="process-connector-dot"></div>
-        </div>
-
-        <div class="process-step">
-          <div class="process-step-top">
-            <span class="process-num">02</span>
-            <div class="process-icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="24" cy="18" r="10" stroke="#e10600" stroke-width="2.5"/>
-                <path d="M24 8V5M24 31V34M34 18H37M11 18H8M31.1 11.1L33.2 9M14.9 26.9L12.8 29M31.1 24.9L33.2 27M14.9 11.1L12.8 9" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M18 40H30M20 43H28" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M24 28V36" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-              </svg>
-            </div>
-          </div>
-          <h3 class="process-step-title">INGREDIENTES DEL DÍA</h3>
-          <p class="process-step-desc">Seleccionamos cada ingrediente esa misma mañana. Sin conservantes, sin atajos, con todo el sabor.</p>
-        </div>
-
-        <div class="process-connector">
-          <div class="process-connector-line"></div>
-          <div class="process-connector-dot"></div>
-        </div>
-
-        <div class="process-step">
-          <div class="process-step-top">
-            <span class="process-num">03</span>
-            <div class="process-icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14 38H34C35.1 38 36 37.1 36 36V26C36 20.5 30.6 16 24 16C17.4 16 12 20.5 12 26V36C12 37.1 12.9 38 14 38Z" stroke="#e10600" stroke-width="2.5" stroke-linejoin="round"/>
-                <path d="M8 38H40" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M24 16V10" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M20 10C20 10 21 7 24 7C27 7 28 10 28 10" stroke="#e10600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M24 22C22 24 22 26 24 28C26 30 26 32 24 34" stroke="#e10600" stroke-width="2.5" stroke-linecap="round"/>
-              </svg>
-            </div>
-          </div>
-          <h3 class="process-step-title">HORNO DE LEÑA</h3>
-          <p class="process-step-desc">400°C de calor directo. La pizza entra cruda y en 90 segundos sale con el borde dorado perfecto.</p>
-        </div>
-
-        <div class="process-connector">
-          <div class="process-connector-line"></div>
-          <div class="process-connector-dot"></div>
-        </div>
-
-        <div class="process-step">
-          <div class="process-step-top">
-            <span class="process-num">04</span>
-            <div class="process-icon">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="10" width="8" height="28" rx="2" stroke="#e10600" stroke-width="2.5"/>
-                <rect x="20" y="10" width="8" height="28" rx="2" stroke="#e10600" stroke-width="2.5"/>
-                <path d="M6 14H14M6 18H14M6 22H14M6 26H14M20 14H28M20 18H28M20 22H28M20 26H28" stroke="#e10600" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M34 10L42 24L34 38" stroke="#e10600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M34 10V38" stroke="rgba(225,6,0,0.3)" stroke-width="2.5"/>
-              </svg>
-            </div>
-          </div>
-          <h3 class="process-step-title">EN TU MESA</h3>
-          <p class="process-step-desc">Desde las manos del chef hasta tu mesa en menos de 12 minutos. Velocidad de pit stop, calidad de podio.</p>
-        </div>
-
-      </div>
     </div>
   </section>
 
@@ -256,11 +165,10 @@
     </div>
   </section>
 
+
   <!-- ═══════════════ EXPERIENCE + MAP ═══════════════ -->
   <section class="experience-section" id="experiencia">
     <div class="experience-overlay"></div>
-    <img src="Images/experience-pizza-left.png" alt="" class="experience-deco-pizza" aria-hidden="true">
-    <img src="Images/experience-tire-right.png" alt="" class="experience-deco-tire" aria-hidden="true">
 
     <div class="experience-inner">
       <div class="row g-0 align-items-stretch">
