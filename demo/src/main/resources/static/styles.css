@@ -898,7 +898,7 @@ a {
 
 .footer-top {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr auto auto auto;
   gap: 48px;
   margin-bottom: 60px;
 }
