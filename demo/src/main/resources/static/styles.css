@@ -147,7 +147,6 @@ a {
 .hero-section {
   position: relative;
   width: 100%;
-  min-height: 800px;
   background: linear-gradient(45deg, rgba(15,15,15,1) 0%, rgba(26,26,26,1) 50%, rgba(225,6,0,1) 100%);
 }
 
@@ -161,7 +160,7 @@ a {
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 53px 32px;
+  padding: 5px 32px 48px;
 }
 
 .hero-content {
