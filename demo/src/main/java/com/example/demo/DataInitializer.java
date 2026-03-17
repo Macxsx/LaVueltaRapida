@@ -104,7 +104,16 @@ public class DataInitializer {
             clienteRepo.save(new Cliente("Carolina", "Díaz",      "carolina.diaz@email.com",        "caro2024",  "caroPass",  "Cl 85 #42-30, Ibagué",        "3145678901"));
 
             // ==========================================
-            // 5. OPERADORES
+            // 5. CARRITOS (uno por cliente)
+            // ==========================================
+            clienteRepo.findAll().forEach(c -> {
+                Carrito carrito = new Carrito(c);
+                carrito.setActivo(false);
+                carritoRepo.save(carrito);
+            });
+
+            // ==========================================
+            // 6. OPERADORES
             // ==========================================
             operadorRepo.save(new Operador("Carlos Ruiz",    "op1", "123"));
             operadorRepo.save(new Operador("Laura Sánchez",  "op2", "123"));
