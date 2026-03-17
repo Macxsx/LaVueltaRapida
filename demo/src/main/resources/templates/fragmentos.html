@@ -21,7 +21,7 @@
 
       <!-- NAV (desktop) -->
       <nav class="header-nav">
-        <a th:href="@{/producto/menu}" class="nav-link">MENÚ</a>
+        <a th:href="${session.loggedUser == 'Admin'} ? @{/producto/menutabla} : @{/producto/menu}" class="nav-link">MENÚ</a>
         <a th:href="@{/#experiencia}" class="nav-link">EXPERIENCIA</a>
         <a th:href="@{/f1-standings}" class="nav-link">CAMPEONATO</a>
         <a th:href="@{/#eventos}" class="nav-link">EVENTOS F1</a>
@@ -88,7 +88,7 @@
     <!-- MOBILE PANEL -->
     <div class="mobile-panel" id="mobilePanel">
       <nav class="mobile-nav">
-        <a th:href="@{/producto/menu}" class="mobile-nav-link">MENÚ</a>
+        <a th:href="${session.loggedUser == 'Admin'} ? @{/producto/menutabla} : @{/producto/menu}" class="mobile-nav-link">MENÚ</a>
         <a th:href="@{/#experiencia}" class="mobile-nav-link">EXPERIENCIA</a>
         <a th:href="@{/f1-standings}" class="mobile-nav-link">CAMPEONATO</a>
         <a th:href="@{/#eventos}" class="mobile-nav-link">EVENTOS F1</a>
