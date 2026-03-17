@@ -1,9 +1,14 @@
 # 🏁🏎️ 🍕La Vuelta Rápida 🍕🏎️🏁
 
+
+
 > **"Donde la pasión por la Fórmula 1 se encuentra con la pizza perfecta."**  
 **"La Vuelta Rápida"** es una pizzería temática única. Nuestro menú está diseñado como una **"Grilla de Partida"**, donde cada pizza, bebida o postre rinde homenaje a los circuitos, pilotos y elementos icónicos de las carreras más rápidas del mundo.
-
 ---
+<p align="center">
+  <img src="demo\src\main\resources\static\Images\HeroLogo.png" alt="Logo La Vuelta Rápida" width="500">
+</p>
+
 
 ## 🏎️ Descripción del Proyecto
 Esta plataforma permite a los usuarios navegar por un menú dividido en categorías "de circuito" (Clásicas, Especiales, Picantes, Bebidas y Postres), gestionar sus perfiles de usuario y recibir recomendaciones de platos.
@@ -14,6 +19,14 @@ Nuestra plataforma está construida con una arquitectura robusta para gestionar 
 * **🚦 Grilla de Partida (Menú):** Gestión de productos categorizados en *Clásicas, Especiales, Picantes, Bebidas y Postres*.
 * **🏎️ Pilotos (Clientes):** Sistema de registro y autenticación de usuarios. 
 * **💾 Boxes (Persistencia):** Manejo eficiente de datos mediante **Spring Data JPA**.
+
+## 🖥️ Landing Page
+[![Visita nuestra web](https://img.shields.io/badge/Landing%20Page-Ver%20Proyecto-red?style=for-the-badge&logo=googlechrome&logoColor=white)](http://localhost:5000)
+
+<p align="center">
+  <img src="demo\src\main\resources\static\Images\landingPage.jpeg" alt="Vista previa de la Landing Page" width="600">
+</p>
+
 
 ## 🚀 Stack Tecnológico
 | Tecnología | Uso |
@@ -32,6 +45,17 @@ El proyecto sigue el estándar de desarrollo en capas para facilitar el mantenim
 - `repository`: Interfaces CRUD para la comunicación con SQL.
 - `service`: Capa de lógica de negocio y reglas del restaurante.
 - `controller`: Endpoints de la API.
+
+
+## 💾 Estructura de Datos (Base de Datos)
+Para que nada falle cuando el semáforo se pone en verde, diseñamos un sistema donde cada pieza encaja perfectamente. Aquí se puede ver cómo se conecta toda la información de nuestro negocio:
+
+<p align="center">
+  <img src="Diagrama de entidad relacion.png" alt="Diagrama de Entidad Relación" width="1000">
+</p>
+
+> **Nota:** Este mapa muestra cómo se conecta todo en nuestra pista: desde los **Clientes** y sus **Carritos**, hasta los **Domiciliarios** que hacen la entrega final. Todo está organizado con identificadores `BIGINT` para que la búsqueda de tus pizzas y sus **Adicionales** sea tan rápida como un cambio de neumáticos en los boxes.
+
 
 ## ⚙️ Cómo Poner el Motor en Marcha
 Sigue estos pasos para ejecutar el proyecto localmente:
