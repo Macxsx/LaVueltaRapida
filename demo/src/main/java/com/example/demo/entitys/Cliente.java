@@ -5,9 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
-
-
 
 @Data
 @Entity
@@ -30,20 +30,11 @@ public class Cliente {
     private String direccion;
     private String telefono;
 
-    // Constructor vacío (Obligatorio para JPA)
-    public Cliente() {
-    }
+    @OneToOne
+    @JoinColumn(name = "cliente")
+    private Carrito carrito;
 
-    // Constructor con todos los campos
-    public Cliente(Long id, String name, String apellido, String email, String username, String password, String direccion, String telefono) {
-        this.id = id;
-        this.name = name;
-        this.apellido = apellido;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.direccion = direccion;
-        this.telefono = telefono;
+    public Cliente() {
     }
 
     public Cliente(String name, String apellido, String email, String username, String password, String direccion, String telefono) {
@@ -56,5 +47,26 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    
+    public Cliente(String name, String apellido, String email, String username, String password, String direccion, String telefono, Carrito carrito) {
+        this.name = name;
+        this.apellido = apellido;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.carrito = carrito;
+    }
+
+    public Cliente(Long id, String name, String apellido, String email, String username, String password, String direccion, String telefono, Carrito carrito) {
+        this.id = id;
+        this.name = name;
+        this.apellido = apellido;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.carrito = carrito;
+    }
 }

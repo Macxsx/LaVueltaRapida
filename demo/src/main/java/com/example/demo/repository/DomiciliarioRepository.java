@@ -1,12 +1,10 @@
 package com.example.demo.repository;
 
-
 import java.util.List;
-import com.example.demo.entitys.Adicional;
+import com.example.demo.entitys.Domiciliario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AdicionalRepository extends JpaRepository<Adicional, Long> {
-    
+public interface DomiciliarioRepository extends JpaRepository<Domiciliario, Long> {
 }
