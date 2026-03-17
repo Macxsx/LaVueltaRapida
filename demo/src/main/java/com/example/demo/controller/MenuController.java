@@ -66,9 +66,12 @@ public class MenuController {
 
     @PostMapping("/add")
     public String AdicionarComida(@ModelAttribute("comida") Comida comida, @RequestParam("categoryId") Long categoryId) {
+        boolean esEdicion = comida.getId() != null;
         comida.setCategory(categoriaService.findById(categoryId));
         comidaService.save(comida);
-        return "redirect:/producto/menutabla";
+        return esEdicion
+            ? "redirect:/producto/menutabla?success=updated"
+            : "redirect:/producto/menutabla?success=added";
     }
 
     @GetMapping("/update/{id}")

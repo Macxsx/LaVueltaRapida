@@ -111,5 +111,25 @@
 
 <div th:replace="fragmentos :: footer"></div>
 
+<!-- Toast de confirmación -->
+<div id="successToast" class="admin-toast"
+     th:classappend="${param.success != null} ? ' visible' : ''">
+  <span class="admin-toast-icon">✔</span>
+  <span class="admin-toast-msg"
+        th:text="${param.success != null and param.success[0] == 'added'} ? '¡Producto agregado al menú exitosamente!' :
+                 (${param.success != null and param.success[0] == 'updated'} ? '¡Producto modificado exitosamente!' : '')">
+  </span>
+</div>
+
+<script>
+  (function () {
+    var toast = document.getElementById('successToast');
+    if (toast && toast.classList.contains('visible')) {
+      setTimeout(function () { toast.classList.add('hide'); }, 3500);
+      setTimeout(function () { toast.remove(); }, 4200);
+    }
+  })();
+</script>
+
 </body>
 </html>
