@@ -111,23 +111,33 @@
 
 <div th:replace="fragmentos :: footer"></div>
 
-<!-- Toast de confirmación -->
+<!-- Toast éxito -->
 <div id="successToast" class="admin-toast"
      th:classappend="${param.success != null} ? ' visible' : ''">
   <span class="admin-toast-icon">✔</span>
   <span class="admin-toast-msg"
-        th:text="${param.success != null and param.success[0] == 'added'} ? '¡Producto agregado al menú exitosamente!' :
-                 (${param.success != null and param.success[0] == 'updated'} ? '¡Producto modificado exitosamente!' : '')">
+        th:text="${param.success != null and param.success[0] == 'added'}   ? '¡Producto agregado al menú exitosamente!'  :
+                 (${param.success != null and param.success[0] == 'updated'} ? '¡Producto modificado exitosamente!'        :
+                 (${param.success != null and param.success[0] == 'deleted'} ? '¡Producto eliminado correctamente!'        : ''))">
   </span>
+</div>
+
+<!-- Toast error -->
+<div id="errorToast" class="admin-toast admin-toast-error"
+     th:classappend="${param.error != null} ? ' visible' : ''">
+  <span class="admin-toast-icon">✕</span>
+  <span class="admin-toast-msg">No se pudo eliminar el producto.</span>
 </div>
 
 <script>
   (function () {
-    var toast = document.getElementById('successToast');
-    if (toast && toast.classList.contains('visible')) {
-      setTimeout(function () { toast.classList.add('hide'); }, 3500);
-      setTimeout(function () { toast.remove(); }, 4200);
-    }
+    ['successToast','errorToast'].forEach(function(id) {
+      var toast = document.getElementById(id);
+      if (toast && toast.classList.contains('visible')) {
+        setTimeout(function () { toast.classList.add('hide'); }, 3500);
+        setTimeout(function () { toast.remove(); }, 4200);
+      }
+    });
   })();
 </script>
 

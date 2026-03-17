@@ -358,3 +358,13 @@
   letter-spacing: 0.04em;
   line-height: 1.4;
 }
+
+/* Toast error */
+.admin-toast-error {
+  border-color: rgba(220, 38, 38, 0.45);
+  border-left-color: #dc2626;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 0 16px rgba(220,38,38,0.15);
+}
+.admin-toast-error .admin-toast-icon {
+  color: #dc2626;
+}

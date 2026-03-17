@@ -92,16 +92,17 @@ public String perfil(
 
 
     @PostMapping("/perfil/delete")
-public String deletePerfil(HttpSession session) {
-
-    Long id = (Long) session.getAttribute("loggedUserId");
-
-    clienteService.deleteById(id);
-
-    session.invalidate();
-
-    return "redirect:/";
-}
+    public String deletePerfil(HttpSession session) {
+        Long id = (Long) session.getAttribute("loggedUserId");
+        if (id == null) return "redirect:/login";
+        try {
+            clienteService.deleteById(id);
+            session.invalidate();
+            return "redirect:/";
+        } catch (Exception e) {
+            return "redirect:/perfil?error=delete";
+        }
+    }
 
     @PostMapping("/perfil/update")
     public String updatePerfil(@ModelAttribute Cliente cliente, HttpSession session) {

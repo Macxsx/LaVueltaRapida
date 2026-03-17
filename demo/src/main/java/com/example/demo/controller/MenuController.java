@@ -50,8 +50,12 @@ public class MenuController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
-        comidaService.deleteById(id);
-        return "redirect:/producto/menutabla";
+        try {
+            comidaService.deleteById(id);
+            return "redirect:/producto/menutabla?success=deleted";
+        } catch (Exception e) {
+            return "redirect:/producto/menutabla?error=delete";
+        }
     }
 
     @GetMapping("/add")
