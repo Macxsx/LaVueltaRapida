@@ -953,7 +953,7 @@ a {
 .footer-col {
   display: flex;
   flex-direction: column;
-  min-width: 160px;
+  /* min-width: 160px; */
 }
 
 .footer-col-title {
@@ -984,10 +984,16 @@ a {
   color: #b5b5b5;
   font-size: 14px;
   transition: color 0.2s ease;
+
+  white-space: normal;
 }
 
 .footer-links a:hover {
   color: #ffffff;
+}
+
+.footer-top .footer-col:nth-child(3) {
+  transform: translateX(-30px);
 }
 
 /* ================= USER AREA ================= */
