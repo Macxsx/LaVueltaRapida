@@ -3,6 +3,10 @@ package com.example.demo.entitys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,28 +27,24 @@ public class LineaPedido {
     private Integer cantidad;
 
     @ManyToOne
+    @JoinColumn(name = "comida_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Comida comida;
 
-    @OneToMany(mappedBy = "lineaPedido")
+    @OneToMany(mappedBy = "lineaPedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LineaPedidoAdicional> adicionales = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "carrito_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Carrito carrito;
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Pedido pedido;
 
     public LineaPedido() {
-    }
-
-    public LineaPedido(Long id, Integer cantidad, Comida comida, Carrito carrito, Pedido pedido) {
-        this.id = id;
-        this.cantidad = cantidad;
-        this.comida = comida;
-        this.carrito = carrito;
-        this.pedido = pedido;
     }
 
     public LineaPedido(Integer cantidad, Comida comida, Carrito carrito, Pedido pedido) {

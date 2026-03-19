@@ -27,7 +27,7 @@ public class LoginController {
 
     @GetMapping("/register")
     public String register(Model model) {
-        Cliente cliente = new Cliente(null, null, null, null, null, null, null, null);
+        Cliente cliente = new Cliente();
         model.addAttribute("cliente", cliente);
         model.addAttribute("editMode", false);
         return "register";

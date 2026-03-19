@@ -1,5 +1,8 @@
 package com.example.demo.entitys;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +21,7 @@ public class LineaPedidoAdicional {
 
     @ManyToOne
     @JoinColumn(name = "linea_pedido_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private LineaPedido lineaPedido;
 
     @ManyToOne
@@ -25,12 +29,6 @@ public class LineaPedidoAdicional {
     private Adicional adicional;
 
     public LineaPedidoAdicional() {
-    }
-
-    public LineaPedidoAdicional(Long id, LineaPedido lineaPedido, Adicional adicional) {
-        this.id = id;
-        this.lineaPedido = lineaPedido;
-        this.adicional = adicional;
     }
 
     public LineaPedidoAdicional(LineaPedido lineaPedido, Adicional adicional) {

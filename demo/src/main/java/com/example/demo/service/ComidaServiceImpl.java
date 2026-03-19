@@ -1,24 +1,18 @@
 package com.example.demo.service;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entitys.Comida;
 import com.example.demo.repository.ComidaRepository;
-import com.example.demo.repository.LineaPedidoRepository;
 
 @Service
 public class ComidaServiceImpl implements ComidaService {
 
     @Autowired
     private ComidaRepository repo;
-
-    @Autowired
-    private LineaPedidoRepository lineaPedidoRepo;
 
     @Override
     public Collection<Comida> findAll() {
@@ -43,9 +37,7 @@ public class ComidaServiceImpl implements ComidaService {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
-        lineaPedidoRepo.nullifyComidaById(id);
         repo.deleteById(id);
     }
 
