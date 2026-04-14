@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Data
 @Entity
 public class Comida {
@@ -16,22 +18,26 @@ public class Comida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // Restricciones: nullable, length
+
     @Column(nullable = false, length = 100)
     private String name;
+
     private String description;
+
     @Column(nullable = false)
     private double price;
+
     private String image;
+
     private boolean available;
 
-    @ManyToOne // <--- ESTO ES LO QUE FALTABA PARA QUE FUNCIONE CON LA NUEVA CATEGORIA
+    @ManyToOne
     @JoinColumn(nullable = false)
+    @JsonIgnoreProperties({"comidas", "hibernateLazyInitializer", "handler"}) // 🔥 FIX
     private Categoria category;
 
     // Constructor vacío
-    public Comida() {
-    }
+    public Comida() {}
 
     // Constructor completo
     public Comida(Long id, String name, String description, double price, String image, boolean available, Categoria category) {
@@ -52,5 +58,4 @@ public class Comida {
         this.available = available;
         this.category = category;
     }
-
 }

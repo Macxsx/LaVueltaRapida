@@ -1,89 +1,91 @@
 package com.example.demo.controller;
 
 import com.example.demo.entitys.Comida;
-import com.example.demo.entitys.Categoria; // Importación explícita para evitar el "missing type"
+import com.example.demo.entitys.Categoria;
 import com.example.demo.service.CategoriaService;
 import com.example.demo.service.ComidaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.stereotype.Controller;
 
-@RequestMapping("/producto")
-@Controller
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/menu")
+@CrossOrigin(origins = "http://localhost:5000")
 public class MenuController {
 
     @Autowired
-    ComidaService comidaService;
+    private ComidaService comidaService;
 
     @Autowired
-    CategoriaService categoriaService;
+    private CategoriaService categoriaService;
 
-    // http://localhost:5000/producto/menu
-    @GetMapping("/menu")
-    public String mostrarMenu(Model model) {
-        model.addAttribute("categorias", categoriaService.findAll());
-        model.addAttribute("comidas", comidaService.findAll());
-        return "menu";
-    }
+    // 🍔 GET ALL COMIDA
+    @GetMapping
+public List<Comida> getAllComidas() {
+    return new java.util.ArrayList<>(comidaService.findAll());
+}
 
-    // http://localhost:5000/producto/{id}
+    // 🍔 GET COMIDA BY ID + RECOMMENDATIONS
     @GetMapping("/{id}")
-    public String verProducto(@PathVariable Long id, Model model) {
+    public Map<String, Object> getComidaById(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+
         Comida comida = comidaService.findById(id);
-        model.addAttribute("comida", comida);
-        model.addAttribute("recomendaciones", comidaService.recomendadosPorCategoria(comida.getCategory().getId(), id));
-        return "product-detail";
+
+        response.put("comida", comida);
+        response.put(
+            "recomendaciones",
+            comidaService.recomendadosPorCategoria(
+                comida.getCategory().getId(), id
+            )
+        );
+
+        return response;
     }
 
-    @GetMapping("/menutabla")
-    public String mostrarMenuTabla(Model model) {
-        model.addAttribute("categorias", categoriaService.findAll());
-        model.addAttribute("comidas", comidaService.findAll());
-        return "menu-list";
-    }
+    // 📂 GET ALL CATEGORIES
+    @GetMapping("/categorias")
+public List<Categoria> getCategorias() {
+    return new java.util.ArrayList<>(categoriaService.findAll());
+}
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        try {
-            comidaService.deleteById(id);
-            return "redirect:/producto/menutabla?success=deleted";
-        } catch (Exception e) {
-            return "redirect:/producto/menutabla?error=delete";
-        }
-    }
+    // ➕ ADD OR UPDATE COMIDA
+    @PostMapping
+    public Map<String, Object> saveComida(
+            @RequestBody Comida comida,
+            @RequestParam Long categoryId) {
 
-    @GetMapping("/add")
-    public String MostrarFormularioCrear(Model model) {
-        // Ajustado al constructor manual de Comida: (id, name, description, price, image, available, category)
-        Comida comida = new Comida(null, "", "", 0.0, "", true, null);
-        model.addAttribute("comida", comida);
-        model.addAttribute("categorias", categoriaService.findAll());
-        model.addAttribute("editMode", false);
-        return "add-product";
-    }
+        Map<String, Object> response = new HashMap<>();
 
-    @PostMapping("/add")
-    public String AdicionarComida(@ModelAttribute("comida") Comida comida, @RequestParam("categoryId") Long categoryId) {
         boolean esEdicion = comida.getId() != null;
+
         comida.setCategory(categoriaService.findById(categoryId));
         comidaService.save(comida);
-        return esEdicion
-            ? "redirect:/producto/menutabla?success=updated"
-            : "redirect:/producto/menutabla?success=added";
+
+        response.put("success", true);
+        response.put("action", esEdicion ? "updated" : "created");
+        response.put("comida", comida);
+
+        return response;
     }
 
-    @GetMapping("/update/{id}")
-    public String ActualizarComida(@PathVariable("id") Long id, Model model) {
-        Comida comida = comidaService.findById(id);
-        model.addAttribute("comida", comida);
-        model.addAttribute("categorias", categoriaService.findAll());
-        model.addAttribute("editMode", true);
-        return "add-product";
+    // 🗑️ DELETE COMIDA
+    @DeleteMapping("/{id}")
+    public Map<String, Object> deleteComida(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            comidaService.deleteById(id);
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error deleting comida");
+        }
+
+        return response;
     }
 }

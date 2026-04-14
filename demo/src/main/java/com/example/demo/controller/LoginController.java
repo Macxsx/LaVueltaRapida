@@ -1,121 +1,103 @@
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.entitys.Cliente;
 import com.example.demo.service.ClienteService;
 
-import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
-
-@Controller
+@RestController
+@RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:5000")
 public class LoginController {
 
     @Autowired
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
-    @GetMapping("/register")
-    public String register(Model model) {
-        Cliente cliente = new Cliente();
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("editMode", false);
-        return "register";
-    }
-    
-
+    // 🔐 LOGIN
     @PostMapping("/login")
-    public String loginPost(@RequestParam String username, @RequestParam String password, HttpSession session) {
+    public Map<String, Object> login(@RequestParam String username,
+                                     @RequestParam String password) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Admin login (kept from your original logic)
         if (username.equals("admin") && password.equals("admin")) {
-            session.setAttribute("loggedUser", "Admin");
-            session.setAttribute("loggedUserId", 0);
-            return "redirect:/producto/menutabla";
+            response.put("success", true);
+            response.put("role", "admin");
+            response.put("user", "Admin");
+            response.put("userId", 0);
+            return response;
         }
 
+        // Cliente login
         if (clienteService.validateCredentials(username, password)) {
             Cliente cliente = clienteService.findByUsername(username);
-            session.setAttribute("loggedUser", cliente.getName());
-            session.setAttribute("loggedUserId", cliente.getId());
-            return "redirect:/";
+
+            response.put("success", true);
+            response.put("role", "cliente");
+            response.put("user", cliente.getName());
+            response.put("userId", cliente.getId());
+            response.put("cliente", cliente);
+
         } else {
-            return "redirect:/login?error";
+            response.put("success", false);
+            response.put("message", "Invalid credentials");
         }
+
+        return response;
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
-    }
-
+    // 📝 REGISTER
     @PostMapping("/register")
-    public String registerPost(@ModelAttribute Cliente cliente, HttpSession session) {
+    public Map<String, Object> register(@RequestBody Cliente cliente) {
+
+        Map<String, Object> response = new HashMap<>();
+
         if (clienteService.isUsernameTaken(cliente.getUsername())) {
-            return "redirect:/register?usernameTaken";
+            response.put("success", false);
+            response.put("message", "Username already taken");
+            return response;
         }
+
         clienteService.save(cliente);
-        session.setAttribute("loggedUser", cliente.getName());
-        session.setAttribute("loggedUserId", cliente.getId());
-        return "redirect:/";
+
+        response.put("success", true);
+        response.put("user", cliente.getName());
+        response.put("userId", cliente.getId());
+        response.put("cliente", cliente);
+
+        return response;
     }
 
-@GetMapping("/perfil")
-public String perfil(
-        @RequestParam(required = false, defaultValue = "false") boolean edit,
-        Model model,
-        HttpSession session) {
-
-    Long id = (Long) session.getAttribute("loggedUserId");
-
-    if (id == null) {
-        return "redirect:/login";
+    // 👤 GET PROFILE
+    @GetMapping("/perfil/{id}")
+    public Cliente getPerfil(@PathVariable Long id) {
+        return clienteService.findById(id);
     }
 
-    Cliente cliente = clienteService.findById(id);
+    // ✏️ UPDATE PROFILE
+    @PutMapping("/perfil/{id}")
+    public Map<String, Object> updatePerfil(@PathVariable Long id,
+                                            @RequestBody Cliente cliente) {
 
-    model.addAttribute("cliente", cliente);
-    model.addAttribute("editMode", edit);
+        Map<String, Object> response = new HashMap<>();
 
-    return "perfil";
-}
-    
-
-
-    @PostMapping("/perfil/delete")
-    public String deletePerfil(HttpSession session) {
-        Long id = (Long) session.getAttribute("loggedUserId");
-        if (id == null) return "redirect:/login";
-        try {
-            clienteService.deleteById(id);
-            session.invalidate();
-            return "redirect:/";
-        } catch (Exception e) {
-            return "redirect:/perfil?error=delete";
-        }
-    }
-
-    @PostMapping("/perfil/update")
-    public String updatePerfil(@ModelAttribute Cliente cliente, HttpSession session) {
-
-        Long id = (Long) session.getAttribute("loggedUserId");
         Cliente stored = clienteService.findById(id);
 
         if (!stored.getPassword().equals(cliente.getPassword())) {
-            return "redirect:/perfil?edit=true&wrongPassword";
+            response.put("success", false);
+            response.put("message", "Wrong password");
+            return response;
         }
 
         if (clienteService.isUsernameTakenByOther(cliente.getUsername(), id)) {
-            return "redirect:/perfil?edit=true&usernameTaken";
+            response.put("success", false);
+            response.put("message", "Username already taken");
+            return response;
         }
 
         stored.setName(cliente.getName());
@@ -126,17 +108,27 @@ public String perfil(
         stored.setTelefono(cliente.getTelefono());
 
         clienteService.save(stored);
-        session.setAttribute("loggedUser", stored.getName());
 
-        return "redirect:/perfil?success";
+        response.put("success", true);
+        response.put("cliente", stored);
+
+        return response;
     }
-    
 
-    
+    // 🗑️ DELETE PROFILE
+    @DeleteMapping("/perfil/{id}")
+    public Map<String, Object> deletePerfil(@PathVariable Long id) {
 
-    
+        Map<String, Object> response = new HashMap<>();
 
-    
+        try {
+            clienteService.deleteById(id);
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error deleting user");
+        }
 
-
+        return response;
+    }
 }

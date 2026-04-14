@@ -15,18 +15,16 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
 public class Categoria {
 
     @Id
-    //PK
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    // nullable, unique, length 
     @Column(nullable = false, unique = true, length = 50)
     private String name;
 
@@ -36,12 +34,11 @@ public class Categoria {
         joinColumns = @JoinColumn(name = "categoria_id"),
         inverseJoinColumns = @JoinColumn(name = "adicional_id")
     )
-   private List<Adicional> adicionales = new ArrayList<>();
-    
+    @JsonIgnoreProperties({"categorias"}) // 🔥 prevents infinite loop
+    private List<Adicional> adicionales = new ArrayList<>();
 
-    // Constructor vacío (Obligatorio para JPA)
-    public Categoria() {
-    }
+    // Constructor vacío
+    public Categoria() {}
 
     // Constructor completo
     public Categoria(Long id, String name) {
@@ -52,6 +49,4 @@ public class Categoria {
     public Categoria(String name) {
         this.name = name;
     }
-
-   
 }
