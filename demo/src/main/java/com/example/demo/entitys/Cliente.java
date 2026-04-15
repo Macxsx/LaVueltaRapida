@@ -1,6 +1,5 @@
 package com.example.demo.entitys;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +23,6 @@ public class Cliente {
     private String email;
     @Column(nullable = false, length = 30)
     private String username;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "contrasena", nullable = false)
     private String password;
     private String direccion;
