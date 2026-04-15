@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entitys.Categoria;
 import com.example.demo.service.CategoriaService;
 
-@CrossOrigin(origins = "http://localhost:5000")
+@CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
-@RequestMapping("/api/categorias")
+@RequestMapping("/categorias")
 public class CategoriaRestController {
 
     @Autowired

@@ -14,16 +14,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.entitys.Categoria;
 import com.example.demo.entitys.Comida;
+import com.example.demo.service.CategoriaService;
 import com.example.demo.service.ComidaService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
-@RequestMapping("/api/comidas")
+@RequestMapping("/comidas")
 public class ComidaRestController {
 
     @Autowired
     private ComidaService comidaService;
+
+    @Autowired
+    private CategoriaService categoriaService;
 
     @GetMapping
     public Collection<Comida> findAll() {
@@ -36,19 +41,101 @@ public class ComidaRestController {
         return comida == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(comida);
     }
 
+    public static class ComidaRequest {
+        private String name;
+        private String description;
+        private double price;
+        private String image;
+        private boolean available;
+        private Long categoryId;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public boolean isAvailable() {
+            return available;
+        }
+
+        public void setAvailable(boolean available) {
+            this.available = available;
+        }
+
+        public Long getCategoryId() {
+            return categoryId;
+        }
+
+        public void setCategoryId(Long categoryId) {
+            this.categoryId = categoryId;
+        }
+    }
+
     @PostMapping
-    public ResponseEntity<Comida> add(@RequestBody Comida comida) {
+    public ResponseEntity<Comida> add(@RequestBody ComidaRequest request) {
+        Categoria categoria = categoriaService.findById(request.getCategoryId());
+        if (categoria == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Comida comida = new Comida(
+                request.getName(),
+                request.getDescription(),
+                request.getPrice(),
+                request.getImage(),
+                request.isAvailable(),
+                categoria);
         comidaService.save(comida);
         return ResponseEntity.ok(comida);
     }
 
-    @PutMapping
-    public ResponseEntity<Comida> update(@RequestBody Comida comida) {
-        if (comida.getId() == null || comidaService.findById(comida.getId()) == null) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Comida> update(@PathVariable Long id, @RequestBody ComidaRequest request) {
+        Comida stored = comidaService.findById(id);
+        if (stored == null) {
             return ResponseEntity.notFound().build();
         }
-        comidaService.save(comida);
-        return ResponseEntity.ok(comida);
+
+        Categoria categoria = categoriaService.findById(request.getCategoryId());
+        if (categoria == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        stored.setName(request.getName());
+        stored.setDescription(request.getDescription());
+        stored.setPrice(request.getPrice());
+        stored.setImage(request.getImage());
+        stored.setAvailable(request.isAvailable());
+        stored.setCategory(categoria);
+        comidaService.save(stored);
+        return ResponseEntity.ok(stored);
     }
 
     @DeleteMapping("/{id}")

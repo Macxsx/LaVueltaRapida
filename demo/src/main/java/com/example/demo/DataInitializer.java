@@ -219,11 +219,26 @@ public class DataInitializer {
             // ==========================================
             // 6. OPERADORES
             // ==========================================
-            operadorRepo.save(new Operador("Carlos Ruiz",    "op1", "123"));
-            operadorRepo.save(new Operador("Laura Sánchez",  "op2", "123"));
-            operadorRepo.save(new Operador("Andrés Mora",    "op3", "123"));
-            operadorRepo.save(new Operador("Sofía Vargas",   "op4", "123"));
-            operadorRepo.save(new Operador("Juan Prada",     "op5", "123"));
+            operadorRepo.save(new Operador("Carlos Ruiz",       "op1",  "123"));
+            operadorRepo.save(new Operador("Laura Sánchez",     "op2",  "123"));
+            operadorRepo.save(new Operador("Andrés Mora",       "op3",  "123"));
+            operadorRepo.save(new Operador("Sofía Vargas",      "op4",  "123"));
+            operadorRepo.save(new Operador("Juan Prada",        "op5",  "123"));
+            operadorRepo.save(new Operador("Natalia Cárdenas",  "op6",  "123"));
+            operadorRepo.save(new Operador("Ricardo Peña",      "op7",  "123"));
+            operadorRepo.save(new Operador("Valentina Cruz",    "op8",  "123"));
+            operadorRepo.save(new Operador("Felipe Gómez",      "op9",  "123"));
+            operadorRepo.save(new Operador("Mariana Ospina",    "op10", "123"));
+            operadorRepo.save(new Operador("Diego Salcedo",     "op11", "123"));
+            operadorRepo.save(new Operador("Isabela Ríos",      "op12", "123"));
+            operadorRepo.save(new Operador("Tomás Bejarano",    "op13", "123"));
+            operadorRepo.save(new Operador("Lucía Montoya",     "op14", "123"));
+            operadorRepo.save(new Operador("Esteban Guerrero",  "op15", "123"));
+            operadorRepo.save(new Operador("Paula Herrera",     "op16", "123"));
+            operadorRepo.save(new Operador("Julián Acosta",     "op17", "123"));
+            operadorRepo.save(new Operador("Camila Nieto",      "op18", "123"));
+            operadorRepo.save(new Operador("Alejandro Duque",   "op19", "123"));
+            operadorRepo.save(new Operador("Sara Quintero",     "op20", "123"));
 
             // ==========================================
             // 6. DOMICILIARIOS
@@ -244,41 +259,72 @@ public class DataInitializer {
             adminRepo.save(new Administrador("admin5", "123"));
 
             // ==========================================
-            // 8. PEDIDOS DE EJEMPLO
+            // 8. PEDIDOS DE EJEMPLO (20 pedidos)
             // ==========================================
             List<Cliente> clientes = clienteRepo.findAll();
             List<Comida> comidas   = comidaRepo.findAll();
             List<Domiciliario> domiciliarios = domiciliarioRepo.findAll();
+            List<Adicional> adicionales = adicionalRepo.findAll();
 
-            for (int i = 0; i < 3; i++) {
+            int[][] pedidoConfig = {
+                // { clienteIdx, comidaIdx, adicionalIdx, estadoOrdinal, minutosAtras, domIdx }
+                // estadoOrdinal: 0=RECIBIDO, 1=COCINANDO, 2=ENVIADO, 3=ENTREGADO
+                {0, 0,  0, 3, 90, 0},
+                {1, 3,  1, 3, 75, 1},
+                {2, 6,  2, 3, 60, 2},
+                {3, 10, 3, 3, 50, 3},
+                {4, 13, 4, 3, 45, 4},
+                {5, 16, 5, 3, 40, 0},
+                {6, 19, 6, 3, 35, 1},
+                {7, 22, 7, 3, 30, 2},
+                {8, 25, 8, 3, 25, 3},
+                {9, 28, 9, 3, 20, 4},
+                {0, 2,  0, 2, 15, 0},
+                {1, 5,  1, 2, 12, 1},
+                {2, 8,  2, 2, 10, 2},
+                {3, 11, 3, 1, 8,  3},
+                {4, 14, 4, 1, 6,  4},
+                {5, 17, 5, 1, 5,  0},
+                {6, 20, 6, 0, 3, -1},
+                {7, 23, 7, 0, 2, -1},
+                {8, 26, 8, 0, 1, -1},
+                {9, 29, 9, 0, 0, -1}
+            };
+
+            EstadoPedido[] estados = EstadoPedido.values();
+
+            for (int[] cfg : pedidoConfig) {
+                int clienteIdx   = cfg[0];
+                int comidaIdx    = cfg[1] % comidas.size();
+                int adicionalIdx = cfg[2] % adicionales.size();
+                EstadoPedido estado = estados[cfg[3]];
+                long minutosAtras = cfg[4];
+                int domIdx = cfg[5];
+
                 Pedido pedido = new Pedido();
-                pedido.setCliente(clientes.get(i));
-                pedido.setEstado(EstadoPedido.RECIBIDO);
-                pedido.setFechaCreacion(LocalDateTime.now());
+                pedido.setCliente(clientes.get(clienteIdx));
+                pedido.setEstado(estado);
+                pedido.setFechaCreacion(LocalDateTime.now().minusMinutes(minutosAtras));
+
+                if (estado == EstadoPedido.ENTREGADO) {
+                    pedido.setFechaEntrega(LocalDateTime.now().minusMinutes(minutosAtras / 3));
+                }
+                if (domIdx >= 0) {
+                    pedido.setDomiciliario(domiciliarios.get(domIdx));
+                }
+
                 pedidoRepo.save(pedido);
 
                 LineaPedido linea = new LineaPedido();
                 linea.setPedido(pedido);
-                linea.setComida(comidas.get(i));
-                linea.setCantidad(1);
+                linea.setComida(comidas.get(comidaIdx));
+                linea.setCantidad(1 + (comidaIdx % 3));
                 lineaPedidoRepo.save(linea);
 
                 LineaPedidoAdicional lpa = new LineaPedidoAdicional();
                 lpa.setLineaPedido(linea);
-                lpa.setAdicional(quesoExtra);
+                lpa.setAdicional(adicionales.get(adicionalIdx));
                 lineaPedidoAdicionalRepo.save(lpa);
-
-                pedido.setEstado(EstadoPedido.COCINANDO);
-                pedido.setDomiciliario(domiciliarios.get(i));
-                domiciliarios.get(i).setDisponible(false);
-                domiciliarioRepo.save(domiciliarios.get(i));
-
-                pedido.setEstado(EstadoPedido.ENVIADO);
-                pedido.setEstado(EstadoPedido.ENTREGADO);
-                pedido.setFechaEntrega(LocalDateTime.now());
-                domiciliarios.get(i).setDisponible(true);
-                domiciliarioRepo.save(domiciliarios.get(i));
-                pedidoRepo.save(pedido);
             }
 
             System.out.println("¡Semáforo en verde! Base de datos de LaVueltaRapida inicializada correctamente.");

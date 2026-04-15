@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entitys.Cliente;
 import com.example.demo.service.ClienteService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
-@RequestMapping("/api/clientes")
+@RequestMapping("/clientes")
 public class ClienteRestController {
 
     @Autowired
@@ -42,8 +42,19 @@ public class ClienteRestController {
         return ResponseEntity.ok(cliente);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> update(@PathVariable Long id, @RequestBody Cliente cliente) {
+        Cliente stored = clienteService.findById(id);
+        if (stored == null) {
+            return ResponseEntity.notFound().build();
+        }
+        cliente.setId(id);
+        clienteService.save(cliente);
+        return ResponseEntity.ok(cliente);
+    }
+
     @PutMapping
-    public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> updateFallback(@RequestBody Cliente cliente) {
         if (cliente.getId() == null || clienteService.findById(cliente.getId()) == null) {
             return ResponseEntity.notFound().build();
         }
