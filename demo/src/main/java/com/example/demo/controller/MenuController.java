@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entitys.Comida;
 import com.example.demo.entitys.Categoria; // Importación explícita para evitar el "missing type"
+import com.example.demo.repository.AdicionalRepository;
 import com.example.demo.service.CategoriaService;
 import com.example.demo.service.ComidaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class MenuController {
     @Autowired
     CategoriaService categoriaService;
 
+    @Autowired
+    AdicionalRepository adicionalRepository;
+
     // http://localhost:5000/producto/menu
     @GetMapping("/menu")
     public String mostrarMenu(Model model) {
@@ -37,6 +41,8 @@ public class MenuController {
     public String verProducto(@PathVariable Long id, Model model) {
         Comida comida = comidaService.findById(id);
         model.addAttribute("comida", comida);
+        model.addAttribute("adicionalesCategoria",
+                adicionalRepository.findByCategorias_IdAndAvailableTrue(comida.getCategory().getId()));
         model.addAttribute("recomendaciones", comidaService.recomendadosPorCategoria(comida.getCategory().getId(), id));
         return "product-detail";
     }
