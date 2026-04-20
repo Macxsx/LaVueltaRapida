@@ -3,6 +3,7 @@ package com.example.demo.entitys;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -34,11 +35,13 @@ public class LineaPedido {
     @OneToMany(mappedBy = "lineaPedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LineaPedidoAdicional> adicionales = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "carrito_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Carrito carrito;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "pedido_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

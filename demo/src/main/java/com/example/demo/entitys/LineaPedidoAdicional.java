@@ -19,6 +19,7 @@ public class LineaPedidoAdicional {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @ManyToOne
     @JoinColumn(name = "linea_pedido_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
