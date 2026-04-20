@@ -1,0 +1,92 @@
+{
+  "id": 22,
+  "fechaCreacion": "2026-04-20T12:00:20.130234",
+  "fechaEntrega": null,
+  "estado": "RECIBIDO",
+  "cliente": {
+    "id": 1,
+    "name": "Pablo",
+    "apellido": "García",
+    "email": "PabloGarcia21@gmail.com",
+    "username": "pablo123",
+    "password": "123456",
+    "direccion": "Cra 7 #40-62, Bogotá",
+    "telefono": "3001234567"
+  },
+  "lineasPedido": [
+    {
+      "id": 25,
+      "cantidad": 1,
+      "comida": {
+        "id": 3,
+        "name": "Napolitana Nürburgring",
+        "description": "Tomate, mozzarella, anchoas, aceitunas negras y orégano.",
+        "price": 57900,
+        "image": "https://cocina-casera.com/wp-content/uploads/2023/06/pizza-napolitana.jpeg",
+        "available": true,
+        "category": {
+          "id": 1,
+          "name": "Clásicas",
+          "adicionales": [
+            {
+              "id": 1,
+              "name": "Queso extra",
+              "price": 3000,
+              "available": true
+            },
+            {
+              "id": 2,
+              "name": "Pepperoni extra",
+              "price": 3500,
+              "available": true
+            },
+            {
+              "id": 3,
+              "name": "Jamón extra",
+              "price": 3000,
+              "available": true
+            },
+            {
+              "id": 4,
+              "name": "Champiñones",
+              "price": 2500,
+              "available": true
+            },
+            {
+              "id": 5,
+              "name": "Aceitunas negras",
+              "price": 2500,
+              "available": true
+            },
+            {
+              "id": 6,
+              "name": "Maíz dulce",
+              "price": 2000,
+              "available": true
+            },
+            {
+              "id": 7,
+              "name": "Piña",
+              "price": 2500,
+              "available": true
+            },
+            {
+              "id": 8,
+              "name": "Borde relleno de queso",
+              "price": 4000,
+              "available": true
+            },
+            {
+              "id": 9,
+              "name": "Salsa extra",
+              "price": 1500,
+              "available": true
+            }
+          ]
+        }
+      },
+      "adicionales": []
+    }
+  ],
+  "domiciliario": null
+}

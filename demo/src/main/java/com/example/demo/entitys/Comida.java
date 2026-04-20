@@ -1,5 +1,6 @@
 package com.example.demo.entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ public class Comida {
     private String image;
     private boolean available;
 
+    @JsonIgnoreProperties("adicionales")
     @ManyToOne // <--- ESTO ES LO QUE FALTABA PARA QUE FUNCIONE CON LA NUEVA CATEGORIA
     @JoinColumn(nullable = false)
     private Categoria category;
