@@ -3,6 +3,7 @@ package com.example.demo.entitys;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ public class Domiciliario {
 
     private boolean disponible;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "domiciliario")
     private List<Pedido> pedidos = new ArrayList<>();
 
