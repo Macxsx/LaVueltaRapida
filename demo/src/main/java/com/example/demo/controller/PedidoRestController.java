@@ -95,13 +95,13 @@ public class PedidoRestController {
         }
 
         // Guardar el pedido (cascade guarda líneas y adicionales)
-        pedidoRepository.save(pedido);
+        Pedido pedidoGuardado = pedidoRepository.save(pedido);
 
         // Vaciar el carrito
         carrito.getLineasPedido().clear();
         carritoRepository.save(carrito);
 
-        return ResponseEntity.ok(pedidoRepository.findById(pedido.getId()).get());
+        return ResponseEntity.ok(pedidoGuardado);
     }
 
     // ── PATCH /pedido/{id}/estado ─────────────────────────────────────────────
