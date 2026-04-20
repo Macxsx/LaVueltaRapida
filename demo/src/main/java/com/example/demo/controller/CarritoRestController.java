@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.entitys.Adicional;
 import com.example.demo.entitys.Carrito;
 import com.example.demo.entitys.Comida;
 import com.example.demo.entitys.LineaPedido;
+import com.example.demo.entitys.LineaPedidoAdicional;
+import com.example.demo.repository.AdicionalRepository;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.ComidaRepository;
 import com.example.demo.repository.LineaPedidoRepository;
@@ -36,6 +44,16 @@ public class CarritoRestController {
     @Autowired
     private ComidaRepository comidaRepository;
 
+    @Autowired
+    private AdicionalRepository adicionalRepository;
+
+    // ── DTO ──────────────────────────────────────────────────────────────────
+    static class AddProductoRequest {
+        public Long comidaId;
+        public Integer cantidad;
+        public List<Long> adicionalesIds;
+    }
+
     // ── GET /carrito/{id} ────────────────────────────────────────────────────
     @GetMapping("/{id}")
     public ResponseEntity<Carrito> findById(@PathVariable Long id) {
@@ -53,37 +71,70 @@ public class CarritoRestController {
     }
 
     // ── POST /carrito/{id}/productos ─────────────────────────────────────────
-    // Body: { "comidaId": 1, "cantidad": 2 }
-    // Si la comida ya está en el carrito, suma la cantidad.
+    // Body: { "comidaId": 1, "cantidad": 2, "adicionalesIds": [3, 7] }
+    // Regla: si ya existe una línea con la misma comida Y los mismos adicionales
+    //        se suma la cantidad. Si los adicionales son distintos, se crea una
+    //        nueva línea separada.
     @Transactional
     @PostMapping("/{id}/productos")
     public ResponseEntity<?> addProducto(@PathVariable Long id,
-                                         @RequestBody Map<String, Integer> body) {
+                                         @RequestBody AddProductoRequest body) {
         Carrito carrito = carritoRepository.findById(id).orElse(null);
         if (carrito == null) {
             return ResponseEntity.notFound().build();
         }
-
-        Integer comidaIdRaw = body.get("comidaId");
-        Integer cantidad    = body.get("cantidad");
-
-        if (comidaIdRaw == null || cantidad == null || cantidad <= 0) {
+        if (body.comidaId == null || body.cantidad == null || body.cantidad <= 0) {
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Se requieren 'comidaId' y 'cantidad' (> 0)"));
         }
 
-        Long comidaId = comidaIdRaw.longValue();
-        Comida comida = comidaRepository.findById(comidaId).orElse(null);
+        Comida comida = comidaRepository.findById(body.comidaId).orElse(null);
         if (comida == null) {
             return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Comida con id " + comidaId + " no encontrada"));
+                    .body(Map.of("error", "Comida con id " + body.comidaId + " no encontrada"));
         }
 
-        lineaPedidoRepository.findByCarritoIdAndComidaId(id, comidaId)
-                .ifPresentOrElse(
-                        linea -> linea.setCantidad(linea.getCantidad() + cantidad),
-                        () -> lineaPedidoRepository.save(new LineaPedido(cantidad, comida, carrito, null))
-                );
+        // Normalizar la lista de adicionales entrante (ordenada, sin nulos)
+        Set<Long> incomingIds = new TreeSet<>();
+        if (body.adicionalesIds != null) {
+            incomingIds.addAll(body.adicionalesIds);
+        }
+
+        // Validar que todos los adicionales existan antes de tocar nada
+        List<Adicional> adicionales = new ArrayList<>();
+        for (Long adicionalId : incomingIds) {
+            Adicional adicional = adicionalRepository.findById(adicionalId).orElse(null);
+            if (adicional == null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Adicional con id " + adicionalId + " no encontrado"));
+            }
+            adicionales.add(adicional);
+        }
+
+        // Buscar si ya existe una línea con la misma comida
+        List<LineaPedido> lineasExistentes =
+                lineaPedidoRepository.findByCarritoIdAndComidaId(id, body.comidaId);
+
+        for (LineaPedido linea : lineasExistentes) {
+            Set<Long> existingIds = linea.getAdicionales().stream()
+                    .map(lpa -> lpa.getAdicional().getId())
+                    .collect(Collectors.toCollection(TreeSet::new));
+
+            if (existingIds.equals(incomingIds)) {
+                // Mismo conjunto de adicionales → solo se suma la cantidad
+                linea.setCantidad(linea.getCantidad() + body.cantidad);
+                lineaPedidoRepository.save(linea);
+                return ResponseEntity.ok(carritoRepository.findById(id).get());
+            }
+        }
+
+        // Adicionales distintos (o primera vez) → nueva línea
+        LineaPedido nuevaLinea = new LineaPedido(body.cantidad, comida, carrito, null);
+        for (Adicional adicional : adicionales) {
+            LineaPedidoAdicional lpa = new LineaPedidoAdicional(nuevaLinea, adicional);
+            nuevaLinea.getAdicionales().add(lpa);
+        }
+        lineaPedidoRepository.save(nuevaLinea);
 
         return ResponseEntity.ok(carritoRepository.findById(id).get());
     }

@@ -10,5 +10,5 @@ public interface LineaPedidoRepository extends JpaRepository<LineaPedido, Long> 
 
     List<LineaPedido> findByCarritoId(Long carritoId);
 
-    java.util.Optional<LineaPedido> findByCarritoIdAndComidaId(Long carritoId, Long comidaId);
+    List<LineaPedido> findByCarritoIdAndComidaId(Long carritoId, Long comidaId);
 }
