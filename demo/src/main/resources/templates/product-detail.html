@@ -62,14 +62,14 @@
             <input type="hidden" name="id" th:value="${comida.id}">
             <input type="hidden" id="base-price" th:value="${comida.price}">
 
-            <div class="pd-options" th:if="${!#lists.isEmpty(adicionalesCategoria)}">
+            <div class="pd-options" th:if="${!#lists.isEmpty(comida.category.adicionales)}">
               <h4 class="pd-options-title">
                 <span class="pd-options-icon">⚙</span>
                 Personaliza tu pedido
               </h4>
               <div class="pd-options-grid">
                 <div class="pd-option-item"
-                     th:each="adicional : ${adicionalesCategoria}"
+                     th:each="adicional : ${comida.category.adicionales}"
                      th:if="${adicional.available}">
                   <input type="checkbox"
                          th:id="'adic-' + ${adicional.id}"
