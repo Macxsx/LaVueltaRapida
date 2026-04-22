@@ -5,7 +5,9 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entitys.Carrito;
 import com.example.demo.entitys.Cliente;
+import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.ClienteRepository;
 
 @Service
@@ -14,6 +16,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Autowired
     ClienteRepository repo;
 
+    @Autowired
+    CarritoRepository carritoRepo;
+
     @Override
     public Collection<Cliente> findAll() {
         return repo.findAll();
@@ -21,7 +26,15 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void save(Cliente cliente) {
-        repo.save(cliente);
+        boolean esNuevo = cliente.getId() == null;
+        Cliente guardado = repo.save(cliente);
+        cliente.setId(guardado.getId());
+
+        if (esNuevo && carritoRepo.findByClienteId(guardado.getId()).isEmpty()) {
+            Carrito carrito = new Carrito(guardado);
+            carrito.setActivo(false);
+            carritoRepo.save(carrito);
+        }
     }
 
     @Override
