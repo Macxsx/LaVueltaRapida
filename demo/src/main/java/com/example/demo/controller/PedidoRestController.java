@@ -177,12 +177,11 @@ public class PedidoRestController {
                     .body(Map.of("error", "Estado inválido: '" + estadoStr + "'. Valores válidos: RECIBIDO, COCINANDO, ENVIADO, ENTREGADO"));
         }
 
-        EstadoPedido estadoAnterior = pedido.getEstado();
-
-        // Al pasar a ENVIADO: asignar un domiciliario disponible y marcarlo ocupado.
-        if (nuevoEstado == EstadoPedido.ENVIADO
-                && estadoAnterior != EstadoPedido.ENVIADO
-                && pedido.getDomiciliario() == null) {
+        // Invariante: solo los pedidos en estado ENVIADO pueden tener domiciliario.
+        // - Al entrar a ENVIADO: asignar un domiciliario disponible y marcarlo ocupado.
+        // - Al salir de ENVIADO (a cualquier otro estado): liberar y desvincular
+        //   al domiciliario asignado.
+        if (nuevoEstado == EstadoPedido.ENVIADO && pedido.getDomiciliario() == null) {
             Domiciliario disponible = domiciliarioRepository
                     .findFirstByDisponibleTrueOrderByIdAsc()
                     .orElse(null);
@@ -193,15 +192,11 @@ public class PedidoRestController {
             disponible.setDisponible(false);
             domiciliarioRepository.save(disponible);
             pedido.setDomiciliario(disponible);
-        }
-
-        // Al pasar a ENTREGADO: liberar al domiciliario asignado.
-        if (nuevoEstado == EstadoPedido.ENTREGADO
-                && estadoAnterior != EstadoPedido.ENTREGADO
-                && pedido.getDomiciliario() != null) {
+        } else if (nuevoEstado != EstadoPedido.ENVIADO && pedido.getDomiciliario() != null) {
             Domiciliario asignado = pedido.getDomiciliario();
             asignado.setDisponible(true);
             domiciliarioRepository.save(asignado);
+            pedido.setDomiciliario(null);
         }
 
         pedido.setEstado(nuevoEstado);
