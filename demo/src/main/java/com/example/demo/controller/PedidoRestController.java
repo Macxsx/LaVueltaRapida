@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entitys.Carrito;
@@ -45,9 +50,35 @@ public class PedidoRestController {
     private DomiciliarioRepository domiciliarioRepository;
 
     // ── GET /pedido ───────────────────────────────────────────────────────────
+    // Paginado, ordenado por fecha de creación descendente.
+    // Query params opcionales: page (default 0), size (default 20).
     @GetMapping
-    public List<Pedido> findAll() {
-        return pedidoRepository.findAll();
+    public ResponseEntity<Map<String, Object>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        if (page < 0) page = 0;
+        if (size <= 0) size = 20;
+        if (size > 100) size = 100;
+
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.DESC, "fechaCreacion"));
+        Page<Pedido> resultado = pedidoRepository.findAll(pageable);
+
+        Map<String, Object> body = Map.of(
+                "content", resultado.getContent(),
+                "page", resultado.getNumber(),
+                "size", resultado.getSize(),
+                "totalElements", resultado.getTotalElements(),
+                "totalPages", resultado.getTotalPages());
+        return ResponseEntity.ok(body);
+    }
+
+    // ── GET /pedido/activos ───────────────────────────────────────────────────
+    // Devuelve los pedidos cuyo estado sea distinto de ENTREGADO,
+    // ordenados por fecha de creación descendente.
+    @GetMapping("/activos")
+    public List<Pedido> findActivos() {
+        return pedidoRepository.findByEstadoNotOrderByFechaCreacionDesc(EstadoPedido.ENTREGADO);
     }
 
     // ── GET /pedido/{id} ──────────────────────────────────────────────────────
