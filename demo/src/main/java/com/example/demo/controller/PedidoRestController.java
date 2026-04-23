@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entitys.Carrito;
+import com.example.demo.entitys.Domiciliario;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.ClienteRepository;
+import com.example.demo.repository.DomiciliarioRepository;
 import com.example.demo.repository.PedidoRepository;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
@@ -38,6 +40,9 @@ public class PedidoRestController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private DomiciliarioRepository domiciliarioRepository;
 
     // ── GET /pedido ───────────────────────────────────────────────────────────
     @GetMapping
@@ -138,6 +143,33 @@ public class PedidoRestController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Estado inválido: '" + estadoStr + "'. Valores válidos: RECIBIDO, COCINANDO, ENVIADO, ENTREGADO"));
+        }
+
+        EstadoPedido estadoAnterior = pedido.getEstado();
+
+        // Al pasar a ENVIADO: asignar un domiciliario disponible y marcarlo ocupado.
+        if (nuevoEstado == EstadoPedido.ENVIADO
+                && estadoAnterior != EstadoPedido.ENVIADO
+                && pedido.getDomiciliario() == null) {
+            Domiciliario disponible = domiciliarioRepository
+                    .findFirstByDisponibleTrueOrderByIdAsc()
+                    .orElse(null);
+            if (disponible == null) {
+                return ResponseEntity.status(409).body(Map.of(
+                        "error", "No hay domiciliarios disponibles para asignar al pedido."));
+            }
+            disponible.setDisponible(false);
+            domiciliarioRepository.save(disponible);
+            pedido.setDomiciliario(disponible);
+        }
+
+        // Al pasar a ENTREGADO: liberar al domiciliario asignado.
+        if (nuevoEstado == EstadoPedido.ENTREGADO
+                && estadoAnterior != EstadoPedido.ENTREGADO
+                && pedido.getDomiciliario() != null) {
+            Domiciliario asignado = pedido.getDomiciliario();
+            asignado.setDisponible(true);
+            domiciliarioRepository.save(asignado);
         }
 
         pedido.setEstado(nuevoEstado);
