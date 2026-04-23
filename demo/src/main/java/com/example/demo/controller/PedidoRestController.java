@@ -77,8 +77,9 @@ public class PedidoRestController {
     // Devuelve los pedidos cuyo estado sea distinto de ENTREGADO,
     // ordenados por fecha de creación descendente.
     @GetMapping("/activos")
-    public List<Pedido> findActivos() {
-        return pedidoRepository.findByEstadoNotOrderByFechaCreacionDesc(EstadoPedido.ENTREGADO);
+    public ResponseEntity<List<Pedido>> findActivos() {
+        return ResponseEntity.ok(
+                pedidoRepository.findByEstadoNotOrderByFechaCreacionDesc(EstadoPedido.ENTREGADO));
     }
 
     // ── GET /pedido/{id} ──────────────────────────────────────────────────────
