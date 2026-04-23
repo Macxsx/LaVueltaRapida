@@ -22,6 +22,7 @@ import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.CarritoRepository;
+import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.PedidoRepository;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
@@ -34,6 +35,9 @@ public class PedidoRestController {
 
     @Autowired
     private CarritoRepository carritoRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     // ── GET /pedido ───────────────────────────────────────────────────────────
     @GetMapping
@@ -53,8 +57,12 @@ public class PedidoRestController {
     // Devuelve los pedidos del cliente, ordenados por fecha de creación
     // (más recientes primero) para que el frontend no tenga que reordenar.
     @GetMapping("/cliente/{clienteId}")
-    public List<Pedido> findByCliente(@PathVariable Long clienteId) {
-        return pedidoRepository.findByClienteIdOrderByFechaCreacionDesc(clienteId);
+    public ResponseEntity<List<Pedido>> findByCliente(@PathVariable Long clienteId) {
+        if (!clienteRepository.existsById(clienteId)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(
+                pedidoRepository.findByClienteIdOrderByFechaCreacionDesc(clienteId));
     }
 
     // ── POST /pedido/desde-carrito/{carritoId} ────────────────────────────────
