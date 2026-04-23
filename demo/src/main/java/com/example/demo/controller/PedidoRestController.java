@@ -50,9 +50,11 @@ public class PedidoRestController {
     }
 
     // ── GET /pedido/cliente/{clienteId} ───────────────────────────────────────
+    // Devuelve los pedidos del cliente, ordenados por fecha de creación
+    // (más recientes primero) para que el frontend no tenga que reordenar.
     @GetMapping("/cliente/{clienteId}")
     public List<Pedido> findByCliente(@PathVariable Long clienteId) {
-        return pedidoRepository.findByClienteId(clienteId);
+        return pedidoRepository.findByClienteIdOrderByFechaCreacionDesc(clienteId);
     }
 
     // ── POST /pedido/desde-carrito/{carritoId} ────────────────────────────────
