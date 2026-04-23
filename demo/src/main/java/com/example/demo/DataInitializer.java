@@ -309,8 +309,13 @@ public class DataInitializer {
                 if (estado == EstadoPedido.ENTREGADO) {
                     pedido.setFechaEntrega(LocalDateTime.now().minusMinutes(minutosAtras / 3));
                 }
-                if (domIdx >= 0) {
-                    pedido.setDomiciliario(domiciliarios.get(domIdx));
+                // Invariante: solo los pedidos en estado ENVIADO pueden tener
+                // domiciliario asignado, y ese domiciliario queda ocupado.
+                if (estado == EstadoPedido.ENVIADO && domIdx >= 0) {
+                    Domiciliario d = domiciliarios.get(domIdx);
+                    d.setDisponible(false);
+                    domiciliarioRepo.save(d);
+                    pedido.setDomiciliario(d);
                 }
 
                 pedidoRepo.save(pedido);
