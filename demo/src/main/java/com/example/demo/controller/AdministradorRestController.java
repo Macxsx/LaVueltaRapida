@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +45,20 @@ public class AdministradorRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Administrador> update(@PathVariable Long id, @RequestBody UpdateAdminRequest req) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateAdminRequest req) {
         Optional<Administrador> existing = administradorRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Administrador stored = existing.get();
         if (req.currentPassword != null && !stored.getContrasena().equals(req.currentPassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "La contraseña actual es incorrecta."));
+        }
+        if (req.usuario != null && !req.usuario.equals(stored.getUsuario())
+                && administradorRepository.findByUsuario(req.usuario).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Ya existe un administrador con el usuario '" + req.usuario + "'."));
         }
         stored.setUsuario(req.usuario);
         if (req.contrasena != null && !req.contrasena.isBlank()) {

@@ -21,5 +21,8 @@ public interface ClienteService {
     public boolean isUsernameTaken(String username);
 
     public boolean isUsernameTakenByOther(String username, Long currentId);
-    
+
+    public boolean isEmailTaken(String email);
+
+    public boolean isEmailTakenByOther(String email, Long currentId);
 }

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,12 @@ public class OperadorRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Operador> add(@RequestBody Operador operador) {
-        Operador saved = operadorRepository.save(operador);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<?> add(@RequestBody Operador operador) {
+        if (operadorRepository.findByUsuario(operador.getUsuario()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Ya existe un operador con el usuario '" + operador.getUsuario() + "'."));
+        }
+        return ResponseEntity.ok(operadorRepository.save(operador));
     }
 
     static class UpdateOperadorRequest {
@@ -52,7 +56,7 @@ public class OperadorRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Operador> update(@PathVariable Long id, @RequestBody UpdateOperadorRequest req) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateOperadorRequest req) {
         Optional<Operador> existing = operadorRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -60,6 +64,11 @@ public class OperadorRestController {
         Operador stored = existing.get();
         if (req.currentPassword != null && !stored.getContrasena().equals(req.currentPassword)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (req.usuario != null && !req.usuario.equals(stored.getUsuario())
+                && operadorRepository.findByUsuario(req.usuario).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Ya existe un operador con el usuario '" + req.usuario + "'."));
         }
         stored.setNombre(req.nombre);
         stored.setUsuario(req.usuario);

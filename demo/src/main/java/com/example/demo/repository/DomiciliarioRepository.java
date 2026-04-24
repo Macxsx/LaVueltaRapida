@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DomiciliarioRepository extends JpaRepository<Domiciliario, Long> {
 
+    Optional<Domiciliario> findByCedula(String cedula);
+
+    Optional<Domiciliario> findByCelular(String celular);
+
     List<Domiciliario> findByDisponibleTrue();
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

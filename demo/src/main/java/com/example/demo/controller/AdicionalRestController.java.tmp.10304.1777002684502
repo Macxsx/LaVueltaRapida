@@ -104,10 +104,7 @@ public class AdicionalRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody AdicionalRequest request) {
-        ResponseEntity<?> error = validarAdicional(request);
-        if (error != null) return error;
-
+    public ResponseEntity<Adicional> add(@RequestBody AdicionalRequest request) {
         Adicional adicional = new Adicional(
                 request.getName(),
                 request.getPrice(),
@@ -129,14 +126,11 @@ public class AdicionalRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody AdicionalRequest request) {
+    public ResponseEntity<Adicional> update(@PathVariable Long id, @RequestBody AdicionalRequest request) {
         Adicional stored = adicionalService.findById(id);
         if (stored == null) {
             return ResponseEntity.notFound().build();
         }
-
-        ResponseEntity<?> error = validarAdicional(request);
-        if (error != null) return error;
 
         stored.setName(request.getName());
         stored.setPrice(request.getPrice());
@@ -163,16 +157,6 @@ public class AdicionalRestController {
         }
         
         return ResponseEntity.ok(stored);
-    }
-
-    private ResponseEntity<?> validarAdicional(AdicionalRequest req) {
-        if (req.getName() == null || req.getName().isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El nombre del adicional es obligatorio."));
-        }
-        if (req.getPrice() <= 0) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El precio debe ser mayor a 0."));
-        }
-        return null;
     }
 
     @DeleteMapping("/{id}")

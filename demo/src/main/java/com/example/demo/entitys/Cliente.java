@@ -23,7 +23,7 @@ public class Cliente {
     private String apellido;
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, unique = true, length = 30)
     private String username;
     @Column(name = "contrasena", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

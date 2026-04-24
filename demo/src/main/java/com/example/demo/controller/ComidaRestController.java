@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -99,10 +100,14 @@ public class ComidaRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Comida> add(@RequestBody ComidaRequest request) {
+    public ResponseEntity<?> add(@RequestBody ComidaRequest request) {
+        ResponseEntity<?> error = validarComida(request);
+        if (error != null) return error;
+
         Categoria categoria = categoriaService.findById(request.getCategoryId());
         if (categoria == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "La categoría seleccionada no existe."));
         }
 
         Comida comida = new Comida(
@@ -117,15 +122,19 @@ public class ComidaRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Comida> update(@PathVariable Long id, @RequestBody ComidaRequest request) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ComidaRequest request) {
         Comida stored = comidaService.findById(id);
         if (stored == null) {
             return ResponseEntity.notFound().build();
         }
 
+        ResponseEntity<?> error = validarComida(request);
+        if (error != null) return error;
+
         Categoria categoria = categoriaService.findById(request.getCategoryId());
         if (categoria == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "La categoría seleccionada no existe."));
         }
 
         stored.setName(request.getName());
@@ -136,6 +145,19 @@ public class ComidaRestController {
         stored.setCategory(categoria);
         comidaService.save(stored);
         return ResponseEntity.ok(stored);
+    }
+
+    private ResponseEntity<?> validarComida(ComidaRequest req) {
+        if (req.getName() == null || req.getName().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El nombre del producto es obligatorio."));
+        }
+        if (req.getPrice() <= 0) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El precio debe ser mayor a 0."));
+        }
+        if (req.getCategoryId() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Debes seleccionar una categoría."));
+        }
+        return null;
     }
 
     @DeleteMapping("/{id}")

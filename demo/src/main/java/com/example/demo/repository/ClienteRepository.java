@@ -8,5 +8,6 @@ import com.example.demo.entitys.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     Cliente findByUsername(String username);
-    
+
+    Cliente findByEmail(String email);
 }

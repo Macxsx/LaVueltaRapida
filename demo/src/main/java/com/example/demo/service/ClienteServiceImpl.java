@@ -68,4 +68,15 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente existing = repo.findByUsername(username);
         return existing != null && !existing.getId().equals(currentId);
     }
+
+    @Override
+    public boolean isEmailTaken(String email) {
+        return repo.findByEmail(email) != null;
+    }
+
+    @Override
+    public boolean isEmailTakenByOther(String email, Long currentId) {
+        Cliente existing = repo.findByEmail(email);
+        return existing != null && !existing.getId().equals(currentId);
+    }
 }

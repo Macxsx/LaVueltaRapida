@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,25 +43,47 @@ public class DomiciliarioRestController {
 
     // ── POST /domiciliarios ──────────────────────────────────────────────────
     @PostMapping
-    public ResponseEntity<Domiciliario> add(@RequestBody Domiciliario domiciliario) {
+    public ResponseEntity<?> add(@RequestBody Domiciliario domiciliario) {
         domiciliario.setId(null);
-        Domiciliario guardado = domiciliarioRepository.save(domiciliario);
-        return ResponseEntity.ok(guardado);
+        ResponseEntity<?> conflicto = validarUnicidad(domiciliario.getCedula(), domiciliario.getCelular(), null);
+        if (conflicto != null) return conflicto;
+        return ResponseEntity.ok(domiciliarioRepository.save(domiciliario));
     }
 
     // ── PUT /domiciliarios/{id} ──────────────────────────────────────────────
     @PutMapping("/{id}")
-    public ResponseEntity<Domiciliario> update(@PathVariable Long id,
-                                               @RequestBody Domiciliario domiciliario) {
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @RequestBody Domiciliario domiciliario) {
         Domiciliario stored = domiciliarioRepository.findById(id).orElse(null);
         if (stored == null) {
             return ResponseEntity.notFound().build();
         }
+        ResponseEntity<?> conflicto = validarUnicidad(domiciliario.getCedula(), domiciliario.getCelular(), id);
+        if (conflicto != null) return conflicto;
         stored.setNombre(domiciliario.getNombre());
         stored.setCedula(domiciliario.getCedula());
         stored.setCelular(domiciliario.getCelular());
         stored.setDisponible(domiciliario.isDisponible());
         return ResponseEntity.ok(domiciliarioRepository.save(stored));
+    }
+
+    /** Retorna un 409 si la cédula o el celular ya pertenecen a otro domiciliario; null si todo está bien. */
+    private ResponseEntity<?> validarUnicidad(String cedula, String celular, Long idPropio) {
+        boolean cedulaOcupada = domiciliarioRepository.findByCedula(cedula)
+                .filter(d -> !d.getId().equals(idPropio))
+                .isPresent();
+        if (cedulaOcupada) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Ya existe un domiciliario con la cédula '" + cedula + "'."));
+        }
+        boolean celularOcupado = domiciliarioRepository.findByCelular(celular)
+                .filter(d -> !d.getId().equals(idPropio))
+                .isPresent();
+        if (celularOcupado) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Ya existe un domiciliario con el celular '" + celular + "'."));
+        }
+        return null;
     }
 
     // ── DELETE /domiciliarios/{id} ───────────────────────────────────────────

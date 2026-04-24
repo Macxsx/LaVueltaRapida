@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,15 @@ public class ClienteRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> add(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> add(@RequestBody Cliente cliente) {
+        if (clienteService.isUsernameTaken(cliente.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "El nombre de usuario '" + cliente.getUsername() + "' ya está en uso."));
+        }
+        if (clienteService.isEmailTaken(cliente.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "El correo '" + cliente.getEmail() + "' ya está registrado."));
+        }
         clienteService.save(cliente);
         return ResponseEntity.ok(cliente);
     }
@@ -55,13 +64,22 @@ public class ClienteRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> update(@PathVariable Long id, @RequestBody UpdateClienteRequest req) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateClienteRequest req) {
         Cliente stored = clienteService.findById(id);
         if (stored == null) {
             return ResponseEntity.notFound().build();
         }
         if (req.currentPassword != null && !stored.getPassword().equals(req.currentPassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "La contraseña actual es incorrecta."));
+        }
+        if (req.username != null && clienteService.isUsernameTakenByOther(req.username, id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "El nombre de usuario '" + req.username + "' ya está en uso."));
+        }
+        if (req.email != null && clienteService.isEmailTakenByOther(req.email, id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "El correo '" + req.email + "' ya está registrado."));
         }
         stored.setName(req.name);
         stored.setApellido(req.apellido);

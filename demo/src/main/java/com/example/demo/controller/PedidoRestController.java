@@ -179,6 +179,17 @@ public class PedidoRestController {
                     .body(Map.of("error", "Estado inválido: '" + estadoStr + "'. Valores válidos: RECIBIDO, COCINANDO, ENVIADO, ENTREGADO"));
         }
 
+        // Validar que la transición sea la inmediatamente siguiente en la cadena.
+        EstadoPedido estadoActual = pedido.getEstado();
+        if (nuevoEstado != estadoActual.siguiente()) {
+            String siguiente = estadoActual.siguiente() != null
+                    ? estadoActual.siguiente().name()
+                    : "ninguno (ya está en el estado final)";
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Transición inválida: un pedido en estado '" + estadoActual
+                            + "' solo puede avanzar a '" + siguiente + "'."));
+        }
+
         // Invariante: solo los pedidos en estado ENVIADO pueden tener domiciliario.
         // - Al entrar a ENVIADO: asignar un domiciliario disponible y marcarlo ocupado.
         // - Al salir de ENVIADO (a cualquier otro estado): liberar y desvincular
