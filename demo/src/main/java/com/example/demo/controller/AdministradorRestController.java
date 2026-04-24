@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,15 +37,26 @@ public class AdministradorRestController {
         return administrador.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    static class UpdateAdminRequest {
+        public String usuario;
+        public String contrasena;
+        public String currentPassword;
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Administrador> update(@PathVariable Long id, @RequestBody Administrador administrador) {
+    public ResponseEntity<Administrador> update(@PathVariable Long id, @RequestBody UpdateAdminRequest req) {
         Optional<Administrador> existing = administradorRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Administrador stored = existing.get();
-        stored.setUsuario(administrador.getUsuario());
-        stored.setContrasena(administrador.getContrasena());
+        if (req.currentPassword != null && !stored.getContrasena().equals(req.currentPassword)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        stored.setUsuario(req.usuario);
+        if (req.contrasena != null && !req.contrasena.isBlank()) {
+            stored.setContrasena(req.contrasena);
+        }
         administradorRepository.save(stored);
         return ResponseEntity.ok(stored);
     }

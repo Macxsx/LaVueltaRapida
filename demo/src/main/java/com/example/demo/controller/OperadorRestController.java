@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,16 +44,28 @@ public class OperadorRestController {
         return ResponseEntity.ok(saved);
     }
 
+    static class UpdateOperadorRequest {
+        public String nombre;
+        public String usuario;
+        public String contrasena;
+        public String currentPassword;
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Operador> update(@PathVariable Long id, @RequestBody Operador operador) {
+    public ResponseEntity<Operador> update(@PathVariable Long id, @RequestBody UpdateOperadorRequest req) {
         Optional<Operador> existing = operadorRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Operador stored = existing.get();
-        stored.setNombre(operador.getNombre());
-        stored.setUsuario(operador.getUsuario());
-        stored.setContrasena(operador.getContrasena());
+        if (req.currentPassword != null && !stored.getContrasena().equals(req.currentPassword)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        stored.setNombre(req.nombre);
+        stored.setUsuario(req.usuario);
+        if (req.contrasena != null && !req.contrasena.isBlank()) {
+            stored.setContrasena(req.contrasena);
+        }
         operadorRepository.save(stored);
         return ResponseEntity.ok(stored);
     }
