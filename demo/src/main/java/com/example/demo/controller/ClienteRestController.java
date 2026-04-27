@@ -100,12 +100,14 @@ public class ClienteRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        if (clienteService.findById(id) == null) {
+        Cliente stored = clienteService.findById(id);
+        if (stored == null) {
             return ResponseEntity.notFound().build();
         }
         if (pedidoRepository.existsByClienteId(id)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "No se puede eliminar el cliente porque tiene pedidos registrados."));
+            stored.setActivo(false);
+            clienteService.save(stored);
+            return ResponseEntity.ok(Map.of("mensaje", "Cuenta desactivada. El historial de pedidos se ha conservado."));
         }
         clienteService.deleteById(id);
         return ResponseEntity.noContent().build();

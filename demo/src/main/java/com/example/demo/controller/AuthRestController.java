@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -63,7 +65,7 @@ public class AuthRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         if (request == null || request.usuario == null || request.contrasena == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -80,6 +82,10 @@ public class AuthRestController {
 
         Cliente cliente = clienteService.findByUsername(request.usuario);
         if (cliente != null && cliente.getPassword().equals(request.contrasena)) {
+            if (!cliente.isActivo()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Esta cuenta ha sido desactivada."));
+            }
             Long carritoId = carritoRepository.findByClienteId(cliente.getId())
                     .map(c -> c.getId())
                     .orElse(null);

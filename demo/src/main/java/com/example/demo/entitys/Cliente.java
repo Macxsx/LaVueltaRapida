@@ -31,6 +31,9 @@ public class Cliente {
     private String direccion;
     private String telefono;
 
+    @Column(nullable = false)
+    private boolean activo = true;
+
     public Cliente() {
     }
 
