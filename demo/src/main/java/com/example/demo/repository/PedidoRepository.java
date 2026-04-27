@@ -17,5 +17,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     boolean existsByClienteId(Long clienteId);
 
+    boolean existsByClienteIdAndEstadoNot(Long clienteId, EstadoPedido estado);
+
     boolean existsByDomiciliarioIdAndEstadoNot(Long domiciliarioId, EstadoPedido estado);
 }

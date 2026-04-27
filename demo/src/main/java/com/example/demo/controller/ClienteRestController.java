@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entitys.Cliente;
+import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.repository.PedidoRepository;
 import com.example.demo.service.ClienteService;
 
@@ -103,6 +104,10 @@ public class ClienteRestController {
         Cliente stored = clienteService.findById(id);
         if (stored == null) {
             return ResponseEntity.notFound().build();
+        }
+        if (pedidoRepository.existsByClienteIdAndEstadoNot(id, EstadoPedido.ENTREGADO)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "No se puede eliminar la cuenta porque tiene pedidos activos."));
         }
         if (pedidoRepository.existsByClienteId(id)) {
             stored.setActivo(false);
