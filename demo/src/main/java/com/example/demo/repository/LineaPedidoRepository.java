@@ -11,4 +11,6 @@ public interface LineaPedidoRepository extends JpaRepository<LineaPedido, Long> 
     List<LineaPedido> findByCarritoId(Long carritoId);
 
     List<LineaPedido> findByCarritoIdAndComidaId(Long carritoId, Long comidaId);
+
+    boolean existsByComidaIdAndPedidoIsNotNull(Long comidaId);
 }

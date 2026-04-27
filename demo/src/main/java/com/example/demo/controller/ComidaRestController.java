@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entitys.Categoria;
 import com.example.demo.entitys.Comida;
+import com.example.demo.repository.LineaPedidoRepository;
 import com.example.demo.service.CategoriaService;
 import com.example.demo.service.ComidaService;
 
@@ -30,6 +32,9 @@ public class ComidaRestController {
 
     @Autowired
     private CategoriaService categoriaService;
+
+    @Autowired
+    private LineaPedidoRepository lineaPedidoRepository;
 
     @GetMapping
     public Collection<Comida> findAll() {
@@ -161,9 +166,13 @@ public class ComidaRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         if (comidaService.findById(id) == null) {
             return ResponseEntity.notFound().build();
+        }
+        if (lineaPedidoRepository.existsByComidaIdAndPedidoIsNotNull(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "No se puede eliminar el producto porque ya está incluido en uno o más pedidos."));
         }
         comidaService.deleteById(id);
         return ResponseEntity.noContent().build();

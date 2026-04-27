@@ -14,4 +14,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByClienteIdOrderByFechaCreacionDesc(Long clienteId);
 
     List<Pedido> findByEstadoNotOrderByFechaCreacionAsc(EstadoPedido estado);
+
+    boolean existsByClienteId(Long clienteId);
+
+    boolean existsByDomiciliarioIdAndEstadoNot(Long domiciliarioId, EstadoPedido estado);
 }

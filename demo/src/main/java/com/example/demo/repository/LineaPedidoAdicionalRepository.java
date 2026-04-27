@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LineaPedidoAdicionalRepository extends JpaRepository<LineaPedidoAdicional, Long> {
 
+    boolean existsByAdicionalIdAndLineaPedidoPedidoIsNotNull(Long adicionalId);
 }

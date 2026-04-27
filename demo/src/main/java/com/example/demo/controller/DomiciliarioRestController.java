@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entitys.Domiciliario;
+import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.repository.DomiciliarioRepository;
+import com.example.demo.repository.PedidoRepository;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
@@ -26,6 +28,9 @@ public class DomiciliarioRestController {
 
     @Autowired
     private DomiciliarioRepository domiciliarioRepository;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     // ── GET /domiciliarios ───────────────────────────────────────────────────
     @GetMapping
@@ -88,9 +93,13 @@ public class DomiciliarioRestController {
 
     // ── DELETE /domiciliarios/{id} ───────────────────────────────────────────
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         if (!domiciliarioRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
+        }
+        if (pedidoRepository.existsByDomiciliarioIdAndEstadoNot(id, EstadoPedido.ENTREGADO)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "No se puede eliminar el domiciliario porque tiene un pedido en curso."));
         }
         domiciliarioRepository.deleteById(id);
         return ResponseEntity.noContent().build();

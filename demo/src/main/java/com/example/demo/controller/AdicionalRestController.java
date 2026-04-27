@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entitys.Adicional;
 import com.example.demo.entitys.Categoria;
-import com.example.demo.service.AdicionalService;
-import com.example.demo.service.CategoriaService;
 import com.example.demo.repository.AdicionalRepository;
 import com.example.demo.repository.CategoriaRepository;
+import com.example.demo.repository.LineaPedidoAdicionalRepository;
+import com.example.demo.service.AdicionalService;
+import com.example.demo.service.CategoriaService;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
@@ -38,6 +40,9 @@ public class AdicionalRestController {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private LineaPedidoAdicionalRepository lineaPedidoAdicionalRepository;
 
     @GetMapping
     public Collection<Adicional> findAll() {
@@ -176,18 +181,17 @@ public class AdicionalRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         Adicional adicional = adicionalService.findById(id);
         if (adicional == null) {
             return ResponseEntity.notFound().build();
         }
-        
-        // Primero eliminar desde la tabla join
+        if (lineaPedidoAdicionalRepository.existsByAdicionalIdAndLineaPedidoPedidoIsNotNull(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "No se puede eliminar el adicional porque ya está incluido en uno o más pedidos."));
+        }
         adicionalRepository.deleteFromCategorias(id);
-        
-        // Luego eliminar el adicional
         adicionalService.deleteById(id);
-        
         return ResponseEntity.noContent().build();
     }
 }
