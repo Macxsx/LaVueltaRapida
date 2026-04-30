@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.AdicionalRequest;
 import com.example.demo.entitys.Adicional;
 import com.example.demo.entitys.Categoria;
-import com.example.demo.repository.AdicionalRepository;
-import com.example.demo.repository.CategoriaRepository;
-import com.example.demo.repository.LineaPedidoAdicionalRepository;
 import com.example.demo.service.AdicionalService;
-import com.example.demo.service.CategoriaService;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
@@ -31,18 +29,6 @@ public class AdicionalRestController {
 
     @Autowired
     private AdicionalService adicionalService;
-
-    @Autowired
-    private CategoriaService categoriaService;
-
-    @Autowired
-    private AdicionalRepository adicionalRepository;
-
-    @Autowired
-    private CategoriaRepository categoriaRepository;
-
-    @Autowired
-    private LineaPedidoAdicionalRepository lineaPedidoAdicionalRepository;
 
     @GetMapping
     public Collection<Adicional> findAll() {
@@ -56,142 +42,49 @@ public class AdicionalRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Adicional> findById(@PathVariable Long id) {
-        Adicional adicional = adicionalService.findById(id);
-        return adicional == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(adicional);
+        try {
+            return ResponseEntity.ok(adicionalService.findById(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}/categorias")
-    public Collection<Categoria> findCategoriasOfAdicional(@PathVariable Long id) {
-        Adicional adicional = adicionalService.findById(id);
-        if (adicional == null) {
-            return java.util.Collections.emptyList();
-        }
-        return categoriaRepository.findByAdicionalesContains(adicional);
-    }
-
-    public static class AdicionalRequest {
-        private String name;
-        private double price;
-        private boolean available;
-        private Long[] categoriaIds;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public boolean isAvailable() {
-            return available;
-        }
-
-        public void setAvailable(boolean available) {
-            this.available = available;
-        }
-
-        public Long[] getCategoriaIds() {
-            return categoriaIds;
-        }
-
-        public void setCategoriaIds(Long[] categoriaIds) {
-            this.categoriaIds = categoriaIds;
-        }
+    public Collection<Categoria> findCategorias(@PathVariable Long id) {
+        return adicionalService.findCategorias(id);
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody AdicionalRequest request) {
-        ResponseEntity<?> error = validarAdicional(request);
-        if (error != null) return error;
-
-        Adicional adicional = new Adicional(
-                request.getName(),
-                request.getPrice(),
-                request.isAvailable());
-        adicionalService.save(adicional);
-        
-        // Asignar categorías
-        if (request.getCategoriaIds() != null && request.getCategoriaIds().length > 0) {
-            for (Long categoriaId : request.getCategoriaIds()) {
-                Categoria categoria = categoriaService.findById(categoriaId);
-                if (categoria != null && !categoria.getAdicionales().contains(adicional)) {
-                    categoria.getAdicionales().add(adicional);
-                    categoriaRepository.save(categoria);
-                }
-            }
+    public ResponseEntity<?> add(@RequestBody AdicionalRequest req) {
+        try {
+            return ResponseEntity.ok(
+                    adicionalService.create(req.name, req.price, req.available, req.categoriaIds));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-        
-        return ResponseEntity.ok(adicional);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody AdicionalRequest request) {
-        Adicional stored = adicionalService.findById(id);
-        if (stored == null) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody AdicionalRequest req) {
+        try {
+            return ResponseEntity.ok(
+                    adicionalService.update(id, req.name, req.price, req.available, req.categoriaIds));
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-
-        ResponseEntity<?> error = validarAdicional(request);
-        if (error != null) return error;
-
-        stored.setName(request.getName());
-        stored.setPrice(request.getPrice());
-        stored.setAvailable(request.isAvailable());
-        adicionalService.save(stored);
-        
-        // Remover de todas las categorías actuales
-        for (Categoria categoria : categoriaRepository.findAll()) {
-            if (categoria.getAdicionales().contains(stored)) {
-                categoria.getAdicionales().remove(stored);
-                categoriaRepository.save(categoria);
-            }
-        }
-        
-        // Asignar nuevas categorías
-        if (request.getCategoriaIds() != null && request.getCategoriaIds().length > 0) {
-            for (Long categoriaId : request.getCategoriaIds()) {
-                Categoria categoria = categoriaService.findById(categoriaId);
-                if (categoria != null && !categoria.getAdicionales().contains(stored)) {
-                    categoria.getAdicionales().add(stored);
-                    categoriaRepository.save(categoria);
-                }
-            }
-        }
-        
-        return ResponseEntity.ok(stored);
-    }
-
-    private ResponseEntity<?> validarAdicional(AdicionalRequest req) {
-        if (req.getName() == null || req.getName().isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El nombre del adicional es obligatorio."));
-        }
-        if (req.getPrice() <= 0) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El precio debe ser mayor a 0."));
-        }
-        return null;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        Adicional adicional = adicionalService.findById(id);
-        if (adicional == null) {
+        try {
+            adicionalService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
         }
-        if (lineaPedidoAdicionalRepository.existsByAdicionalIdAndLineaPedidoPedidoIsNotNull(id)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "No se puede eliminar el adicional porque ya está incluido en uno o más pedidos."));
-        }
-        adicionalRepository.deleteFromCategorias(id);
-        adicionalService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

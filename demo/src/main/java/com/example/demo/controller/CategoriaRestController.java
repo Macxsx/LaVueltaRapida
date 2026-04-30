@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,10 @@ public class CategoriaRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Categoria> findById(@PathVariable Long id) {
-        Categoria categoria = categoriaService.findById(id);
-        return categoria == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(categoria);
+        try {
+            return ResponseEntity.ok(categoriaService.findById(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

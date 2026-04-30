@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.UpdateClienteRequest;
 import com.example.demo.entitys.Cliente;
-import com.example.demo.entitys.EstadoPedido;
-import com.example.demo.repository.PedidoRepository;
+import com.example.demo.exception.CuentaDesactivadaException;
 import com.example.demo.service.ClienteService;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
@@ -29,9 +30,6 @@ public class ClienteRestController {
     @Autowired
     private ClienteService clienteService;
 
-    @Autowired
-    private PedidoRepository pedidoRepository;
-
     @GetMapping
     public Collection<Cliente> findAll() {
         return clienteService.findAll();
@@ -39,82 +37,48 @@ public class ClienteRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> findById(@PathVariable Long id) {
-        Cliente cliente = clienteService.findById(id);
-        return cliente == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(cliente);
+        try {
+            return ResponseEntity.ok(clienteService.findById(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
     public ResponseEntity<?> add(@RequestBody Cliente cliente) {
-        if (clienteService.isUsernameTaken(cliente.getUsername())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "El nombre de usuario '" + cliente.getUsername() + "' ya está en uso."));
+        try {
+            return ResponseEntity.ok(clienteService.create(cliente));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
         }
-        if (clienteService.isEmailTaken(cliente.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "El correo '" + cliente.getEmail() + "' ya está registrado."));
-        }
-        clienteService.save(cliente);
-        return ResponseEntity.ok(cliente);
-    }
-
-    static class UpdateClienteRequest {
-        public String name;
-        public String apellido;
-        public String email;
-        public String username;
-        public String password;
-        public String direccion;
-        public String telefono;
-        public String currentPassword;
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateClienteRequest req) {
-        Cliente stored = clienteService.findById(id);
-        if (stored == null) {
+        try {
+            return ResponseEntity.ok(clienteService.update(
+                    id, req.name, req.apellido, req.email, req.username,
+                    req.password, req.direccion, req.telefono, req.currentPassword));
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
         }
-        if (req.currentPassword != null && !stored.getPassword().equals(req.currentPassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "La contraseña actual es incorrecta."));
-        }
-        if (req.username != null && clienteService.isUsernameTakenByOther(req.username, id)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "El nombre de usuario '" + req.username + "' ya está en uso."));
-        }
-        if (req.email != null && clienteService.isEmailTakenByOther(req.email, id)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "El correo '" + req.email + "' ya está registrado."));
-        }
-        stored.setName(req.name);
-        stored.setApellido(req.apellido);
-        stored.setEmail(req.email);
-        stored.setUsername(req.username);
-        if (req.password != null && !req.password.isBlank()) {
-            stored.setPassword(req.password);
-        }
-        stored.setDireccion(req.direccion);
-        stored.setTelefono(req.telefono);
-        clienteService.save(stored);
-        return ResponseEntity.ok(stored);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        Cliente stored = clienteService.findById(id);
-        if (stored == null) {
+        try {
+            clienteService.deleteOrDeactivate(id);
+            return ResponseEntity.noContent().build();
+        } catch (CuentaDesactivadaException e) {
+            return ResponseEntity.ok(Map.of("mensaje", e.getMessage()));
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
         }
-        if (pedidoRepository.existsByClienteIdAndEstadoNot(id, EstadoPedido.ENTREGADO)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "No se puede eliminar la cuenta porque tiene pedidos activos."));
-        }
-        if (pedidoRepository.existsByClienteId(id)) {
-            stored.setActivo(false);
-            clienteService.save(stored);
-            return ResponseEntity.ok(Map.of("mensaje", "Cuenta desactivada. El historial de pedidos se ha conservado."));
-        }
-        clienteService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ClienteLoginRequest;
 import com.example.demo.entitys.Cliente;
 import com.example.demo.service.ClienteService;
 
@@ -20,23 +21,14 @@ public class LoginRestController {
     @Autowired
     private ClienteService clienteService;
 
-    public static class LoginRequest {
-        public String username;
-        public String password;
-
-        public LoginRequest() {
-        }
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<Cliente> login(@RequestBody LoginRequest request) {
-        if (request == null || request.username == null || request.password == null) {
+    public ResponseEntity<Cliente> login(@RequestBody ClienteLoginRequest request) {
+        try {
+            return ResponseEntity.ok(clienteService.loginCliente(request.username, request.password));
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
+        } catch (SecurityException | IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (clienteService.validateCredentials(request.username, request.password)) {
-            Cliente cliente = clienteService.findByUsername(request.username);
-            return ResponseEntity.ok(cliente);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

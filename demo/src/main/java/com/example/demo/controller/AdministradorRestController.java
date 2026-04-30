@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.UpdateAdminRequest;
 import com.example.demo.entitys.Administrador;
-import com.example.demo.repository.AdministradorRepository;
+import com.example.demo.service.AdministradorService;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
@@ -25,55 +26,41 @@ import com.example.demo.repository.AdministradorRepository;
 public class AdministradorRestController {
 
     @Autowired
-    private AdministradorRepository administradorRepository;
+    private AdministradorService administradorService;
 
     @GetMapping
     public Collection<Administrador> findAll() {
-        return administradorRepository.findAll();
+        return administradorService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Administrador> findById(@PathVariable Long id) {
-        Optional<Administrador> administrador = administradorRepository.findById(id);
-        return administrador.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    static class UpdateAdminRequest {
-        public String usuario;
-        public String contrasena;
-        public String currentPassword;
+        return administradorService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateAdminRequest req) {
-        Optional<Administrador> existing = administradorRepository.findById(id);
-        if (existing.isEmpty()) {
+        try {
+            return ResponseEntity.ok(
+                    administradorService.update(id, req.usuario, req.contrasena, req.currentPassword));
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
         }
-        Administrador stored = existing.get();
-        if (req.currentPassword != null && !stored.getContrasena().equals(req.currentPassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "La contraseña actual es incorrecta."));
-        }
-        if (req.usuario != null && !req.usuario.equals(stored.getUsuario())
-                && administradorRepository.findByUsuario(req.usuario).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "Ya existe un administrador con el usuario '" + req.usuario + "'."));
-        }
-        stored.setUsuario(req.usuario);
-        if (req.contrasena != null && !req.contrasena.isBlank()) {
-            stored.setContrasena(req.contrasena);
-        }
-        administradorRepository.save(stored);
-        return ResponseEntity.ok(stored);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!administradorRepository.existsById(id)) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            administradorService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }
-        administradorRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

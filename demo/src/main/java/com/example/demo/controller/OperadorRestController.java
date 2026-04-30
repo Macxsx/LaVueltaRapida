@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.UpdateOperadorRequest;
 import com.example.demo.entitys.Operador;
-import com.example.demo.repository.OperadorRepository;
+import com.example.demo.service.OperadorService;
 
 @CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
@@ -26,65 +27,50 @@ import com.example.demo.repository.OperadorRepository;
 public class OperadorRestController {
 
     @Autowired
-    private OperadorRepository operadorRepository;
+    private OperadorService operadorService;
 
     @GetMapping
     public Collection<Operador> findAll() {
-        return operadorRepository.findAll();
+        return operadorService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Operador> findById(@PathVariable Long id) {
-        Optional<Operador> operador = operadorRepository.findById(id);
-        return operador.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return operadorService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<?> add(@RequestBody Operador operador) {
-        if (operadorRepository.findByUsuario(operador.getUsuario()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "Ya existe un operador con el usuario '" + operador.getUsuario() + "'."));
+        try {
+            return ResponseEntity.ok(operadorService.create(operador));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
         }
-        return ResponseEntity.ok(operadorRepository.save(operador));
-    }
-
-    static class UpdateOperadorRequest {
-        public String nombre;
-        public String usuario;
-        public String contrasena;
-        public String currentPassword;
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateOperadorRequest req) {
-        Optional<Operador> existing = operadorRepository.findById(id);
-        if (existing.isEmpty()) {
+        try {
+            return ResponseEntity.ok(
+                    operadorService.update(id, req.nombre, req.usuario, req.contrasena, req.currentPassword));
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
         }
-        Operador stored = existing.get();
-        if (req.currentPassword != null && !stored.getContrasena().equals(req.currentPassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (req.usuario != null && !req.usuario.equals(stored.getUsuario())
-                && operadorRepository.findByUsuario(req.usuario).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "Ya existe un operador con el usuario '" + req.usuario + "'."));
-        }
-        stored.setNombre(req.nombre);
-        stored.setUsuario(req.usuario);
-        if (req.contrasena != null && !req.contrasena.isBlank()) {
-            stored.setContrasena(req.contrasena);
-        }
-        operadorRepository.save(stored);
-        return ResponseEntity.ok(stored);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!operadorRepository.existsById(id)) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            operadorService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }
-        operadorRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

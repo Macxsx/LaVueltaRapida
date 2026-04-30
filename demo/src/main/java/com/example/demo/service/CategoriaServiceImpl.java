@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
-import org.springframework.stereotype.Service;
 import java.util.Collection;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.example.demo.entitys.Categoria;
 import com.example.demo.repository.CategoriaRepository;
 
@@ -19,6 +22,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public Categoria findById(Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Categoría no encontrada."));
     }
 }
