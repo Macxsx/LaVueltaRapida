@@ -31,8 +31,8 @@ public class ClienteRestController {
     private ClienteService clienteService;
 
     @GetMapping
-    public Collection<Cliente> findAll() {
-        return clienteService.findAll();
+    public ResponseEntity<Collection<Cliente>> findAll() {
+        return ResponseEntity.ok(clienteService.findAll());
     }
 
     @GetMapping("/{id}")

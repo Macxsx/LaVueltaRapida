@@ -29,8 +29,8 @@ public class AdministradorRestController {
     private AdministradorService administradorService;
 
     @GetMapping
-    public Collection<Administrador> findAll() {
-        return administradorService.findAll();
+    public ResponseEntity<Collection<Administrador>> findAll() {
+        return ResponseEntity.ok(administradorService.findAll());
     }
 
     @GetMapping("/{id}")

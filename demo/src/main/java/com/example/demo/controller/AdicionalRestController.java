@@ -31,13 +31,13 @@ public class AdicionalRestController {
     private AdicionalService adicionalService;
 
     @GetMapping
-    public Collection<Adicional> findAll() {
-        return adicionalService.findAll();
+    public ResponseEntity<Collection<Adicional>> findAll() {
+        return ResponseEntity.ok(adicionalService.findAll());
     }
 
     @GetMapping("/categoria/{categoriaId}")
-    public Collection<Adicional> findByCategoriaId(@PathVariable Long categoriaId) {
-        return adicionalService.findByCategoriaId(categoriaId);
+    public ResponseEntity<Collection<Adicional>> findByCategoriaId(@PathVariable Long categoriaId) {
+        return ResponseEntity.ok(adicionalService.findByCategoriaId(categoriaId));
     }
 
     @GetMapping("/{id}")
@@ -50,8 +50,8 @@ public class AdicionalRestController {
     }
 
     @GetMapping("/{id}/categorias")
-    public Collection<Categoria> findCategorias(@PathVariable Long id) {
-        return adicionalService.findCategorias(id);
+    public ResponseEntity<Collection<Categoria>> findCategorias(@PathVariable Long id) {
+        return ResponseEntity.ok(adicionalService.findCategorias(id));
     }
 
     @PostMapping

@@ -23,8 +23,8 @@ public class CategoriaRestController {
     private CategoriaService categoriaService;
 
     @GetMapping
-    public Collection<Categoria> findAll() {
-        return categoriaService.findAll();
+    public ResponseEntity<Collection<Categoria>> findAll() {
+        return ResponseEntity.ok(categoriaService.findAll());
     }
 
     @GetMapping("/{id}")

@@ -30,8 +30,8 @@ public class ComidaRestController {
     private ComidaService comidaService;
 
     @GetMapping
-    public Collection<Comida> findAll() {
-        return comidaService.findAll();
+    public ResponseEntity<Collection<Comida>> findAll() {
+        return ResponseEntity.ok(comidaService.findAll());
     }
 
     @GetMapping("/{id}")

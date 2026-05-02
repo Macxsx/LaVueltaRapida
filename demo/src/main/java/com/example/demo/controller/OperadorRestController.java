@@ -30,8 +30,8 @@ public class OperadorRestController {
     private OperadorService operadorService;
 
     @GetMapping
-    public Collection<Operador> findAll() {
-        return operadorService.findAll();
+    public ResponseEntity<Collection<Operador>> findAll() {
+        return ResponseEntity.ok(operadorService.findAll());
     }
 
     @GetMapping("/{id}")

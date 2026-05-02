@@ -29,8 +29,8 @@ public class DomiciliarioRestController {
     private DomiciliarioService domiciliarioService;
 
     @GetMapping
-    public List<Domiciliario> findAll() {
-        return domiciliarioService.findAll();
+    public ResponseEntity<List<Domiciliario>> findAll() {
+        return ResponseEntity.ok(domiciliarioService.findAll());
     }
 
     @GetMapping("/{id}")
