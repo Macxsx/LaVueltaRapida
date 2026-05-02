@@ -35,8 +35,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("default")
-public class DataInitializer {
+@Profile("test")
+public class DataInitializerTest {
 
     @Bean
     CommandLineRunner initDatabase(
@@ -210,6 +210,18 @@ public class DataInitializer {
             clienteRepo.save(new Cliente("Daniela",  "Castro",    "daniela.castro@email.com",       "dani321",   "daniSecure","Av 30 #15-80, Manizales",     "3009876543"));
             clienteRepo.save(new Cliente("Sebastián","Morales",   "sebastian.morales@email.com",    "sebas007",  "sebasKey",  "Cra 25 #60-12, Santa Marta",  "3178901234"));
             clienteRepo.save(new Cliente("Carolina", "Díaz",      "carolina.diaz@email.com",        "caro2024",  "caroPass",  "Cl 85 #42-30, Ibagué",        "3145678901"));
+
+            Cliente clienteInactivo = new Cliente("Cuenta", "Inactiva", "inactivo@test.com", "inactivo", "inacPass", "Calle X", "0000000000");
+            clienteInactivo.setActivo(false);
+            clienteRepo.save(clienteInactivo);
+
+            Cliente clienteHistorial = clienteRepo.save(new Cliente("Solo", "Historial", "historial@test.com", "historial", "histPass", "Calle Y", "1111111111"));
+            Pedido pedidoHistorial = new Pedido();
+            pedidoHistorial.setCliente(clienteHistorial);
+            pedidoHistorial.setEstado(EstadoPedido.ENTREGADO);
+            pedidoHistorial.setFechaCreacion(LocalDateTime.now().minusDays(1));
+            pedidoHistorial.setFechaEntrega(LocalDateTime.now().minusHours(20));
+            pedidoRepo.save(pedidoHistorial);
 
             // ==========================================
             // 5. CARRITOS (uno por cliente)
