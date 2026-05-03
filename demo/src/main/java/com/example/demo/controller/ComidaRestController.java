@@ -7,7 +7,6 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +20,6 @@ import com.example.demo.dto.ComidaRequest;
 import com.example.demo.entitys.Comida;
 import com.example.demo.service.ComidaService;
 
-@CrossOrigin(origins = {"http://localhost:5000", "http://127.0.0.1:5000"})
 @RestController
 @RequestMapping("/comidas")
 public class ComidaRestController {

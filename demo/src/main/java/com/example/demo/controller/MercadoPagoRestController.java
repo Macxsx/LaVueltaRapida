@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,14 +22,6 @@ import com.example.demo.service.MercadoPagoService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 
-@CrossOrigin(
-        origins = {"http://localhost:5000", "http://127.0.0.1:5000"},
-        methods = {
-                org.springframework.web.bind.annotation.RequestMethod.GET,
-                org.springframework.web.bind.annotation.RequestMethod.POST,
-                org.springframework.web.bind.annotation.RequestMethod.OPTIONS
-        },
-        allowedHeaders = {"Content-Type", "Authorization"})
 @RestController
 @RequestMapping("/api/mp")
 public class MercadoPagoRestController {
