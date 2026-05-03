@@ -1,0 +1,89 @@
+4. ENDPOINTS A EXPONER (rutas EXACTAS, no las cambies)
+═══════════════════════════════════════════════════════════════════════
+──────────────────────────────────────────────────────────────────────
+4.1 POST  /api/mp/preference
+──────────────────────────────────────────────────────────────────────
+Crea una preferencia de pago en MP a partir de un pedido existente.
+Request body (JSON):
+{
+  "pedidoId": 123,
+  "total": 45000,
+  "items": [
+    { "id": "5", "title": "Pizza Monza", "quantity": 2, "unit_price": 18000 },
+    { "id": "8", "title": "Coca-Cola 1.5L", "quantity": 1, "unit_price": 9000 }
+  ],
+  "payer": { "name": "Juan Perez", "email": "juan@example.com" },
+  "origin": "https://mi-app.com"
+}
+Lógica:
+  1. Validar que el pedido exista (404 si no).
+  2. Construir items para MP usando los del request (o, si vienen vacíos,
+     un solo item "Pedido La Vuelta Rápida #N" con el total).
+  3. Setear currency_id="COP" en cada item.
+  4. external_reference = String.valueOf(pedidoId)
+  5. statement_descriptor = "LA VUELTA RAPIDA"
+  6. back_urls = {
+        success: "${origin}/pago/resultado/${pedidoId}",
+        failure: "${origin}/pago/resultado/${pedidoId}",
+        pending: "${origin}/pago/resultado/${pedidoId}"
+     }
+  7. auto_return = "approved"
+  8. notification_url = "${app.backend-url}/api/mp/webhook"  (si configurado)
+  9. Llamar al SDK: PreferenceClient.create(request)
+ 10. Guardar preference.getId() en pedido.mpPreferenceId.
+Response (200):
+{
+  "id": "1234567890-abcd-...",
+  "init_point": "https://www.mercadopago.com.co/checkout/v1/redirect?...",
+  "sandbox_init_point": "https://sandbox.mercadopago.com.co/checkout/v1/redirect?..."
+}
+Errores: 400 si faltan datos, 500 si MP falla. Respuesta de error:
+{ "error": "mensaje", "detail": "detalle técnico opcional" }
+──────────────────────────────────────────────────────────────────────
+4.2 GET  /api/mp/payment/{paymentId}
+──────────────────────────────────────────────────────────────────────
+Consulta el estado real de un pago en MP por su ID.
+Lógica:
+  1. PaymentClient.get(Long.parseLong(paymentId))
+  2. Devolver los campos relevantes del pago.
+Response (200):
+{
+  "id": 123456789,
+  "status": "approved",                  // approved|pending|rejected|in_process|cancelled|refunded
+  "status_detail": "accredited",
+  "payment_method_id": "visa",
+  "payment_type_id": "credit_card",
+  "transaction_amount": 45000,
+  "currency_id": "COP",
+  "external_reference": "123",
+  "date_approved": "2025-01-15T10:30:00.000-05:00",
+  "payer": { "email": "juan@example.com" }
+}
+Errores: 404 si no existe, 500 si MP falla.
+──────────────────────────────────────────────────────────────────────
+4.3 POST  /api/mp/webhook  (CRÍTICO para confirmación real del pago)
+──────────────────────────────────────────────────────────────────────
+Recibe notificaciones IPN/Webhook de Mercado Pago.
+MP envía:
+  - Headers: x-signature, x-request-id
+  - Query param: ?type=payment&data.id=PAYMENT_ID
+  - Body: { "action": "payment.created", "data": { "id": "..." }, ... }
+Lógica:
+  1. (Opcional pero recomendado) Validar la firma HMAC SHA256 con
+     mercadopago.webhook-secret usando el algoritmo documentado por MP:
+     manifest = "id:{data.id};request-id:{x-request-id};ts:{ts};"
+     hmac = HMAC_SHA256(secret, manifest)
+     comparar con la parte v1=... del header x-signature
+  2. Si type=payment → consultar el pago con PaymentClient.get(data.id)
+  3. Buscar el pedido por external_reference (= pedido.id)
+  4. Actualizar pedido:
+       - estadoPago = mapear status MP:
+           approved → "APROBADO"
+           pending|in_process → "EN_PROCESO"
+           rejected|cancelled|refunded|charged_back → "RECHAZADO"
+       - mpPaymentId = payment.id
+       - mpPaymentMethod = payment.payment_method_id
+       - mpPaymentType = payment.payment_type_id
+       - totalPagado = payment.transaction_amount
+       - fechaPago = payment.date_approved (si APROBADO)
+  5. Devolver siempre HTTP 200 (vacío) — MP reintenta si recibe error.

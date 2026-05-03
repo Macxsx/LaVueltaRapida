@@ -4,7 +4,11 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.mercadopago.client.payment.PaymentClient;
+import com.mercadopago.client.preference.PreferenceClient;
 
 @Configuration
 public class MercadoPagoConfig {
@@ -22,6 +26,9 @@ public class MercadoPagoConfig {
 
     @Value("${app.frontend-url:http://localhost:5000}")
     private String frontendUrl;
+
+    @Value("${app.backend-url:}")
+    private String backendUrl;
 
     @PostConstruct
     public void init() {
@@ -48,5 +55,19 @@ public class MercadoPagoConfig {
 
     public String getFrontendUrl() {
         return frontendUrl;
+    }
+
+    public String getBackendUrl() {
+        return backendUrl;
+    }
+
+    @Bean
+    public PreferenceClient preferenceClient() {
+        return new PreferenceClient();
+    }
+
+    @Bean
+    public PaymentClient paymentClient() {
+        return new PaymentClient();
     }
 }
