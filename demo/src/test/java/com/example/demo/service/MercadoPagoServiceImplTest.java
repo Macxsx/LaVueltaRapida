@@ -115,11 +115,36 @@ public class MercadoPagoServiceImplTest {
     }
 
     @Test
-    void crearPreferencia_sinOrigin_lanzaIllegalArgument() {
+    void crearPreferencia_sinOriginYSinFrontendUrl_lanzaIllegalArgument() {
+        when(mpConfig.getFrontendUrl()).thenReturn("");
         MpPreferenceRequest req = new MpPreferenceRequest();
-        req.setPedidoId(1L);
+        req.setPedidoId(123L);
         assertThatThrownBy(() -> service.crearPreferencia(req))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("frontend-url");
+    }
+
+    @Test
+    void crearPreferencia_sinOrigin_usaFrontendUrlComoFallback() throws Exception {
+        when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
+        when(mpConfig.getBackendUrl()).thenReturn("");
+        when(mpConfig.getFrontendUrl()).thenReturn("http://localhost:5000");
+        when(preferenceClient.create(any(PreferenceRequest.class)))
+                .thenReturn(mockPreference("P", "i", "s"));
+
+        MpPreferenceRequest req = new MpPreferenceRequest();
+        req.setPedidoId(123L);
+        // origin intencionalmente NO seteado
+
+        service.crearPreferencia(req);
+
+        ArgumentCaptor<PreferenceRequest> captor = ArgumentCaptor.forClass(PreferenceRequest.class);
+        verify(preferenceClient).create(captor.capture());
+        PreferenceRequest sent = captor.getValue();
+        assertThat(sent.getBackUrls()).isNotNull();
+        assertThat(sent.getBackUrls().getSuccess()).isEqualTo("http://localhost:5000/pago/resultado/123");
+        assertThat(sent.getBackUrls().getFailure()).isEqualTo("http://localhost:5000/pago/resultado/123");
+        assertThat(sent.getBackUrls().getPending()).isEqualTo("http://localhost:5000/pago/resultado/123");
     }
 
     @Test

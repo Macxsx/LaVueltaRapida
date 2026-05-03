@@ -64,8 +64,22 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         if (req == null || req.getPedidoId() == null) {
             throw new IllegalArgumentException("Falta el campo 'pedidoId'.");
         }
-        if (req.getOrigin() == null || req.getOrigin().isBlank()) {
-            throw new IllegalArgumentException("Falta el campo 'origin'.");
+
+        log.info("Origin recibido del frontend: {}", req.getOrigin());
+
+        // Las back_urls son OBLIGATORIAS en MP: sin ellas, después del pago
+        // el cliente queda atrapado en la pantalla de MP sin botón "Volver
+        // al sitio". Si el frontend no envía origin, usamos el frontendUrl
+        // configurado en application.properties como fallback.
+        String origin = req.getOrigin();
+        if (origin == null || origin.isBlank()) {
+            origin = mpConfig.getFrontendUrl();
+            log.warn("Origin no fue enviado por el frontend; usando fallback: {}", origin);
+        }
+        if (origin == null || origin.isBlank()) {
+            throw new IllegalArgumentException(
+                    "No se pudo determinar la URL de retorno: 'origin' no fue enviado " +
+                    "y 'app.frontend-url' no está configurado.");
         }
 
         Pedido pedido = pedidoRepository.findById(req.getPedidoId())
@@ -75,7 +89,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
         List<PreferenceItemRequest> items = construirItems(req, pedido, totalReal);
 
-        String backUrl = req.getOrigin().replaceAll("/+$", "")
+        String backUrl = origin.replaceAll("/+$", "")
                 + "/pago/resultado/" + pedido.getId();
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
@@ -89,8 +103,11 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .externalReference(String.valueOf(pedido.getId()))
                 .statementDescriptor(STATEMENT_DESCRIPTOR)
                 .backUrls(backUrls);
-
-        // Nota: NO enviamos el bloque payer al crear la preferencia.
+        // Nota 1: NO enviamos auto_return porque las back_urls son
+        // http://localhost en desarrollo y MP exige HTTPS para auto_return.
+        // En producción, cuando tengamos HTTPS, agregar: .autoReturn("approved")
+        //
+        // Nota 2: NO enviamos el bloque payer al crear la preferencia.
         // En modo de prueba (TEST credentials) MP rechaza la tokenización
         // de tarjetas si el email pertenece a una cuenta MP real, y en
         // producción dejamos que MP recolecte los datos del comprador en
