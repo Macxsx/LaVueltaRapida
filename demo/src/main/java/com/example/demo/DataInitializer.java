@@ -24,8 +24,6 @@ import com.example.demo.repository.LineaPedidoRepository;
 import com.example.demo.repository.OperadorRepository;
 import com.example.demo.repository.PedidoRepository;
 
-import jakarta.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

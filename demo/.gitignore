@@ -37,3 +37,7 @@ build/
 replit.md
 .agents/
 attached_assets/
+
+### Environment variables ###
+.env
+../.env
