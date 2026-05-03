@@ -205,6 +205,40 @@ public class MercadoPagoServiceImplTest {
         assertThat(sent.getItems().get(0).getUnitPrice()).isEqualByComparingTo("40000.00");
     }
 
+    @Test
+    void crearPreferencia_modoTest_omitePayerAunqueElRequestLoTraiga() throws Exception {
+        when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
+        when(mpConfig.getBackendUrl()).thenReturn("");
+        when(mpConfig.getAccessToken()).thenReturn("TEST-1234567890-abcdef");
+        when(preferenceClient.create(any(PreferenceRequest.class)))
+                .thenReturn(mockPreference("P", "i", "s"));
+
+        service.crearPreferencia(buildReq(List.of()));
+
+        ArgumentCaptor<PreferenceRequest> captor = ArgumentCaptor.forClass(PreferenceRequest.class);
+        verify(preferenceClient).create(captor.capture());
+        PreferenceRequest sent = captor.getValue();
+        assertThat(sent.getPayer()).isNull();
+    }
+
+    @Test
+    void crearPreferencia_modoProduccion_enviaPayerCuandoElRequestLoTrae() throws Exception {
+        when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
+        when(mpConfig.getBackendUrl()).thenReturn("");
+        when(mpConfig.getAccessToken()).thenReturn("APP_USR-1234567890-abcdef");
+        when(preferenceClient.create(any(PreferenceRequest.class)))
+                .thenReturn(mockPreference("P", "i", "s"));
+
+        service.crearPreferencia(buildReq(List.of()));
+
+        ArgumentCaptor<PreferenceRequest> captor = ArgumentCaptor.forClass(PreferenceRequest.class);
+        verify(preferenceClient).create(captor.capture());
+        PreferenceRequest sent = captor.getValue();
+        assertThat(sent.getPayer()).isNotNull();
+        assertThat(sent.getPayer().getEmail()).isEqualTo("juan@example.com");
+        assertThat(sent.getPayer().getName()).isEqualTo("Juan Perez");
+    }
+
     // ───────── consultarPago ─────────
 
     @Test

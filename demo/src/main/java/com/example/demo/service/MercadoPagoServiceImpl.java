@@ -91,7 +91,8 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .statementDescriptor(STATEMENT_DESCRIPTOR)
                 .backUrls(backUrls);
 
-        if (req.getPayer() != null && req.getPayer().getEmail() != null
+        if (!isTestMode()
+                && req.getPayer() != null && req.getPayer().getEmail() != null
                 && !req.getPayer().getEmail().isBlank()) {
             builder.payer(PreferencePayerRequest.builder()
                     .name(req.getPayer().getName())
@@ -114,6 +115,18 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         resp.put("init_point", preference.getInitPoint());
         resp.put("sandbox_init_point", preference.getSandboxInitPoint());
         return resp;
+    }
+
+    /**
+     * Indica si el SDK está usando credenciales de prueba/sandbox.
+     * MP marca los access tokens de prueba con el prefijo "TEST-".
+     * En modo de prueba omitimos el bloque payer para evitar enviar
+     * el email real del usuario y para que MP pida los datos en su
+     * propia pantalla de checkout.
+     */
+    private boolean isTestMode() {
+        String token = mpConfig.getAccessToken();
+        return token != null && token.startsWith("TEST-");
     }
 
     @Override
