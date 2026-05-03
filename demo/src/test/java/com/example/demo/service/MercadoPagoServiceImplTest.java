@@ -31,7 +31,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.demo.config.MercadoPagoConfig;
 import com.example.demo.dto.MpItemRequest;
-import com.example.demo.dto.MpPayerRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.entitys.Adicional;
 import com.example.demo.entitys.Comida;
@@ -94,10 +93,6 @@ public class MercadoPagoServiceImplTest {
         req.setPedidoId(123L);
         req.setOrigin("https://mi-app.com");
         req.setItems(items);
-        MpPayerRequest payer = new MpPayerRequest();
-        payer.setName("Juan Perez");
-        payer.setEmail("juan@example.com");
-        req.setPayer(payer);
         return req;
     }
 
@@ -206,10 +201,9 @@ public class MercadoPagoServiceImplTest {
     }
 
     @Test
-    void crearPreferencia_modoTest_omitePayerAunqueElRequestLoTraiga() throws Exception {
+    void crearPreferencia_nuncaEnviaPayerAlSDK() throws Exception {
         when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
         when(mpConfig.getBackendUrl()).thenReturn("");
-        when(mpConfig.getAccessToken()).thenReturn("TEST-1234567890-abcdef");
         when(preferenceClient.create(any(PreferenceRequest.class)))
                 .thenReturn(mockPreference("P", "i", "s"));
 
@@ -219,24 +213,6 @@ public class MercadoPagoServiceImplTest {
         verify(preferenceClient).create(captor.capture());
         PreferenceRequest sent = captor.getValue();
         assertThat(sent.getPayer()).isNull();
-    }
-
-    @Test
-    void crearPreferencia_modoProduccion_enviaPayerCuandoElRequestLoTrae() throws Exception {
-        when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
-        when(mpConfig.getBackendUrl()).thenReturn("");
-        when(mpConfig.getAccessToken()).thenReturn("APP_USR-1234567890-abcdef");
-        when(preferenceClient.create(any(PreferenceRequest.class)))
-                .thenReturn(mockPreference("P", "i", "s"));
-
-        service.crearPreferencia(buildReq(List.of()));
-
-        ArgumentCaptor<PreferenceRequest> captor = ArgumentCaptor.forClass(PreferenceRequest.class);
-        verify(preferenceClient).create(captor.capture());
-        PreferenceRequest sent = captor.getValue();
-        assertThat(sent.getPayer()).isNotNull();
-        assertThat(sent.getPayer().getEmail()).isEqualTo("juan@example.com");
-        assertThat(sent.getPayer().getName()).isEqualTo("Juan Perez");
     }
 
     // ───────── consultarPago ─────────

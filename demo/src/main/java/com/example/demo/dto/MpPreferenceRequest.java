@@ -8,7 +8,6 @@ public class MpPreferenceRequest {
     private Long pedidoId;
     private BigDecimal total;
     private List<MpItemRequest> items;
-    private MpPayerRequest payer;
     private String origin;
 
     public MpPreferenceRequest() {
@@ -36,14 +35,6 @@ public class MpPreferenceRequest {
 
     public void setItems(List<MpItemRequest> items) {
         this.items = items;
-    }
-
-    public MpPayerRequest getPayer() {
-        return payer;
-    }
-
-    public void setPayer(MpPayerRequest payer) {
-        this.payer = payer;
     }
 
     public String getOrigin() {

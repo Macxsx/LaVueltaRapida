@@ -33,7 +33,6 @@ import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
-import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
@@ -91,14 +90,11 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .statementDescriptor(STATEMENT_DESCRIPTOR)
                 .backUrls(backUrls);
 
-        if (!isTestMode()
-                && req.getPayer() != null && req.getPayer().getEmail() != null
-                && !req.getPayer().getEmail().isBlank()) {
-            builder.payer(PreferencePayerRequest.builder()
-                    .name(req.getPayer().getName())
-                    .email(req.getPayer().getEmail())
-                    .build());
-        }
+        // Nota: NO enviamos el bloque payer al crear la preferencia.
+        // En modo de prueba (TEST credentials) MP rechaza la tokenización
+        // de tarjetas si el email pertenece a una cuenta MP real, y en
+        // producción dejamos que MP recolecte los datos del comprador en
+        // su propia pantalla de checkout.
 
         String backendUrl = mpConfig.getBackendUrl();
         if (backendUrl != null && !backendUrl.isBlank()) {
@@ -115,18 +111,6 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         resp.put("init_point", preference.getInitPoint());
         resp.put("sandbox_init_point", preference.getSandboxInitPoint());
         return resp;
-    }
-
-    /**
-     * Indica si el SDK está usando credenciales de prueba/sandbox.
-     * MP marca los access tokens de prueba con el prefijo "TEST-".
-     * En modo de prueba omitimos el bloque payer para evitar enviar
-     * el email real del usuario y para que MP pida los datos en su
-     * propia pantalla de checkout.
-     */
-    private boolean isTestMode() {
-        String token = mpConfig.getAccessToken();
-        return token != null && token.startsWith("TEST-");
     }
 
     @Override
