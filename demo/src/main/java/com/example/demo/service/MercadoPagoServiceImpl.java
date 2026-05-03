@@ -89,8 +89,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .items(items)
                 .externalReference(String.valueOf(pedido.getId()))
                 .statementDescriptor(STATEMENT_DESCRIPTOR)
-                .backUrls(backUrls)
-                .autoReturn("approved");
+                .backUrls(backUrls);
 
         if (req.getPayer() != null && req.getPayer().getEmail() != null
                 && !req.getPayer().getEmail().isBlank()) {

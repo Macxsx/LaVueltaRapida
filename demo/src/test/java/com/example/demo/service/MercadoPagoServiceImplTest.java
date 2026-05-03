@@ -147,7 +147,7 @@ public class MercadoPagoServiceImplTest {
 
         assertThat(sent.getExternalReference()).isEqualTo("123");
         assertThat(sent.getStatementDescriptor()).isEqualTo("LA VUELTA RAPIDA");
-        assertThat(sent.getAutoReturn()).isEqualTo("approved");
+        assertThat(sent.getAutoReturn()).isNull();
         assertThat(sent.getBackUrls().getSuccess()).isEqualTo("https://mi-app.com/pago/resultado/123");
         assertThat(sent.getBackUrls().getFailure()).isEqualTo("https://mi-app.com/pago/resultado/123");
         assertThat(sent.getBackUrls().getPending()).isEqualTo("https://mi-app.com/pago/resultado/123");
