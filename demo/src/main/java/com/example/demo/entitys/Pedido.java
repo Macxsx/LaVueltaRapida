@@ -1,5 +1,6 @@
 package com.example.demo.entitys;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,6 +46,28 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "domiciliario_id")
     private Domiciliario domiciliario;
+
+    // ─── Mercado Pago ──────────────────────────────────────────────
+    @Column(name = "estado_pago", length = 20)
+    private String estadoPago = "PENDIENTE";
+
+    @Column(name = "mp_preference_id", length = 100)
+    private String mpPreferenceId;
+
+    @Column(name = "mp_payment_id", length = 100)
+    private String mpPaymentId;
+
+    @Column(name = "mp_payment_method", length = 50)
+    private String mpPaymentMethod;
+
+    @Column(name = "mp_payment_type", length = 50)
+    private String mpPaymentType;
+
+    @Column(name = "total_pagado", precision = 12, scale = 2)
+    private BigDecimal totalPagado;
+
+    @Column(name = "fecha_pago")
+    private LocalDateTime fechaPago;
 
     public Pedido() {
     }

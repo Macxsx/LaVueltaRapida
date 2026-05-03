@@ -1,0 +1,183 @@
+Necesito integrar Mercado Pago Checkout Pro como pasarela de pagos para los
+pedidos del sistema "La Vuelta Rápida" (pizzería en Bogotá). El frontend
+Angular ya está construido y espera ciertos endpoints exactos. Por favor
+implementa lo siguiente:
+
+═══════════════════════════════════════════════════════════════════════
+1. DEPENDENCIAS
+═══════════════════════════════════════════════════════════════════════
+Agrega al pom.xml (o build.gradle) el SDK oficial de Mercado Pago para Java:
+
+  <dependency>
+    <groupId>com.mercadopago</groupId>
+    <artifactId>sdk-java</artifactId>
+    <version>2.1.27</version>
+  </dependency>
+
+═══════════════════════════════════════════════════════════════════════
+2. VARIABLES DE ENTORNO (application.properties / application.yml)
+═══════════════════════════════════════════════════════════════════════
+mercadopago.access-token=${MERCADOPAGO_ACCESS_TOKEN}
+mercadopago.public-key=${MERCADOPAGO_PUBLIC_KEY}
+mercadopago.webhook-secret=${MERCADOPAGO_WEBHOOK_SECRET:}
+app.frontend-url=${APP_FRONTEND_URL:http://localhost:5000}
+
+Cárgalas con @Value en una clase @Configuration y configura el SDK al
+arrancar:
+
+  MercadoPagoConfig.setAccessToken(accessToken);
+
+═══════════════════════════════════════════════════════════════════════
+3. ENTIDAD Pedido — AGREGAR CAMPOS
+═══════════════════════════════════════════════════════════════════════
+Agrega estas columnas a la entidad Pedido (y migración Flyway/Liquibase):
+
+  - estadoPago         VARCHAR(20)   // PENDIENTE | APROBADO | RECHAZADO | EN_PROCESO
+  - mpPreferenceId     VARCHAR(100)
+  - mpPaymentId        VARCHAR(100)
+  - mpPaymentMethod    VARCHAR(50)
+  - mpPaymentType      VARCHAR(50)
+  - totalPagado        DECIMAL(12,2)
+  - fechaPago          TIMESTAMP
+
+Default de estadoPago = "PENDIENTE" al crear el pedido.
+
+═══════════════════════════════════════════════════════════════════════
+4. ENDPOINTS A EXPONER (rutas EXACTAS, no las cambies)
+═══════════════════════════════════════════════════════════════════════
+
+──────────────────────────────────────────────────────────────────────
+4.1 POST  /api/mp/preference
+──────────────────────────────────────────────────────────────────────
+Crea una preferencia de pago en MP a partir de un pedido existente.
+
+Request body (JSON):
+{
+  "pedidoId": 123,
+  "total": 45000,
+  "items": [
+    { "id": "5", "title": "Pizza Monza", "quantity": 2, "unit_price": 18000 },
+    { "id": "8", "title": "Coca-Cola 1.5L", "quantity": 1, "unit_price": 9000 }
+  ],
+  "payer": { "name": "Juan Perez", "email": "juan@example.com" },
+  "origin": "https://mi-app.com"
+}
+
+Lógica:
+  1. Validar que el pedido exista (404 si no).
+  2. Construir items para MP usando los del request (o, si vienen vacíos,
+     un solo item "Pedido La Vuelta Rápida #N" con el total).
+  3. Setear currency_id="COP" en cada item.
+  4. external_reference = String.valueOf(pedidoId)
+  5. statement_descriptor = "LA VUELTA RAPIDA"
+  6. back_urls = {
+        success: "${origin}/pago/resultado/${pedidoId}",
+        failure: "${origin}/pago/resultado/${pedidoId}",
+        pending: "${origin}/pago/resultado/${pedidoId}"
+     }
+  7. auto_return = "approved"
+  8. notification_url = "${app.backend-url}/api/mp/webhook"  (si configurado)
+  9. Llamar al SDK: PreferenceClient.create(request)
+ 10. Guardar preference.getId() en pedido.mpPreferenceId.
+
+Response (200):
+{
+  "id": "1234567890-abcd-...",
+  "init_point": "https://www.mercadopago.com.co/checkout/v1/redirect?...",
+  "sandbox_init_point": "https://sandbox.mercadopago.com.co/checkout/v1/redirect?..."
+}
+
+Errores: 400 si faltan datos, 500 si MP falla. Respuesta de error:
+{ "error": "mensaje", "detail": "detalle técnico opcional" }
+
+──────────────────────────────────────────────────────────────────────
+4.2 GET  /api/mp/payment/{paymentId}
+──────────────────────────────────────────────────────────────────────
+Consulta el estado real de un pago en MP por su ID.
+
+Lógica:
+  1. PaymentClient.get(Long.parseLong(paymentId))
+  2. Devolver los campos relevantes del pago.
+
+Response (200):
+{
+  "id": 123456789,
+  "status": "approved",                  // approved|pending|rejected|in_process|cancelled|refunded
+  "status_detail": "accredited",
+  "payment_method_id": "visa",
+  "payment_type_id": "credit_card",
+  "transaction_amount": 45000,
+  "currency_id": "COP",
+  "external_reference": "123",
+  "date_approved": "2025-01-15T10:30:00.000-05:00",
+  "payer": { "email": "juan@example.com" }
+}
+
+Errores: 404 si no existe, 500 si MP falla.
+
+──────────────────────────────────────────────────────────────────────
+4.3 POST  /api/mp/webhook  (CRÍTICO para confirmación real del pago)
+──────────────────────────────────────────────────────────────────────
+Recibe notificaciones IPN/Webhook de Mercado Pago.
+
+MP envía:
+  - Headers: x-signature, x-request-id
+  - Query param: ?type=payment&data.id=PAYMENT_ID
+  - Body: { "action": "payment.created", "data": { "id": "..." }, ... }
+
+Lógica:
+  1. (Opcional pero recomendado) Validar la firma HMAC SHA256 con
+     mercadopago.webhook-secret usando el algoritmo documentado por MP:
+     manifest = "id:{data.id};request-id:{x-request-id};ts:{ts};"
+     hmac = HMAC_SHA256(secret, manifest)
+     comparar con la parte v1=... del header x-signature
+  2. Si type=payment → consultar el pago con PaymentClient.get(data.id)
+  3. Buscar el pedido por external_reference (= pedido.id)
+  4. Actualizar pedido:
+       - estadoPago = mapear status MP:
+           approved → "APROBADO"
+           pending|in_process → "EN_PROCESO"
+           rejected|cancelled|refunded|charged_back → "RECHAZADO"
+       - mpPaymentId = payment.id
+       - mpPaymentMethod = payment.payment_method_id
+       - mpPaymentType = payment.payment_type_id
+       - totalPagado = payment.transaction_amount
+       - fechaPago = payment.date_approved (si APROBADO)
+  5. Devolver siempre HTTP 200 (vacío) — MP reintenta si recibe error.
+
+═══════════════════════════════════════════════════════════════════════
+5. CORS
+═══════════════════════════════════════════════════════════════════════
+Habilitar CORS para que el frontend Angular (origen
+http://localhost:5000 en dev y la URL real en producción) pueda llamar
+a /api/mp/**. Permitir métodos GET, POST, OPTIONS y headers
+Content-Type, Authorization.
+
+═══════════════════════════════════════════════════════════════════════
+6. SEGURIDAD
+═══════════════════════════════════════════════════════════════════════
+- NUNCA loguear el access token completo (solo prefijo).
+- El access token solo se usa server-side; jamás lo expongas en
+  responses.
+- Validar montos: el total que llega del frontend NO es de confianza;
+  recalcula el total real desde las líneas del pedido en BD y úsalo
+  para crear la preferencia.
+
+═══════════════════════════════════════════════════════════════════════
+7. TESTING
+═══════════════════════════════════════════════════════════════════════
+Tarjetas de prueba MP Colombia (modo sandbox):
+- Aprobada:  5031 7557 3453 0604  exp 11/30  CVV 123  titular APRO
+- Rechazada: 5031 7557 3453 0604  exp 11/30  CVV 123  titular OTHE
+- Pendiente: 5031 7557 3453 0604  exp 11/30  CVV 123  titular CONT
+
+═══════════════════════════════════════════════════════════════════════
+NOTAS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════
+- Las URLs de los endpoints (/api/mp/preference, /api/mp/payment/{id},
+  /api/mp/webhook) NO se pueden cambiar — el frontend Angular ya las
+  está llamando exactamente con esos paths.
+- El front espera que el campo se llame "init_point" y/o
+  "sandbox_init_point" (snake_case, no camelCase).
+- En modo TEST el frontend usa sandbox_init_point si está disponible;
+  por eso la respuesta debe incluir AMBOS cuando MP los devuelva.
