@@ -33,6 +33,7 @@ import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
+import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
@@ -102,16 +103,16 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .items(items)
                 .externalReference(String.valueOf(pedido.getId()))
                 .statementDescriptor(STATEMENT_DESCRIPTOR)
-                .backUrls(backUrls);
-        // Nota 1: NO enviamos auto_return porque las back_urls son
-        // http://localhost en desarrollo y MP exige HTTPS para auto_return.
-        // En producción, cuando tengamos HTTPS, agregar: .autoReturn("approved")
-        //
-        // Nota 2: NO enviamos el bloque payer al crear la preferencia.
-        // En modo de prueba (TEST credentials) MP rechaza la tokenización
-        // de tarjetas si el email pertenece a una cuenta MP real, y en
-        // producción dejamos que MP recolecte los datos del comprador en
-        // su propia pantalla de checkout.
+                .backUrls(backUrls)
+                .autoReturn("approved");
+
+        if (req.getPayer() != null && req.getPayer().getEmail() != null
+                && !req.getPayer().getEmail().isBlank()) {
+            builder.payer(PreferencePayerRequest.builder()
+                    .name(req.getPayer().getName())
+                    .email(req.getPayer().getEmail())
+                    .build());
+        }
 
         String backendUrl = mpConfig.getBackendUrl();
         if (backendUrl != null && !backendUrl.isBlank()) {

@@ -31,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.demo.config.MercadoPagoConfig;
 import com.example.demo.dto.MpItemRequest;
+import com.example.demo.dto.MpPayerRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.entitys.Adicional;
 import com.example.demo.entitys.Comida;
@@ -167,7 +168,7 @@ public class MercadoPagoServiceImplTest {
 
         assertThat(sent.getExternalReference()).isEqualTo("123");
         assertThat(sent.getStatementDescriptor()).isEqualTo("LA VUELTA RAPIDA");
-        assertThat(sent.getAutoReturn()).isNull();
+        assertThat(sent.getAutoReturn()).isEqualTo("approved");
         assertThat(sent.getBackUrls().getSuccess()).isEqualTo("https://mi-app.com/pago/resultado/123");
         assertThat(sent.getBackUrls().getFailure()).isEqualTo("https://mi-app.com/pago/resultado/123");
         assertThat(sent.getBackUrls().getPending()).isEqualTo("https://mi-app.com/pago/resultado/123");
@@ -226,13 +227,57 @@ public class MercadoPagoServiceImplTest {
     }
 
     @Test
-    void crearPreferencia_nuncaEnviaPayerAlSDK() throws Exception {
+    void crearPreferencia_conPayer_envíaNombreYEmailAlSDK() throws Exception {
+        when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
+        when(mpConfig.getBackendUrl()).thenReturn("");
+        when(preferenceClient.create(any(PreferenceRequest.class)))
+                .thenReturn(mockPreference("P", "i", "s"));
+
+        MpPreferenceRequest req = buildReq(List.of());
+        MpPayerRequest payer = new MpPayerRequest();
+        payer.setName("Juan Perez");
+        payer.setEmail("juan@example.com");
+        req.setPayer(payer);
+
+        service.crearPreferencia(req);
+
+        ArgumentCaptor<PreferenceRequest> captor = ArgumentCaptor.forClass(PreferenceRequest.class);
+        verify(preferenceClient).create(captor.capture());
+        PreferenceRequest sent = captor.getValue();
+        assertThat(sent.getPayer()).isNotNull();
+        assertThat(sent.getPayer().getName()).isEqualTo("Juan Perez");
+        assertThat(sent.getPayer().getEmail()).isEqualTo("juan@example.com");
+    }
+
+    @Test
+    void crearPreferencia_sinPayer_noEnviaPayerAlSDK() throws Exception {
         when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
         when(mpConfig.getBackendUrl()).thenReturn("");
         when(preferenceClient.create(any(PreferenceRequest.class)))
                 .thenReturn(mockPreference("P", "i", "s"));
 
         service.crearPreferencia(buildReq(List.of()));
+
+        ArgumentCaptor<PreferenceRequest> captor = ArgumentCaptor.forClass(PreferenceRequest.class);
+        verify(preferenceClient).create(captor.capture());
+        PreferenceRequest sent = captor.getValue();
+        assertThat(sent.getPayer()).isNull();
+    }
+
+    @Test
+    void crearPreferencia_payerConEmailBlanco_noEnviaPayerAlSDK() throws Exception {
+        when(pedidoRepository.findById(123L)).thenReturn(Optional.of(pedido));
+        when(mpConfig.getBackendUrl()).thenReturn("");
+        when(preferenceClient.create(any(PreferenceRequest.class)))
+                .thenReturn(mockPreference("P", "i", "s"));
+
+        MpPreferenceRequest req = buildReq(List.of());
+        MpPayerRequest payer = new MpPayerRequest();
+        payer.setName("Juan");
+        payer.setEmail("   ");
+        req.setPayer(payer);
+
+        service.crearPreferencia(req);
 
         ArgumentCaptor<PreferenceRequest> captor = ArgumentCaptor.forClass(PreferenceRequest.class);
         verify(preferenceClient).create(captor.capture());

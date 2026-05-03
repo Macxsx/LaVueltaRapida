@@ -29,6 +29,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.demo.dto.MpItemRequest;
+import com.example.demo.dto.MpPayerRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.service.MercadoPagoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,6 +62,11 @@ public class MercadoPagoControllerTest {
         it.setQuantity(2);
         it.setUnitPrice(new BigDecimal("18000"));
         req.setItems(List.of(it));
+
+        MpPayerRequest payer = new MpPayerRequest();
+        payer.setName("Juan Perez");
+        payer.setEmail("juan@example.com");
+        req.setPayer(payer);
         return req;
     }
 
