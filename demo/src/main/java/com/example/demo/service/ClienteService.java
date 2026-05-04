@@ -13,6 +13,8 @@ public interface ClienteService {
 
     Cliente findByUsername(String username);
 
+    Cliente findByEmail(String email);
+
     /** Lanza IllegalStateException si el usuario o email ya están en uso. */
     Cliente create(Cliente cliente);
 

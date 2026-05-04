@@ -43,6 +43,11 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public Cliente findByEmail(String email) {
+        return repo.findByEmail(email);
+    }
+
+    @Override
     public Cliente create(Cliente cliente) {
         if (repo.findByUsername(cliente.getUsername()) != null) {
             throw new IllegalStateException(

@@ -37,7 +37,9 @@ public class AuthServiceImpl implements AuthService {
             return new LoginResult(operador.getUsuario(), "operador");
         }
 
-        Cliente cliente = clienteService.findByUsername(usuario);
+        Cliente cliente = usuario.contains("@")
+                ? clienteService.findByEmail(usuario)
+                : clienteService.findByUsername(usuario);
         if (cliente != null && cliente.getPassword().equals(contrasena)) {
             if (!cliente.isActivo()) {
                 throw new IllegalStateException("Esta cuenta ha sido desactivada.");

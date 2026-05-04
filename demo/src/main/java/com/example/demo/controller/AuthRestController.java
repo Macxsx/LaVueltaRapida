@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
+import com.example.demo.dto.RecuperarContrasenaRequest;
+import com.example.demo.dto.ResetContrasenaRequest;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.AuthService.LoginResult;
+import com.example.demo.service.PasswordResetService;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,6 +25,9 @@ public class AuthRestController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -33,6 +40,36 @@ public class AuthRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", e.getMessage()));
         } catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @PostMapping("/recuperar-contrasena")
+    public ResponseEntity<?> recuperarContrasena(@RequestBody RecuperarContrasenaRequest request) {
+        try {
+            passwordResetService.solicitarRecuperacion(request.email);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "No se pudo enviar el correo. Intenta de nuevo."));
+        }
+    }
+
+    @PostMapping("/reset-contrasena")
+    public ResponseEntity<?> resetContrasena(@RequestBody ResetContrasenaRequest request) {
+        try {
+            passwordResetService.resetContrasena(request.token, request.nuevaContrasena);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "No se pudo actualizar la contraseña. Intenta de nuevo."));
         }
     }
 }
