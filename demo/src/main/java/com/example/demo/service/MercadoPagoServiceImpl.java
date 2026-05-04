@@ -23,13 +23,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.config.MercadoPagoConfig;
+import com.example.demo.dto.CardPaymentRequest;
 import com.example.demo.dto.MpItemRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
+import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.PedidoRepository;
+import com.mercadopago.client.common.IdentificationRequest;
 import com.mercadopago.client.payment.PaymentClient;
+import com.mercadopago.client.payment.PaymentCreateRequest;
+import com.mercadopago.client.payment.PaymentPayerRequest;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
@@ -129,6 +134,73 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         resp.put("init_point", preference.getInitPoint());
         resp.put("sandbox_init_point", preference.getSandboxInitPoint());
         return resp;
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> procesarPagoConTarjeta(CardPaymentRequest req) throws MPException, MPApiException {
+        if (req.getToken() == null || req.getToken().isBlank()) {
+            throw new IllegalArgumentException("Falta el campo 'token'.");
+        }
+        if (req.getTransactionAmount() == null || req.getTransactionAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("'transaction_amount' debe ser mayor que cero.");
+        }
+        if (req.getPaymentMethodId() == null || req.getPaymentMethodId().isBlank()) {
+            throw new IllegalArgumentException("Falta el campo 'payment_method_id'.");
+        }
+        if (req.getPayer() == null || req.getPayer().getEmail() == null || req.getPayer().getEmail().isBlank()) {
+            throw new IllegalArgumentException("Falta el email del pagador.");
+        }
+
+        PaymentPayerRequest.PaymentPayerRequestBuilder payerBuilder = PaymentPayerRequest.builder()
+                .email(req.getPayer().getEmail());
+
+        CardPaymentRequest.CardIdentificationRequest ident = req.getPayer().getIdentification();
+        if (ident != null && ident.getType() != null && ident.getNumber() != null) {
+            payerBuilder.identification(IdentificationRequest.builder()
+                    .type(ident.getType())
+                    .number(ident.getNumber())
+                    .build());
+        }
+
+        PaymentCreateRequest.PaymentCreateRequestBuilder builder = PaymentCreateRequest.builder()
+                .transactionAmount(req.getTransactionAmount())
+                .token(req.getToken())
+                .description("Pedido La Vuelta Rápida")
+                .installments(req.getInstallments() != null ? req.getInstallments() : 1)
+                .paymentMethodId(req.getPaymentMethodId())
+                .payer(payerBuilder.build())
+                .statementDescriptor(STATEMENT_DESCRIPTOR);
+
+        if (req.getPedidoId() != null) {
+            builder.externalReference(String.valueOf(req.getPedidoId()));
+        }
+
+        Payment payment = paymentClient.create(builder.build());
+        log.info("Pago con tarjeta creado: id={}, status={}, detail={}",
+                payment.getId(), payment.getStatus(), payment.getStatusDetail());
+
+        // Actualizar el pedido de forma síncrona (sin esperar webhook)
+        if (req.getPedidoId() != null) {
+            pedidoRepository.findById(req.getPedidoId()).ifPresent(pedido -> {
+                String estadoMapeado = mapearEstado(payment.getStatus());
+                pedido.setEstadoPago(estadoMapeado);
+                pedido.setMpPaymentId(String.valueOf(payment.getId()));
+                pedido.setMpPaymentMethod(payment.getPaymentMethodId());
+                pedido.setMpPaymentType(payment.getPaymentTypeId());
+                pedido.setTotalPagado(payment.getTransactionAmount());
+                pedido.setMetodoPago(MetodoPago.TARJETA);
+                if ("APROBADO".equals(estadoMapeado) && payment.getDateApproved() != null) {
+                    pedido.setFechaPago(payment.getDateApproved()
+                            .atZoneSameInstant(ZoneId.systemDefault())
+                            .toLocalDateTime());
+                }
+                pedidoRepository.save(pedido);
+                log.info("Pedido {} actualizado tras pago con tarjeta → estadoPago={}", pedido.getId(), estadoMapeado);
+            });
+        }
+
+        return mapPaymentToResponse(payment);
     }
 
     @Override

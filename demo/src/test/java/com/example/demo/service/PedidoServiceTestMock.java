@@ -196,7 +196,7 @@ public class PedidoServiceTestMock {
             return p;
         });
 
-        Pedido result = service.desdeCarrito(1L);
+        Pedido result = service.desdeCarrito(1L, null);
 
         Assertions.assertThat(result.getId()).isEqualTo(99L);
         Assertions.assertThat(result.getEstado()).isEqualTo(EstadoPedido.RECIBIDO);
@@ -220,7 +220,7 @@ public class PedidoServiceTestMock {
     public void PedidoService_desdeCarrito_ThrowsWhenCarritoDoesNotExist() {
         when(carritoRepository.findById(999L)).thenReturn(Optional.empty());
 
-        Assertions.assertThatThrownBy(() -> service.desdeCarrito(999L))
+        Assertions.assertThatThrownBy(() -> service.desdeCarrito(999L, null))
                 .isInstanceOf(NoSuchElementException.class);
 
         verify(pedidoRepository, never()).save(any(Pedido.class));
@@ -233,7 +233,7 @@ public class PedidoServiceTestMock {
         carrito.setLineasPedido(new ArrayList<>());
         when(carritoRepository.findById(1L)).thenReturn(Optional.of(carrito));
 
-        Assertions.assertThatThrownBy(() -> service.desdeCarrito(1L))
+        Assertions.assertThatThrownBy(() -> service.desdeCarrito(1L, null))
                 .isInstanceOf(IllegalArgumentException.class);
 
         verify(pedidoRepository, never()).save(any(Pedido.class));
