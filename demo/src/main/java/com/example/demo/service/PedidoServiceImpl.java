@@ -141,6 +141,41 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
+    public Pedido confirmarPago(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));
+
+        if (pedido.getMetodoPago() == null || !METODOS_PRESENCIALES.contains(pedido.getMetodoPago())) {
+            throw new IllegalArgumentException(
+                    "Solo se puede confirmar el pago manualmente en pedidos con método de pago contra entrega.");
+        }
+
+        if ("APROBADO".equals(pedido.getEstadoPago())) {
+            throw new IllegalStateException("El pedido ya está marcado como pagado.");
+        }
+
+        pedido.setEstadoPago("APROBADO");
+        pedido.setFechaPago(LocalDateTime.now());
+
+        if (pedido.getTotalPagado() == null && pedido.getLineasPedido() != null) {
+            double total = pedido.getLineasPedido().stream().mapToDouble(lp -> {
+                double base = lp.getComida() != null ? lp.getComida().getPrice() : 0.0;
+                double adics = lp.getAdicionales() != null
+                        ? lp.getAdicionales().stream()
+                              .mapToDouble(a -> a.getAdicional() != null ? a.getAdicional().getPrice() : 0.0)
+                              .sum()
+                        : 0.0;
+                int cantidad = lp.getCantidad() != null ? lp.getCantidad() : 0;
+                return (base + adics) * cantidad;
+            }).sum();
+            pedido.setTotalPagado(java.math.BigDecimal.valueOf(total));
+        }
+
+        return pedidoRepository.save(pedido);
+    }
+
+    @Override
+    @Transactional
     public Pedido actualizarEstado(Long id, String estadoStr) {
         if (estadoStr == null) {
             throw new IllegalArgumentException("Se requiere el campo 'estado'.");
@@ -164,6 +199,11 @@ public class PedidoServiceImpl implements PedidoService {
             throw new IllegalArgumentException(
                     "Transición inválida: un pedido en estado '" + estadoActual
                     + "' solo puede avanzar a '" + siguiente + "'.");
+        }
+
+        if (nuevoEstado == EstadoPedido.ENTREGADO && !"APROBADO".equals(pedido.getEstadoPago())) {
+            throw new IllegalArgumentException(
+                    "El pedido no puede marcarse como entregado: el pago aún no ha sido confirmado.");
         }
 
         if (nuevoEstado == EstadoPedido.ENVIADO && pedido.getDomiciliario() == null) {

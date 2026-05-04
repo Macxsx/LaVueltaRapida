@@ -10,6 +10,7 @@ import com.example.demo.entitys.Domiciliario;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
+import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Operador;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.AdicionalRepository;
@@ -307,9 +308,12 @@ public class DataInitializer {
                 pedido.setCliente(clientes.get(clienteIdx));
                 pedido.setEstado(estado);
                 pedido.setFechaCreacion(LocalDateTime.now().minusMinutes(minutosAtras));
+                pedido.setMetodoPago(MetodoPago.EFECTIVO);
 
                 if (estado == EstadoPedido.ENTREGADO) {
                     pedido.setFechaEntrega(LocalDateTime.now().minusMinutes(minutosAtras / 3));
+                    pedido.setEstadoPago("APROBADO");
+                    pedido.setFechaPago(LocalDateTime.now().minusMinutes(minutosAtras / 3));
                 }
                 // Invariante: solo los pedidos en estado ENVIADO pueden tener
                 // domiciliario asignado, y ese domiciliario queda ocupado.

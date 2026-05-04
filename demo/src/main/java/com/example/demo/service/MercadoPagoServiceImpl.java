@@ -127,6 +127,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         Preference preference = preferenceClient.create(builder.build());
 
         pedido.setMpPreferenceId(preference.getId());
+        pedido.setMetodoPago(MetodoPago.MP_ONLINE);
         pedidoRepository.save(pedido);
 
         Map<String, Object> resp = new LinkedHashMap<>();
@@ -275,6 +276,9 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
             String estadoMapeado = mapearEstado(payment.getStatus());
             pedido.setEstadoPago(estadoMapeado);
+            if (pedido.getMetodoPago() == null) {
+                pedido.setMetodoPago(MetodoPago.MP_ONLINE);
+            }
             pedido.setMpPaymentId(String.valueOf(payment.getId()));
             pedido.setMpPaymentMethod(payment.getPaymentMethodId());
             pedido.setMpPaymentType(payment.getPaymentTypeId());

@@ -95,6 +95,19 @@ public class PedidoRestController {
         }
     }
 
+    @PatchMapping("/{id}/confirmar-pago")
+    public ResponseEntity<?> confirmarPago(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(pedidoService.confirmarPago(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
+        }
+    }
+
     @PatchMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstado(@PathVariable Long id,
                                               @RequestBody Map<String, String> body) {

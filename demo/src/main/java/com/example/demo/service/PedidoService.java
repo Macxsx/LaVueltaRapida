@@ -37,6 +37,14 @@ public interface PedidoService {
     Pedido confirmarPresencial(Long id, String metodoPago);
 
     /**
+     * Marca el pago de un pedido contra entrega como aprobado.
+     * Lanza NoSuchElementException si el pedido no existe.
+     * Lanza IllegalArgumentException si el pedido no tiene un método de pago contra entrega.
+     * Lanza IllegalStateException si el pedido ya está pagado.
+     */
+    Pedido confirmarPago(Long id);
+
+    /**
      * Lanza NoSuchElementException si el pedido no existe.
      * Lanza IllegalArgumentException si estadoStr es nulo, inválido o la transición no está permitida.
      * Lanza IllegalStateException si no hay domiciliarios disponibles al pasar a ENVIADO.
