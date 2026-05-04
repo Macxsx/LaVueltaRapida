@@ -167,7 +167,7 @@ public class PedidoControllerTest {
 
     @Test
     public void PedidoController_desdeCarrito_CreaPedidoYRetorna200() throws Exception {
-        when(pedidoService.desdeCarrito(1L))
+        when(pedidoService.desdeCarrito(1L, null))
                 .thenReturn(buildPedido(99L, 7L, EstadoPedido.RECIBIDO));
 
         mockMvc.perform(post("/pedido/desde-carrito/1"))
@@ -179,7 +179,7 @@ public class PedidoControllerTest {
 
     @Test
     public void PedidoController_desdeCarrito_Retorna404CuandoCarritoNoExiste() throws Exception {
-        when(pedidoService.desdeCarrito(999L))
+        when(pedidoService.desdeCarrito(999L, null))
                 .thenThrow(new NoSuchElementException("Carrito no encontrado."));
 
         mockMvc.perform(post("/pedido/desde-carrito/999"))
@@ -188,7 +188,7 @@ public class PedidoControllerTest {
 
     @Test
     public void PedidoController_desdeCarrito_Retorna400CuandoCarritoEstaVacio() throws Exception {
-        when(pedidoService.desdeCarrito(1L))
+        when(pedidoService.desdeCarrito(1L, null))
                 .thenThrow(new IllegalArgumentException("El carrito está vacío."));
 
         mockMvc.perform(post("/pedido/desde-carrito/1"))

@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import com.example.demo.entitys.Domiciliario;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
+import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.ClienteRepository;
@@ -25,6 +28,10 @@ import com.example.demo.repository.PedidoRepository;
 
 @Service
 public class PedidoServiceImpl implements PedidoService {
+
+    private static final Set<MetodoPago> METODOS_PRESENCIALES = EnumSet.of(
+            MetodoPago.EFECTIVO, MetodoPago.DATAFONO, MetodoPago.NEQUI,
+            MetodoPago.DAVIPLATA, MetodoPago.TRANSFERENCIA, MetodoPago.LLAVE);
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -67,7 +74,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
-    public Pedido desdeCarrito(Long carritoId) {
+    public Pedido desdeCarrito(Long carritoId, MetodoPago metodoPago) {
         Carrito carrito = carritoRepository.findById(carritoId)
                 .orElseThrow(() -> new NoSuchElementException("Carrito no encontrado."));
         if (carrito.getLineasPedido().isEmpty()) {
@@ -79,6 +86,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setCliente(carrito.getCliente());
         pedido.setEstado(EstadoPedido.RECIBIDO);
         pedido.setFechaCreacion(LocalDateTime.now());
+        pedido.setMetodoPago(metodoPago);
 
         for (LineaPedido carritoLinea : carrito.getLineasPedido()) {
             LineaPedido nuevaLinea = new LineaPedido();
@@ -98,6 +106,37 @@ public class PedidoServiceImpl implements PedidoService {
         carrito.getLineasPedido().clear();
         carritoRepository.save(carrito);
         return guardado;
+    }
+
+    @Override
+    @Transactional
+    public Pedido confirmarPresencial(Long id, String metodoPagoStr) {
+        if (metodoPagoStr == null || metodoPagoStr.isBlank()) {
+            throw new IllegalArgumentException("Se requiere el campo 'metodoPago'.");
+        }
+
+        MetodoPago metodoPago;
+        try {
+            metodoPago = MetodoPago.valueOf(metodoPagoStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "metodoPago inválido: '" + metodoPagoStr + "'. " +
+                    "Valores presenciales: EFECTIVO, DATAFONO, NEQUI, DAVIPLATA, TRANSFERENCIA, LLAVE");
+        }
+
+        if (!METODOS_PRESENCIALES.contains(metodoPago)) {
+            throw new IllegalArgumentException(
+                    "'" + metodoPago + "' no es un método de pago presencial. " +
+                    "Use: EFECTIVO, DATAFONO, NEQUI, DAVIPLATA, TRANSFERENCIA, LLAVE");
+        }
+
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));
+
+        pedido.setMetodoPago(metodoPago);
+        pedido.setEstadoPago("PENDIENTE_DE_PAGO");
+
+        return pedidoRepository.save(pedido);
     }
 
     @Override

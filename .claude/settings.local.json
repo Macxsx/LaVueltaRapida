@@ -3,7 +3,10 @@
     "allow": [
       "Bash(git -C \"c:\\\\Users\\\\jorge\\\\Documents\\\\LaVueltaRapida\" check-ignore -v .env)",
       "Bash(git -C \"c:\\\\Users\\\\jorge\\\\Documents\\\\LaVueltaRapida\" ls-files --error-unmatch .env)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(./mvnw compile *)",
+      "Bash(./mvnw spring-boot:run)",
+      "Bash(./mvnw test *)"
     ]
   }
 }

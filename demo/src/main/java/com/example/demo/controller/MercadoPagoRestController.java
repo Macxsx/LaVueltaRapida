@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.CardPaymentRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.service.MercadoPagoService;
 import com.mercadopago.exceptions.MPApiException;
@@ -52,6 +53,32 @@ public class MercadoPagoRestController {
             log.error("Error inesperado creando preferencia MP: {}", e.getMessage(), e);
             return ResponseEntity.status(500)
                     .body(error("Error inesperado.", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/payment")
+    public ResponseEntity<?> procesarPagoConTarjeta(@RequestBody CardPaymentRequest req) {
+        try {
+            return ResponseEntity.ok(mercadoPagoService.procesarPagoConTarjeta(req));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(error(e.getMessage(), null));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(error(e.getMessage(), null));
+        } catch (MPApiException e) {
+            String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
+            int mpStatus = e.getStatusCode();
+            log.error("Error API MP procesando pago con tarjeta: status={}, body={}", mpStatus, detail);
+            // 4xx = tarjeta rechazada / token inválido — propagamos el código de MP
+            if (mpStatus >= 400 && mpStatus < 500) {
+                return ResponseEntity.status(mpStatus).body(error("Pago rechazado por Mercado Pago.", detail));
+            }
+            return ResponseEntity.status(500).body(error("No se pudo procesar el pago.", detail));
+        } catch (MPException e) {
+            log.error("Error SDK MP procesando pago con tarjeta: {}", e.getMessage());
+            return ResponseEntity.status(500).body(error("No se pudo procesar el pago.", e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error inesperado procesando pago con tarjeta: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body(error("Error inesperado.", e.getMessage()));
         }
     }
 

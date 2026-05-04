@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.service.PedidoService;
 
@@ -60,13 +61,37 @@ public class PedidoRestController {
     }
 
     @PostMapping("/desde-carrito/{carritoId}")
-    public ResponseEntity<?> desdeCarrito(@PathVariable Long carritoId) {
+    public ResponseEntity<?> desdeCarrito(
+            @PathVariable Long carritoId,
+            @RequestBody(required = false) Map<String, String> body) {
+        MetodoPago metodoPago = null;
+        if (body != null && body.get("metodoPago") != null) {
+            try {
+                metodoPago = MetodoPago.valueOf(body.get("metodoPago").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "metodoPago inválido. Valores: " +
+                                java.util.Arrays.toString(MetodoPago.values())));
+            }
+        }
         try {
-            return ResponseEntity.ok(pedidoService.desdeCarrito(carritoId));
+            return ResponseEntity.ok(pedidoService.desdeCarrito(carritoId, metodoPago));
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PatchMapping("/{id}/pago-presencial")
+    public ResponseEntity<Pedido> pagoPresencial(@PathVariable Long id,
+                                                  @RequestBody Map<String, String> body) {
+        try {
+            return ResponseEntity.ok(pedidoService.confirmarPresencial(id, body.get("metodoPago")));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

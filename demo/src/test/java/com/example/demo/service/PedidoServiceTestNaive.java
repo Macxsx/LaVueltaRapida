@@ -132,7 +132,7 @@ public class PedidoServiceTestNaive {
     @Test
     public void PedidoService_desdeCarrito_ThrowsWhenCarritoNotFound() {
 
-        Assertions.assertThatThrownBy(() -> service.desdeCarrito(999L))
+        Assertions.assertThatThrownBy(() -> service.desdeCarrito(999L, null))
                 .isInstanceOf(NoSuchElementException.class);
     }
 
@@ -140,7 +140,7 @@ public class PedidoServiceTestNaive {
     public void PedidoService_desdeCarrito_ThrowsWhenCarritoEmpty() {
         Long carritoId = carritoRepo.findAll().get(0).getId();
 
-        Assertions.assertThatThrownBy(() -> service.desdeCarrito(carritoId))
+        Assertions.assertThatThrownBy(() -> service.desdeCarrito(carritoId, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -150,7 +150,7 @@ public class PedidoServiceTestNaive {
         LineaPedido linea = new LineaPedido(1, comidaRepo.findAll().get(0), carrito, null);
         lineaPedidoRepo.save(linea);
 
-        Pedido result = service.desdeCarrito(carrito.getId());
+        Pedido result = service.desdeCarrito(carrito.getId(), null);
 
         Assertions.assertThat(result.getId()).isNotNull();
         Assertions.assertThat(result.getEstado()).isEqualTo(EstadoPedido.RECIBIDO);

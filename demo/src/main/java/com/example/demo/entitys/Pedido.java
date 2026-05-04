@@ -47,7 +47,11 @@ public class Pedido {
     @JoinColumn(name = "domiciliario_id")
     private Domiciliario domiciliario;
 
-    // ─── Mercado Pago ──────────────────────────────────────────────
+    // ─── Método y estado de pago ───────────────────────────────────
+    @Enumerated(EnumType.STRING)
+    @Column(name = "metodo_pago", length = 20)
+    private MetodoPago metodoPago;
+
     @Column(name = "estado_pago", length = 20)
     private String estadoPago = "PENDIENTE";
 
