@@ -23,12 +23,8 @@ import com.example.demo.repository.LineaPedidoAdicionalRepository;
 import com.example.demo.repository.LineaPedidoRepository;
 import com.example.demo.repository.OperadorRepository;
 import com.example.demo.repository.PedidoRepository;
-
-import jakarta.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

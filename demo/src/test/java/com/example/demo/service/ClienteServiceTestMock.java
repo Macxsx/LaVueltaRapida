@@ -97,6 +97,25 @@ public class ClienteServiceTestMock {
         Assertions.assertThat(result).isSameAs(cliente);
     }
 
+    @Test
+    public void ClienteService_findByEmail_ReturnsClienteWhenExists() {
+        Cliente cliente = buildCliente(1L, "pablo", "p@x.com", "123456", true);
+        when(repo.findByEmail("p@x.com")).thenReturn(cliente);
+
+        Cliente result = service.findByEmail("p@x.com");
+
+        Assertions.assertThat(result).isSameAs(cliente);
+    }
+
+    @Test
+    public void ClienteService_findByEmail_ReturnsNullWhenNotExists() {
+        when(repo.findByEmail("noexiste@x.com")).thenReturn(null);
+
+        Cliente result = service.findByEmail("noexiste@x.com");
+
+        Assertions.assertThat(result).isNull();
+    }
+
 
     @Test
     public void ClienteService_create_SavesClienteAndCreatesInactiveCarrito() {

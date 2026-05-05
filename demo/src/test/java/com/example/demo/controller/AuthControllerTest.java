@@ -2,11 +2,15 @@ package com.example.demo.controller;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RecuperarContrasenaRequest;
+import com.example.demo.dto.ResetContrasenaRequest;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.AuthService.LoginResult;
 import com.example.demo.service.PasswordResetService;
@@ -114,5 +120,123 @@ public class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isUnauthorized());
+    }
+
+
+    // ── POST /auth/recuperar-contrasena ───────────────────────────────────────
+
+    @Test
+    public void AuthController_recuperarContrasena_Retorna200CuandoEmailExiste() throws Exception {
+        RecuperarContrasenaRequest req = new RecuperarContrasenaRequest();
+        req.email = "pablo@x.com";
+        doNothing().when(passwordResetService).solicitarRecuperacion("pablo@x.com");
+
+        mockMvc.perform(post("/auth/recuperar-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void AuthController_recuperarContrasena_Retorna404CuandoEmailNoExiste() throws Exception {
+        RecuperarContrasenaRequest req = new RecuperarContrasenaRequest();
+        req.email = "noexiste@x.com";
+        doThrow(new NoSuchElementException("No existe ningún usuario con ese email."))
+                .when(passwordResetService).solicitarRecuperacion("noexiste@x.com");
+
+        mockMvc.perform(post("/auth/recuperar-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("No existe ningún usuario con ese email."));
+    }
+
+    @Test
+    public void AuthController_recuperarContrasena_Retorna503CuandoServicioDeEmailFalla() throws Exception {
+        RecuperarContrasenaRequest req = new RecuperarContrasenaRequest();
+        req.email = "pablo@x.com";
+        doThrow(new IllegalStateException("Servicio de email no disponible."))
+                .when(passwordResetService).solicitarRecuperacion("pablo@x.com");
+
+        mockMvc.perform(post("/auth/recuperar-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.error").value("Servicio de email no disponible."));
+    }
+
+    @Test
+    public void AuthController_recuperarContrasena_Retorna500CuandoExcepcionInesperada() throws Exception {
+        RecuperarContrasenaRequest req = new RecuperarContrasenaRequest();
+        req.email = "pablo@x.com";
+        doThrow(new RuntimeException("fallo SMTP"))
+                .when(passwordResetService).solicitarRecuperacion("pablo@x.com");
+
+        mockMvc.perform(post("/auth/recuperar-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("No se pudo enviar el correo. Intenta de nuevo."));
+    }
+
+
+    // ── POST /auth/reset-contrasena ───────────────────────────────────────────
+
+    @Test
+    public void AuthController_resetContrasena_Retorna200CuandoTokenYContrasenaValidos() throws Exception {
+        ResetContrasenaRequest req = new ResetContrasenaRequest();
+        req.token = "token-valido";
+        req.nuevaContrasena = "nuevaPass123";
+        doNothing().when(passwordResetService).resetContrasena("token-valido", "nuevaPass123");
+
+        mockMvc.perform(post("/auth/reset-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void AuthController_resetContrasena_Retorna400CuandoArgumentoInvalido() throws Exception {
+        ResetContrasenaRequest req = new ResetContrasenaRequest();
+        req.token = "token-valido";
+        req.nuevaContrasena = "";
+        doThrow(new IllegalArgumentException("La contraseña no puede estar vacía."))
+                .when(passwordResetService).resetContrasena(anyString(), anyString());
+
+        mockMvc.perform(post("/auth/reset-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("La contraseña no puede estar vacía."));
+    }
+
+    @Test
+    public void AuthController_resetContrasena_Retorna404CuandoTokenNoExiste() throws Exception {
+        ResetContrasenaRequest req = new ResetContrasenaRequest();
+        req.token = "token-inexistente";
+        req.nuevaContrasena = "nuevaPass123";
+        doThrow(new NoSuchElementException("Token inválido o expirado."))
+                .when(passwordResetService).resetContrasena(anyString(), anyString());
+
+        mockMvc.perform(post("/auth/reset-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Token inválido o expirado."));
+    }
+
+    @Test
+    public void AuthController_resetContrasena_Retorna500CuandoExcepcionInesperada() throws Exception {
+        ResetContrasenaRequest req = new ResetContrasenaRequest();
+        req.token = "token-valido";
+        req.nuevaContrasena = "nuevaPass123";
+        doThrow(new RuntimeException("fallo interno"))
+                .when(passwordResetService).resetContrasena(anyString(), anyString());
+
+        mockMvc.perform(post("/auth/reset-contrasena")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("No se pudo actualizar la contraseña. Intenta de nuevo."));
     }
 }

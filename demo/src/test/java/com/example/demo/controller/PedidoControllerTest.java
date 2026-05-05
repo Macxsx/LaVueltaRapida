@@ -244,4 +244,83 @@ public class PedidoControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.error").value("No hay domiciliarios disponibles."));
     }
+
+
+    // ── PATCH /pedido/{id}/pago-presencial ────────────────────────────────────
+
+    @Test
+    public void PedidoController_pagoPresencial_Retorna200CuandoPedidoExiste() throws Exception {
+        when(pedidoService.confirmarPresencial(eq(1L), eq("EFECTIVO")))
+                .thenReturn(buildPedido(1L, 7L, EstadoPedido.RECIBIDO));
+
+        mockMvc.perform(patch("/pedido/1/pago-presencial")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("metodoPago", "EFECTIVO"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
+    }
+
+    @Test
+    public void PedidoController_pagoPresencial_Retorna404CuandoPedidoNoExiste() throws Exception {
+        when(pedidoService.confirmarPresencial(anyLong(), anyString()))
+                .thenThrow(new NoSuchElementException("Pedido no encontrado."));
+
+        mockMvc.perform(patch("/pedido/999/pago-presencial")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("metodoPago", "EFECTIVO"))))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void PedidoController_pagoPresencial_Retorna400CuandoMetodoPagoInvalido() throws Exception {
+        when(pedidoService.confirmarPresencial(anyLong(), anyString()))
+                .thenThrow(new IllegalArgumentException("Método de pago inválido."));
+
+        mockMvc.perform(patch("/pedido/1/pago-presencial")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("metodoPago", "INVALIDO"))))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    // ── PATCH /pedido/{id}/confirmar-pago ─────────────────────────────────────
+
+    @Test
+    public void PedidoController_confirmarPago_Retorna200CuandoPagoConfirmado() throws Exception {
+        when(pedidoService.confirmarPago(1L))
+                .thenReturn(buildPedido(1L, 7L, EstadoPedido.RECIBIDO));
+
+        mockMvc.perform(patch("/pedido/1/confirmar-pago"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
+    }
+
+    @Test
+    public void PedidoController_confirmarPago_Retorna404CuandoPedidoNoExiste() throws Exception {
+        when(pedidoService.confirmarPago(999L))
+                .thenThrow(new NoSuchElementException("Pedido no encontrado."));
+
+        mockMvc.perform(patch("/pedido/999/confirmar-pago"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void PedidoController_confirmarPago_Retorna400CuandoMetodoPagoNoEsContraEntrega() throws Exception {
+        when(pedidoService.confirmarPago(anyLong()))
+                .thenThrow(new IllegalArgumentException("El pedido no tiene un método de pago contra entrega."));
+
+        mockMvc.perform(patch("/pedido/1/confirmar-pago"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("El pedido no tiene un método de pago contra entrega."));
+    }
+
+    @Test
+    public void PedidoController_confirmarPago_Retorna409CuandoPedidoYaEstaPagado() throws Exception {
+        when(pedidoService.confirmarPago(anyLong()))
+                .thenThrow(new IllegalStateException("El pedido ya está pagado."));
+
+        mockMvc.perform(patch("/pedido/1/confirmar-pago"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("El pedido ya está pagado."));
+    }
 }

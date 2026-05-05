@@ -70,6 +70,25 @@ public class ClienteServiceTestNaive {
         Assertions.assertThat(result).isNull();
     }
 
+    // ── findByEmail ───────────────────────────────────────────────────────────
+
+    @Test
+    public void ClienteService_findByEmail_ReturnsClienteWhenExists() {
+
+        Cliente result = service.findByEmail("PabloGarcia21@gmail.com");
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getEmail()).isEqualTo("PabloGarcia21@gmail.com");
+    }
+
+    @Test
+    public void ClienteService_findByEmail_ReturnsNullWhenNotExists() {
+
+        Cliente result = service.findByEmail("noexiste@email.com");
+
+        Assertions.assertThat(result).isNull();
+    }
+
     // ── create ────────────────────────────────────────────────────────────────
 
     @Test

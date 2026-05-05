@@ -28,6 +28,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.demo.dto.CardPaymentRequest;
 import com.example.demo.dto.MpItemRequest;
 import com.example.demo.dto.MpPayerRequest;
 import com.example.demo.dto.MpPreferenceRequest;
@@ -63,6 +64,19 @@ public class MercadoPagoControllerTest {
 
         MpPayerRequest payer = new MpPayerRequest();
         payer.setName("Juan Perez");
+        payer.setEmail("juan@example.com");
+        req.setPayer(payer);
+        return req;
+    }
+
+    private CardPaymentRequest buildCardPaymentRequest() {
+        CardPaymentRequest req = new CardPaymentRequest();
+        req.setPedidoId(123L);
+        req.setToken("TEST-TOKEN-123");
+        req.setTransactionAmount(new BigDecimal("45000"));
+        req.setPaymentMethodId("visa");
+        req.setInstallments(1);
+        CardPaymentRequest.CardPayerRequest payer = new CardPaymentRequest.CardPayerRequest();
         payer.setEmail("juan@example.com");
         req.setPayer(payer);
         return req;
@@ -182,6 +196,63 @@ public class MercadoPagoControllerTest {
         mockMvc.perform(get("/api/mp/payment/123"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.error").value("No se pudo consultar el pago."));
+    }
+
+    // ───────── POST /api/mp/payment ─────────
+
+    @Test
+    void cardPayment_procesamientoExitoso_retorna200() throws Exception {
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("id", 123456789L);
+        resp.put("status", "approved");
+        resp.put("status_detail", "accredited");
+        resp.put("payment_method_id", "visa");
+        resp.put("transaction_amount", new BigDecimal("45000"));
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class))).thenReturn(resp);
+
+        mockMvc.perform(post("/api/mp/payment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(buildCardPaymentRequest())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(123456789L))
+                .andExpect(jsonPath("$.status").value("approved"))
+                .andExpect(jsonPath("$.payment_method_id").value("visa"));
+    }
+
+    @Test
+    void cardPayment_argumentoInvalido_retorna400() throws Exception {
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class)))
+                .thenThrow(new IllegalArgumentException("Token de tarjeta requerido."));
+
+        mockMvc.perform(post("/api/mp/payment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(buildCardPaymentRequest())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Token de tarjeta requerido."));
+    }
+
+    @Test
+    void cardPayment_pedidoNoExiste_retorna404() throws Exception {
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class)))
+                .thenThrow(new NoSuchElementException("Pedido no encontrado."));
+
+        mockMvc.perform(post("/api/mp/payment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(buildCardPaymentRequest())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Pedido no encontrado."));
+    }
+
+    @Test
+    void cardPayment_mpException_retorna500() throws Exception {
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class)))
+                .thenThrow(new MPException("timeout"));
+
+        mockMvc.perform(post("/api/mp/payment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(buildCardPaymentRequest())))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("No se pudo procesar el pago."));
     }
 
     // ───────── POST /api/mp/webhook ─────────
