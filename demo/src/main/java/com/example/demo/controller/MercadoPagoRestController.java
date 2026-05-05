@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.CardPaymentRequest;
 import com.example.demo.dto.MpPreferenceRequest;
+import com.example.demo.error.ApiError;
 import com.example.demo.service.MercadoPagoService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
@@ -37,22 +37,19 @@ public class MercadoPagoRestController {
         try {
             return ResponseEntity.ok(mercadoPagoService.crearPreferencia(req));
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(404).body(error(e.getMessage(), null));
+            return ResponseEntity.status(404).body(ApiError.of(e.getMessage()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(error(e.getMessage(), null));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         } catch (MPApiException e) {
             String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
             log.error("Error de la API de Mercado Pago: status={}, body={}", e.getStatusCode(), detail);
-            return ResponseEntity.status(500)
-                    .body(error("No se pudo crear la preferencia de pago.", detail));
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo crear la preferencia de pago.", detail));
         } catch (MPException e) {
             log.error("Error del SDK de Mercado Pago: {}", e.getMessage());
-            return ResponseEntity.status(500)
-                    .body(error("No se pudo crear la preferencia de pago.", e.getMessage()));
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo crear la preferencia de pago.", e.getMessage()));
         } catch (Exception e) {
             log.error("Error inesperado creando preferencia MP: {}", e.getMessage(), e);
-            return ResponseEntity.status(500)
-                    .body(error("Error inesperado.", e.getMessage()));
+            return ResponseEntity.status(500).body(ApiError.of("Error inesperado.", e.getMessage()));
         }
     }
 
@@ -61,24 +58,19 @@ public class MercadoPagoRestController {
         try {
             return ResponseEntity.ok(mercadoPagoService.procesarPagoConTarjeta(req));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(error(e.getMessage(), null));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(404).body(error(e.getMessage(), null));
+            return ResponseEntity.status(404).body(ApiError.of(e.getMessage()));
         } catch (MPApiException e) {
             String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
-            int mpStatus = e.getStatusCode();
-            log.error("Error API MP procesando pago con tarjeta: status={}, body={}", mpStatus, detail);
-            // 4xx = tarjeta rechazada / token inválido — propagamos el código de MP
-            if (mpStatus >= 400 && mpStatus < 500) {
-                return ResponseEntity.status(mpStatus).body(error("Pago rechazado por Mercado Pago.", detail));
-            }
-            return ResponseEntity.status(500).body(error("No se pudo procesar el pago.", detail));
+            log.error("Error API MP procesando pago con tarjeta: status={}, body={}", e.getStatusCode(), detail);
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo procesar el pago.", detail));
         } catch (MPException e) {
             log.error("Error SDK MP procesando pago con tarjeta: {}", e.getMessage());
-            return ResponseEntity.status(500).body(error("No se pudo procesar el pago.", e.getMessage()));
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo procesar el pago.", e.getMessage()));
         } catch (Exception e) {
             log.error("Error inesperado procesando pago con tarjeta: {}", e.getMessage(), e);
-            return ResponseEntity.status(500).body(error("Error inesperado.", e.getMessage()));
+            return ResponseEntity.status(500).body(ApiError.of("Error inesperado.", e.getMessage()));
         }
     }
 
@@ -87,23 +79,19 @@ public class MercadoPagoRestController {
         try {
             return ResponseEntity.ok(mercadoPagoService.consultarPago(paymentId));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(error(e.getMessage(), null));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(ApiError.of(e.getMessage()));
         } catch (MPApiException e) {
-            if (e.getStatusCode() == 404) {
-                return ResponseEntity.status(404).body(error("Pago no encontrado.", null));
-            }
             String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
             log.error("Error API MP consultando pago: status={}, body={}", e.getStatusCode(), detail);
-            return ResponseEntity.status(500)
-                    .body(error("No se pudo consultar el pago.", detail));
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo consultar el pago.", detail));
         } catch (MPException e) {
             log.error("Error SDK MP consultando pago: {}", e.getMessage());
-            return ResponseEntity.status(500)
-                    .body(error("No se pudo consultar el pago.", e.getMessage()));
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo consultar el pago.", e.getMessage()));
         } catch (Exception e) {
             log.error("Error inesperado consultando pago MP: {}", e.getMessage(), e);
-            return ResponseEntity.status(500)
-                    .body(error("Error inesperado.", e.getMessage()));
+            return ResponseEntity.status(500).body(ApiError.of("Error inesperado.", e.getMessage()));
         }
     }
 
@@ -123,12 +111,5 @@ public class MercadoPagoRestController {
                     e.getMessage(), e);
         }
         return ResponseEntity.ok().build();
-    }
-
-    private Map<String, Object> error(String mensaje, String detalle) {
-        Map<String, Object> m = new LinkedHashMap<>();
-        m.put("error", mensaje);
-        if (detalle != null) m.put("detail", detalle);
-        return m;
     }
 }

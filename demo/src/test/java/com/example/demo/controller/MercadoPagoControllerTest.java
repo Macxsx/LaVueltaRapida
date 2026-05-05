@@ -33,9 +33,7 @@ import com.example.demo.dto.MpPayerRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.service.MercadoPagoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
-import com.mercadopago.net.MPResponse;
 
 @WebMvcTest(controllers = MercadoPagoRestController.class)
 @ActiveProfiles("test")
@@ -158,9 +156,8 @@ public class MercadoPagoControllerTest {
 
     @Test
     void payment_pagoNoExiste_retorna404() throws Exception {
-        MPResponse fakeResp = new MPResponse(404, null, "{\"message\":\"not found\"}");
         when(mercadoPagoService.consultarPago("999"))
-                .thenThrow(new MPApiException("not found", fakeResp));
+                .thenThrow(new NoSuchElementException("Pago no encontrado."));
 
         mockMvc.perform(get("/api/mp/payment/999"))
                 .andExpect(status().isNotFound())

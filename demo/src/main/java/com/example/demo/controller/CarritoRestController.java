@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AddProductoRequest;
 import com.example.demo.entitys.Carrito;
+import com.example.demo.error.ApiError;
 import com.example.demo.service.CarritoService;
 
 @RestController
@@ -48,7 +48,7 @@ public class CarritoRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         }
     }
 

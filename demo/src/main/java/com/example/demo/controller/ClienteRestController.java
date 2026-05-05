@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.UpdateClienteRequest;
 import com.example.demo.entitys.Cliente;
-import com.example.demo.exception.CuentaDesactivadaException;
+import com.example.demo.error.ApiError;
 import com.example.demo.service.ClienteService;
 
 @RestController
@@ -47,7 +46,7 @@ public class ClienteRestController {
         try {
             return ResponseEntity.ok(clienteService.create(cliente));
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
     }
 
@@ -60,9 +59,9 @@ public class ClienteRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiError.of(e.getMessage()));
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
     }
 
@@ -71,12 +70,10 @@ public class ClienteRestController {
         try {
             clienteService.deleteOrDeactivate(id);
             return ResponseEntity.noContent().build();
-        } catch (CuentaDesactivadaException e) {
-            return ResponseEntity.ok(Map.of("mensaje", e.getMessage()));
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
     }
 }

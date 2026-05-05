@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.UpdateOperadorRequest;
 import com.example.demo.entitys.Operador;
+import com.example.demo.error.ApiError;
 import com.example.demo.service.OperadorService;
 
 @RestController
@@ -44,7 +44,7 @@ public class OperadorRestController {
         try {
             return ResponseEntity.ok(operadorService.create(operador));
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
     }
 
@@ -56,9 +56,9 @@ public class OperadorRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiError.of(e.getMessage()));
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
     }
 

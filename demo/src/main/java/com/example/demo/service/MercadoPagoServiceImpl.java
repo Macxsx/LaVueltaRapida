@@ -177,7 +177,17 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
             builder.externalReference(String.valueOf(req.getPedidoId()));
         }
 
-        Payment payment = paymentClient.create(builder.build());
+        Payment payment;
+        try {
+            payment = paymentClient.create(builder.build());
+        } catch (MPApiException e) {
+            String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
+            if (e.getStatusCode() >= 400 && e.getStatusCode() < 500) {
+                log.warn("Pago rechazado por Mercado Pago: status={}, body={}", e.getStatusCode(), detail);
+                throw new IllegalArgumentException("Pago rechazado por Mercado Pago.");
+            }
+            throw e;
+        }
         log.info("Pago con tarjeta creado: id={}, status={}, detail={}",
                 payment.getId(), payment.getStatus(), payment.getStatusDetail());
 
@@ -216,7 +226,15 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
             throw new IllegalArgumentException("paymentId inválido: " + paymentId);
         }
 
-        Payment payment = paymentClient.get(id);
+        Payment payment;
+        try {
+            payment = paymentClient.get(id);
+        } catch (MPApiException e) {
+            if (e.getStatusCode() == 404) {
+                throw new NoSuchElementException("Pago no encontrado.");
+            }
+            throw e;
+        }
         return mapPaymentToResponse(payment);
     }
 

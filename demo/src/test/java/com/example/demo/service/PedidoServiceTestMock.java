@@ -31,6 +31,7 @@ import com.example.demo.entitys.Domiciliario;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
+import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.ClienteRepository;
@@ -286,6 +287,7 @@ public class PedidoServiceTestMock {
     public void PedidoService_actualizarEstado_ReleasesDomiciliarioAndSetsFechaEntregaWhenAdvancingToEntregado() {
         Domiciliario domi = new Domiciliario(5L, "Juan", "111", "3001", false);
         Pedido pedido = buildPedido(1L, EstadoPedido.ENVIADO, domi);
+        pedido.setEstadoPago("APROBADO");
 
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
         when(pedidoRepository.save(pedido)).thenReturn(pedido);
@@ -346,5 +348,133 @@ public class PedidoServiceTestMock {
                 .isInstanceOf(IllegalArgumentException.class);
 
         verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
+    @Test
+    public void PedidoService_actualizarEstado_ThrowsWhenPagoNoAprobadoAlPasarAEntregado() {
+        Domiciliario domi = new Domiciliario(5L, "Juan", "111", "3001", false);
+        Pedido pedido = buildPedido(1L, EstadoPedido.ENVIADO, domi);
+        // estadoPago queda en "PENDIENTE" (default), no "APROBADO"
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+
+        Assertions.assertThatThrownBy(() -> service.actualizarEstado(1L, "ENTREGADO"))
+                .isInstanceOf(IllegalArgumentException.class);
+
+        verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
+
+    // ── confirmarPresencial ───────────────────────────────────────────────────
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoIsNull() {
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, null))
+                .isInstanceOf(IllegalArgumentException.class);
+
+        verify(pedidoRepository, never()).findById(any());
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoIsBlank() {
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, "   "))
+                .isInstanceOf(IllegalArgumentException.class);
+
+        verify(pedidoRepository, never()).findById(any());
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoInvalido() {
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, "TELEPATICO"))
+                .isInstanceOf(IllegalArgumentException.class);
+
+        verify(pedidoRepository, never()).findById(any());
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoNoEsPresencial() {
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, "MP_ONLINE"))
+                .isInstanceOf(IllegalArgumentException.class);
+
+        verify(pedidoRepository, never()).findById(any());
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenPedidoNotFound() {
+        when(pedidoRepository.findById(999L)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(999L, "EFECTIVO"))
+                .isInstanceOf(NoSuchElementException.class);
+
+        verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_SetsMetodoPagoYEstadoPago() {
+        Pedido pedido = buildPedido(1L, EstadoPedido.RECIBIDO, null);
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        when(pedidoRepository.save(pedido)).thenReturn(pedido);
+
+        Pedido result = service.confirmarPresencial(1L, "EFECTIVO");
+
+        Assertions.assertThat(result.getMetodoPago()).isEqualTo(MetodoPago.EFECTIVO);
+        Assertions.assertThat(result.getEstadoPago()).isEqualTo("PENDIENTE_DE_PAGO");
+        verify(pedidoRepository).save(pedido);
+    }
+
+
+    // ── confirmarPago ─────────────────────────────────────────────────────────
+
+    @Test
+    public void PedidoService_confirmarPago_ThrowsWhenPedidoNotFound() {
+        when(pedidoRepository.findById(999L)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPago(999L))
+                .isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPago_ThrowsWhenMetodoPagoIsNotPresencial() {
+        Pedido pedido = buildPedido(1L, EstadoPedido.RECIBIDO, null);
+        // metodoPago es null por defecto → no es presencial
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPago(1L))
+                .isInstanceOf(IllegalArgumentException.class);
+
+        verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
+    @Test
+    public void PedidoService_confirmarPago_ThrowsWhenYaPagado() {
+        Pedido pedido = buildPedido(1L, EstadoPedido.ENVIADO, null);
+        pedido.setMetodoPago(MetodoPago.EFECTIVO);
+        pedido.setEstadoPago("APROBADO");
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPago(1L))
+                .isInstanceOf(IllegalStateException.class);
+
+        verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
+    @Test
+    public void PedidoService_confirmarPago_MarksAsAprobadoAndSetsFechaPagoYTotal() {
+        Comida comida = new Comida();
+        comida.setId(10L);
+        comida.setPrice(54900);
+        Pedido pedido = buildPedido(1L, EstadoPedido.ENVIADO, null);
+        pedido.setMetodoPago(MetodoPago.EFECTIVO);
+        LineaPedido linea = new LineaPedido(2, comida, null, pedido);
+        pedido.getLineasPedido().add(linea);
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        when(pedidoRepository.save(pedido)).thenReturn(pedido);
+
+        Pedido result = service.confirmarPago(1L);
+
+        Assertions.assertThat(result.getEstadoPago()).isEqualTo("APROBADO");
+        Assertions.assertThat(result.getFechaPago()).isNotNull();
+        Assertions.assertThat(result.getTotalPagado()).isNotNull();
+        Assertions.assertThat(result.getTotalPagado().doubleValue()).isEqualTo(109800.0);
+        verify(pedidoRepository).save(pedido);
     }
 }

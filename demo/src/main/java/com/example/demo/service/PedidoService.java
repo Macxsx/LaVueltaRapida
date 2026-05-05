@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 
 public interface PedidoService {
@@ -27,7 +25,7 @@ public interface PedidoService {
      * Lanza NoSuchElementException si el carrito no existe.
      * Lanza IllegalArgumentException si el carrito está vacío.
      */
-    Pedido desdeCarrito(Long carritoId, MetodoPago metodoPago);
+    Pedido desdeCarrito(Long carritoId, String metodoPago);
 
     /**
      * Registra el método de pago presencial en un pedido existente y marca estadoPago = "PENDIENTE_DE_PAGO".

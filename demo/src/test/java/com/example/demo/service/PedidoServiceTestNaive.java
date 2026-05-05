@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import com.example.demo.entitys.Carrito;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.LineaPedido;
+import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.ComidaRepository;
@@ -187,6 +188,8 @@ public class PedidoServiceTestNaive {
         Pedido enviado = service.findActivos().stream()
                 .filter(p -> p.getEstado() == EstadoPedido.ENVIADO)
                 .findFirst().get();
+        service.confirmarPresencial(enviado.getId(), "EFECTIVO");
+        service.confirmarPago(enviado.getId());
 
         Pedido result = service.actualizarEstado(enviado.getId(), "ENTREGADO");
 
@@ -237,5 +240,111 @@ public class PedidoServiceTestNaive {
 
         Assertions.assertThatThrownBy(() -> service.actualizarEstado(999L, "COCINANDO"))
                 .isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void PedidoService_actualizarEstado_ThrowsWhenPagoNoAprobadoAlPasarAEntregado() {
+        Pedido enviado = service.findActivos().stream()
+                .filter(p -> p.getEstado() == EstadoPedido.ENVIADO)
+                .findFirst().get();
+        // no se llama confirmarPago → estadoPago queda en "PENDIENTE"
+
+        Assertions.assertThatThrownBy(() -> service.actualizarEstado(enviado.getId(), "ENTREGADO"))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    // ── confirmarPresencial ───────────────────────────────────────────────────
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenPedidoNotFound() {
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(999L, "EFECTIVO"))
+                .isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoIsNull() {
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoIsBlank() {
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, "   "))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoInvalido() {
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, "TELEPATICO"))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_ThrowsWhenMetodoPagoNoEsPresencial() {
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPresencial(1L, "MP_ONLINE"))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPresencial_SetsMetodoPagoYEstadoPago() {
+        Long id = service.findActivos().stream()
+                .filter(p -> p.getEstado() == EstadoPedido.RECIBIDO)
+                .findFirst().get().getId();
+
+        Pedido result = service.confirmarPresencial(id, "NEQUI");
+
+        Assertions.assertThat(result.getMetodoPago()).isEqualTo(MetodoPago.NEQUI);
+        Assertions.assertThat(result.getEstadoPago()).isEqualTo("PENDIENTE_DE_PAGO");
+    }
+
+    // ── confirmarPago ─────────────────────────────────────────────────────────
+
+    @Test
+    public void PedidoService_confirmarPago_ThrowsWhenPedidoNotFound() {
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPago(999L))
+                .isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPago_ThrowsWhenMetodoPagoIsNotPresencial() {
+        // Los pedidos sembrados sin metodoPago (null) deben lanzar IllegalArgumentException
+        Long id = service.findActivos().stream()
+                .filter(p -> p.getEstado() == EstadoPedido.RECIBIDO)
+                .findFirst().get().getId();
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPago(id))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPago_ThrowsWhenYaPagado() {
+        Long id = service.findActivos().stream()
+                .filter(p -> p.getEstado() == EstadoPedido.ENVIADO)
+                .findFirst().get().getId();
+        service.confirmarPresencial(id, "EFECTIVO");
+        service.confirmarPago(id);
+
+        Assertions.assertThatThrownBy(() -> service.confirmarPago(id))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void PedidoService_confirmarPago_MarksAsAprobadoAndSetsFechaPago() {
+        Long id = service.findActivos().stream()
+                .filter(p -> p.getEstado() == EstadoPedido.ENVIADO)
+                .findFirst().get().getId();
+        service.confirmarPresencial(id, "EFECTIVO");
+
+        Pedido result = service.confirmarPago(id);
+
+        Assertions.assertThat(result.getEstadoPago()).isEqualTo("APROBADO");
+        Assertions.assertThat(result.getFechaPago()).isNotNull();
+        Assertions.assertThat(result.getTotalPagado()).isNotNull();
     }
 }

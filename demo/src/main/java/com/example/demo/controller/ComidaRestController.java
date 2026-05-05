@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.ComidaRequest;
 import com.example.demo.entitys.Comida;
+import com.example.demo.error.ApiError;
 import com.example.demo.service.ComidaService;
 
 @RestController
@@ -47,7 +47,7 @@ public class ComidaRestController {
             return ResponseEntity.ok(comidaService.create(
                     req.name, req.description, req.price, req.image, req.available, req.categoryId));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         }
     }
 
@@ -59,7 +59,7 @@ public class ComidaRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         }
     }
 
@@ -71,7 +71,7 @@ public class ComidaRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
     }
 }

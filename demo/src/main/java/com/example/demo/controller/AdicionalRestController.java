@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.AdicionalRequest;
 import com.example.demo.entitys.Adicional;
 import com.example.demo.entitys.Categoria;
+import com.example.demo.error.ApiError;
 import com.example.demo.service.AdicionalService;
 
 @RestController
@@ -58,7 +58,7 @@ public class AdicionalRestController {
             return ResponseEntity.ok(
                     adicionalService.create(req.name, req.price, req.available, req.categoriaIds));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         }
     }
 
@@ -70,7 +70,7 @@ public class AdicionalRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         }
     }
 
@@ -82,7 +82,7 @@ public class AdicionalRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
     }
 }

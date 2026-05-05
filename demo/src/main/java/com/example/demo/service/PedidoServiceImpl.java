@@ -74,7 +74,17 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
-    public Pedido desdeCarrito(Long carritoId, MetodoPago metodoPago) {
+    public Pedido desdeCarrito(Long carritoId, String metodoPagoStr) {
+        MetodoPago metodoPago = null;
+        if (metodoPagoStr != null && !metodoPagoStr.isBlank()) {
+            try {
+                metodoPago = MetodoPago.valueOf(metodoPagoStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(
+                        "metodoPago inválido. Valores: " + java.util.Arrays.toString(MetodoPago.values()));
+            }
+        }
+
         Carrito carrito = carritoRepository.findById(carritoId)
                 .orElseThrow(() -> new NoSuchElementException("Carrito no encontrado."));
         if (carrito.getLineasPedido().isEmpty()) {
