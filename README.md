@@ -21,7 +21,7 @@ Nuestra plataforma está construida con una arquitectura robusta para gestionar 
 * **💾 Boxes (Persistencia):** Manejo eficiente de datos mediante **Spring Data JPA**.
 
 ## 🖥️ Landing Page
-[![Visita nuestra web](https://img.shields.io/badge/Landing%20Page-Ver%20Proyecto-red?style=for-the-badge&logo=googlechrome&logoColor=white)](http://localhost:5000)
+[![Visita nuestra web](https://img.shields.io/badge/Landing%20Page-Ver%20Proyecto-red?style=for-the-badge&logo=googlechrome&logoColor=white)](http://localhost:4200)
 
 <p align="center">
   <img src="demo\src\main\resources\static\Images\landingPage.jpeg" alt="Vista previa de la Landing Page" width="600">
@@ -58,26 +58,39 @@ Para que nada falle cuando el semáforo se pone en verde, diseñamos un sistema 
 
 
 ## ⚙️ Cómo Poner el Motor en Marcha
-Sigue estos pasos para ejecutar el proyecto localmente:
 
-1. **Clonar el Repositorio:**
+### Requisitos previos
+- Java 17+
+- Maven (o usar el wrapper incluido `./mvnw`)
+
+### Pasos
+
+1. **Clonar el repositorio:**
    ```bash
    git clone https://github.com/tu-usuario/la-vuelta-rapida.git
+   cd la-vuelta-rapida
+   ```
 
-2. **Importar en tu IDE:**
-   Abre tu IDE favorito (IntelliJ, VS Code o Eclipse) e importa el proyecto como un "Existing Maven Project".
-
-3. **Ejecutar la aplicación:**
-   Puedes correr la clase DemoApplication.java directamente o usar la terminal desde la raíz del proyecto:
+2. **Configurar las variables de entorno:**
    ```bash
-   mvn spring-boot:run
+   cp demo/.env.example demo/.env
+   ```
+   Edita `demo/.env` y completa las credenciales de Mercado Pago y SMTP.
 
-4. **Importar en tu IDE:**
-   Puedes auditar las tablas y los datos en tiempo real ingresando a:
-   - ***URL:*** http://localhost:8080/h2-console
-   - ***JDBC URL:*** jdbc:h2:mem:testdb
-   - ***Usuario:*** sa
-   - ***Contraseña:*** (dejar en blanco)
+3. **Levantar el backend desde la carpeta `demo/`:**
+   ```bash
+   cd demo
+   ./mvnw spring-boot:run
+   ```
+   La API queda disponible en **http://localhost:8090**
+
+4. **Consola H2 (base de datos en memoria):**
+   | Campo | Valor |
+   |---|---|
+   | URL | http://localhost:8090/h2 |
+   | JDBC URL | `jdbc:h2:mem:lavueltarapida` |
+   | Usuario | `sa` |
+   | Contraseña | *(dejar en blanco)* |
 
 
 

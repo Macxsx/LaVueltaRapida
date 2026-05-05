@@ -24,7 +24,7 @@ public class MercadoPagoConfig {
     @Value("${mercadopago.webhook-secret:}")
     private String webhookSecret;
 
-    @Value("${app.frontend-url:http://localhost:5000}")
+    @Value("${app.frontend-url:http://localhost:4200}")
     private String frontendUrl;
 
     @Value("${app.backend-url:}")
