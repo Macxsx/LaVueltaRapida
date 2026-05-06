@@ -10,6 +10,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entitys.Cliente;
 import com.example.demo.entitys.PasswordResetToken;
@@ -76,6 +77,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     @Override
+    @Transactional
     public void resetContrasena(String token, String nuevaContrasena) {
         PasswordResetToken prt = tokenRepo.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("El enlace de recuperación no es válido."));
