@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.config.MercadoPagoConfig;
 import com.example.demo.dto.CardPaymentRequest;
-import com.example.demo.dto.MpItemRequest;
 import com.example.demo.dto.MpPreferenceRequest;
+import com.example.demo.entitys.Comida;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
 import com.example.demo.entitys.MetodoPago;
@@ -91,9 +91,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         Pedido pedido = pedidoRepository.findById(req.getPedidoId())
                 .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));
 
-        BigDecimal totalReal = calcularTotalDesdeBd(pedido);
-
-        List<PreferenceItemRequest> items = construirItems(req, pedido, totalReal);
+        List<PreferenceItemRequest> items = construirItems(pedido);
 
         String backUrl = origin.replaceAll("/+$", "")
                 + "/pago/resultado/" + pedido.getId();
@@ -120,9 +118,12 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         }
 
         String backendUrl = mpConfig.getBackendUrl();
-        if (backendUrl != null && !backendUrl.isBlank()) {
-            builder.notificationUrl(backendUrl.replaceAll("/+$", "") + "/api/mp/webhook");
+        if (backendUrl == null || backendUrl.isBlank()) {
+            throw new IllegalStateException(
+                    "APP_BACKEND_URL no está configurado. " +
+                    "Se requiere una URL pública del backend para registrar el notification_url en Mercado Pago.");
         }
+        builder.notificationUrl(backendUrl.replaceAll("/+$", "") + "/api/mp/webhook");
 
         Preference preference = preferenceClient.create(builder.build());
 
@@ -339,45 +340,95 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         return total.setScale(2, RoundingMode.HALF_UP);
     }
 
-    private List<PreferenceItemRequest> construirItems(MpPreferenceRequest req,
-                                                       Pedido pedido,
-                                                       BigDecimal totalReal) {
-        List<PreferenceItemRequest> items = new ArrayList<>();
-        boolean usarRequest = req.getItems() != null && !req.getItems().isEmpty();
+    private List<PreferenceItemRequest> construirItems(Pedido pedido) {
+        List<LineaPedido> lineas = pedido.getLineasPedido();
 
-        if (usarRequest) {
-            BigDecimal sumaRequest = BigDecimal.ZERO;
-            for (MpItemRequest it : req.getItems()) {
-                int qty = it.getQuantity() == null ? 0 : it.getQuantity();
-                BigDecimal unit = it.getUnitPrice() == null ? BigDecimal.ZERO : it.getUnitPrice();
-                sumaRequest = sumaRequest.add(unit.multiply(BigDecimal.valueOf(qty)));
-            }
-            sumaRequest = sumaRequest.setScale(2, RoundingMode.HALF_UP);
-
-            if (sumaRequest.compareTo(totalReal) == 0) {
-                for (MpItemRequest it : req.getItems()) {
-                    items.add(PreferenceItemRequest.builder()
-                            .id(it.getId())
-                            .title(it.getTitle() != null ? it.getTitle() : "Item")
-                            .quantity(it.getQuantity() != null ? it.getQuantity() : 1)
-                            .unitPrice(it.getUnitPrice() != null ? it.getUnitPrice() : BigDecimal.ZERO)
-                            .currencyId(CURRENCY)
-                            .build());
-                }
-                return items;
-            }
-            log.warn("Total enviado por el frontend ({}) no coincide con el total real ({}); " +
-                    "se usará un único item con el total real.", sumaRequest, totalReal);
+        if (lineas == null || lineas.isEmpty()) {
+            BigDecimal total = calcularTotalDesdeBd(pedido);
+            return List.of(PreferenceItemRequest.builder()
+                    .id(String.valueOf(pedido.getId()))
+                    .title("Pedido La Vuelta Rápida #" + pedido.getId())
+                    .categoryId("food")
+                    .quantity(1)
+                    .unitPrice(total)
+                    .currencyId(CURRENCY)
+                    .build());
         }
 
-        items.add(PreferenceItemRequest.builder()
-                .id(String.valueOf(pedido.getId()))
-                .title("Pedido La Vuelta Rápida #" + pedido.getId())
-                .quantity(1)
-                .unitPrice(totalReal)
-                .currencyId(CURRENCY)
-                .build());
+        List<PreferenceItemRequest> items = new ArrayList<>();
+
+        for (LineaPedido lp : lineas) {
+            Comida comida = lp.getComida();
+            if (comida == null) continue;
+
+            int cantidad = lp.getCantidad() == null ? 1 : lp.getCantidad();
+
+            double precioAdic = 0.0;
+            if (lp.getAdicionales() != null) {
+                for (LineaPedidoAdicional a : lp.getAdicionales()) {
+                    if (a.getAdicional() != null) precioAdic += a.getAdicional().getPrice();
+                }
+            }
+
+            BigDecimal unitPrice = BigDecimal.valueOf(comida.getPrice() + precioAdic)
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            String categoryId = normalizarCategoria(
+                    comida.getCategory() != null ? comida.getCategory().getName() : null);
+
+            String description = construirDescripcion(comida, lp);
+
+            items.add(PreferenceItemRequest.builder()
+                    .id(String.valueOf(comida.getId()))
+                    .title(comida.getName())
+                    .description(description)
+                    .categoryId(categoryId)
+                    .quantity(cantidad)
+                    .unitPrice(unitPrice)
+                    .currencyId(CURRENCY)
+                    .build());
+        }
+
+        if (items.isEmpty()) {
+            BigDecimal total = calcularTotalDesdeBd(pedido);
+            items.add(PreferenceItemRequest.builder()
+                    .id(String.valueOf(pedido.getId()))
+                    .title("Pedido La Vuelta Rápida #" + pedido.getId())
+                    .categoryId("food")
+                    .quantity(1)
+                    .unitPrice(total)
+                    .currencyId(CURRENCY)
+                    .build());
+        }
+
         return items;
+    }
+
+    private String normalizarCategoria(String nombre) {
+        if (nombre == null || nombre.isBlank()) return "food";
+        return nombre.toLowerCase()
+                .replace('á', 'a').replace('é', 'e').replace('í', 'i')
+                .replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n')
+                .replaceAll("[^a-z0-9]+", "_")
+                .replaceAll("^_+|_+$", "");
+    }
+
+    private String construirDescripcion(Comida comida, LineaPedido lp) {
+        StringBuilder sb = new StringBuilder();
+        if (comida.getDescription() != null && !comida.getDescription().isBlank()) {
+            sb.append(comida.getDescription());
+        }
+        if (lp.getAdicionales() != null) {
+            for (LineaPedidoAdicional a : lp.getAdicionales()) {
+                if (a.getAdicional() != null && a.getAdicional().getName() != null) {
+                    if (sb.length() > 0) sb.append(sb.indexOf("Extras:") < 0 ? ". Extras: " : ", ");
+                    else sb.append("Extras: ");
+                    sb.append(a.getAdicional().getName());
+                }
+            }
+        }
+        String result = sb.length() > 0 ? sb.toString() : comida.getName();
+        return result.length() > 250 ? result.substring(0, 247) + "..." : result;
     }
 
     private Map<String, Object> mapPaymentToResponse(Payment payment) {

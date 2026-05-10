@@ -40,6 +40,9 @@ public class MercadoPagoRestController {
             return ResponseEntity.status(404).body(ApiError.of(e.getMessage()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
+        } catch (IllegalStateException e) {
+            log.error("Error de configuración del servidor MP: {}", e.getMessage());
+            return ResponseEntity.status(500).body(ApiError.of(e.getMessage()));
         } catch (MPApiException e) {
             String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
             log.error("Error de la API de Mercado Pago: status={}, body={}", e.getStatusCode(), detail);
