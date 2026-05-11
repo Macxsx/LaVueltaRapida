@@ -31,7 +31,10 @@ import com.example.demo.entitys.LineaPedidoAdicional;
 import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.PedidoRepository;
+import com.mercadopago.client.common.AddressRequest;
 import com.mercadopago.client.common.IdentificationRequest;
+import com.mercadopago.client.common.PhoneRequest;
+import com.mercadopago.client.payment.PaymentAdditionalInfoPayerRequest;
 import com.mercadopago.client.payment.PaymentAdditionalInfoRequest;
 import com.mercadopago.client.payment.PaymentItemRequest;
 import com.mercadopago.client.payment.PaymentClient;
@@ -159,6 +162,12 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
             throw new IllegalArgumentException("Falta el email del pagador.");
         }
 
+        // Cargar pedido para enriquecer ítems y datos del cliente
+        Pedido pedido = req.getPedidoId() != null
+                ? pedidoRepository.findByIdConLineas(req.getPedidoId()).orElse(null)
+                : null;
+
+        // Payer principal: email + identificación + nombre completo del cliente
         PaymentPayerRequest.PaymentPayerRequestBuilder payerBuilder = PaymentPayerRequest.builder()
                 .email(req.getPayer().getEmail());
 
@@ -170,12 +179,18 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                     .build());
         }
 
+        if (pedido != null && pedido.getCliente() != null) {
+            com.example.demo.entitys.Cliente cliente = pedido.getCliente();
+            if (cliente.getName() != null) payerBuilder.firstName(cliente.getName());
+            if (cliente.getApellido() != null) payerBuilder.lastName(cliente.getApellido());
+        }
+
+        // additionalInfo: ítems + payer con teléfono y dirección
         String descripcionPago = "Pedido La Vuelta Rápida";
         PaymentAdditionalInfoRequest additionalInfo = null;
-        if (req.getPedidoId() != null) {
-            Pedido pedido = pedidoRepository.findByIdConLineas(req.getPedidoId()).orElse(null);
-            if (pedido != null && !pedido.getLineasPedido().isEmpty()) {
-                List<PaymentItemRequest> infoItems = new ArrayList<>();
+        if (pedido != null) {
+            List<PaymentItemRequest> infoItems = new ArrayList<>();
+            if (!pedido.getLineasPedido().isEmpty()) {
                 for (LineaPedido lp : pedido.getLineasPedido()) {
                     Comida comida = lp.getComida();
                     if (comida == null) continue;
@@ -198,15 +213,33 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                             .unitPrice(unitPrice)
                             .build());
                 }
-                if (!infoItems.isEmpty()) {
-                    additionalInfo = PaymentAdditionalInfoRequest.builder()
-                            .items(infoItems)
-                            .build();
-                    descripcionPago = pedido.getLineasPedido().size() == 1
-                            ? pedido.getLineasPedido().get(0).getComida().getName()
-                            : pedido.getLineasPedido().size() + " productos — La Vuelta Rápida";
+                descripcionPago = infoItems.size() == 1
+                        ? infoItems.get(0).getTitle()
+                        : infoItems.size() + " productos — La Vuelta Rápida";
+            }
+
+            PaymentAdditionalInfoPayerRequest.PaymentAdditionalInfoPayerRequestBuilder infoPayer =
+                    PaymentAdditionalInfoPayerRequest.builder();
+            boolean infoPayerTieneData = false;
+            if (pedido.getCliente() != null) {
+                com.example.demo.entitys.Cliente cliente = pedido.getCliente();
+                if (cliente.getName() != null)     { infoPayer.firstName(cliente.getName());     infoPayerTieneData = true; }
+                if (cliente.getApellido() != null) { infoPayer.lastName(cliente.getApellido());  infoPayerTieneData = true; }
+                if (cliente.getTelefono() != null && !cliente.getTelefono().isBlank()) {
+                    infoPayer.phone(PhoneRequest.builder().areaCode("57").number(cliente.getTelefono()).build());
+                    infoPayerTieneData = true;
+                }
+                if (cliente.getDireccion() != null && !cliente.getDireccion().isBlank()) {
+                    infoPayer.address(AddressRequest.builder().streetName(cliente.getDireccion()).build());
+                    infoPayerTieneData = true;
                 }
             }
+
+            PaymentAdditionalInfoRequest.PaymentAdditionalInfoRequestBuilder infoBuilder =
+                    PaymentAdditionalInfoRequest.builder();
+            if (!infoItems.isEmpty()) infoBuilder.items(infoItems);
+            if (infoPayerTieneData) infoBuilder.payer(infoPayer.build());
+            additionalInfo = infoBuilder.build();
         }
 
         PaymentCreateRequest.PaymentCreateRequestBuilder builder = PaymentCreateRequest.builder()
@@ -224,10 +257,21 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         if (additionalInfo != null) {
             builder.additionalInfo(additionalInfo);
         }
+        String backendUrl = mpConfig.getBackendUrl();
+        if (backendUrl != null && !backendUrl.isBlank()) {
+            builder.notificationUrl(backendUrl.replaceAll("/+$", "") + "/api/mp/webhook");
+        }
+
+        PaymentCreateRequest paymentRequest = builder.build();
+        log.info("Enviando pago a MP → amount={}, method={}, installments={}, payer={}",
+                paymentRequest.getTransactionAmount(),
+                paymentRequest.getPaymentMethodId(),
+                paymentRequest.getInstallments(),
+                paymentRequest.getPayer() != null ? paymentRequest.getPayer().getEmail() : "null");
 
         Payment payment;
         try {
-            payment = paymentClient.create(builder.build());
+            payment = paymentClient.create(paymentRequest);
         } catch (MPApiException e) {
             String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
             if (e.getStatusCode() >= 400 && e.getStatusCode() < 500) {
@@ -242,20 +286,20 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         // Actualizar el pedido de forma síncrona (sin esperar webhook)
         if (req.getPedidoId() != null) {
             String estadoMapeado = mapearEstado(payment.getStatus());
-            pedidoRepository.findById(req.getPedidoId()).ifPresent(pedido -> {
-                pedido.setEstadoPago(estadoMapeado);
-                pedido.setMpPaymentId(String.valueOf(payment.getId()));
-                pedido.setMpPaymentMethod(payment.getPaymentMethodId());
-                pedido.setMpPaymentType(payment.getPaymentTypeId());
-                pedido.setTotalPagado(payment.getTransactionAmount());
-                pedido.setMetodoPago(MetodoPago.TARJETA);
+            pedidoRepository.findById(req.getPedidoId()).ifPresent(p -> {
+                p.setEstadoPago(estadoMapeado);
+                p.setMpPaymentId(String.valueOf(payment.getId()));
+                p.setMpPaymentMethod(payment.getPaymentMethodId());
+                p.setMpPaymentType(payment.getPaymentTypeId());
+                p.setTotalPagado(payment.getTransactionAmount());
+                p.setMetodoPago(MetodoPago.TARJETA);
                 if ("APROBADO".equals(estadoMapeado) && payment.getDateApproved() != null) {
-                    pedido.setFechaPago(payment.getDateApproved()
+                    p.setFechaPago(payment.getDateApproved()
                             .atZoneSameInstant(ZoneId.systemDefault())
                             .toLocalDateTime());
                 }
-                pedidoRepository.save(pedido);
-                log.info("Pedido {} actualizado tras pago con tarjeta → estadoPago={}", pedido.getId(), estadoMapeado);
+                pedidoRepository.save(p);
+                log.info("Pedido {} actualizado tras pago con tarjeta → estadoPago={}", p.getId(), estadoMapeado);
             });
             if (esPagoRechazado(payment.getStatus())) {
                 pedidoService.cancelarPorPago(req.getPedidoId());
