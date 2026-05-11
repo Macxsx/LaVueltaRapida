@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.example.demo.dto.CardPaymentRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.error.ApiError;
@@ -57,9 +59,13 @@ public class MercadoPagoRestController {
     }
 
     @PostMapping("/payment")
-    public ResponseEntity<?> procesarPagoConTarjeta(@RequestBody CardPaymentRequest req) {
+    public ResponseEntity<?> procesarPagoConTarjeta(
+            @RequestBody CardPaymentRequest req,
+            @RequestHeader(value = "X-meli-session-id", required = false) String deviceId,
+            HttpServletRequest httpRequest) {
+        String clientIp = extraerIpCliente(httpRequest);
         try {
-            return ResponseEntity.ok(mercadoPagoService.procesarPagoConTarjeta(req));
+            return ResponseEntity.ok(mercadoPagoService.procesarPagoConTarjeta(req, deviceId, clientIp));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         } catch (NoSuchElementException e) {
@@ -143,5 +149,19 @@ public class MercadoPagoRestController {
                     e.getMessage(), e);
         }
         return ResponseEntity.ok().build();
+    }
+
+    private String extraerIpCliente(HttpServletRequest req) {
+        String[] headers = {
+            "X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP",
+            "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"
+        };
+        for (String h : headers) {
+            String val = req.getHeader(h);
+            if (val != null && !val.isBlank() && !"unknown".equalsIgnoreCase(val)) {
+                return val.split(",")[0].trim();
+            }
+        }
+        return req.getRemoteAddr();
     }
 }

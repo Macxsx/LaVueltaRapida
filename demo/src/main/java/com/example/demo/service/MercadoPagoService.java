@@ -14,8 +14,9 @@ public interface MercadoPagoService {
     /**
      * Checkout API: crea un pago directo con token de tarjeta.
      * Si el request incluye pedidoId, actualiza el estadoPago del pedido inmediatamente.
+     * deviceId es el MP_DEVICE_SESSION_ID generado por el SDK en el frontend.
      */
-    Map<String, Object> procesarPagoConTarjeta(CardPaymentRequest req) throws MPException, MPApiException;
+    Map<String, Object> procesarPagoConTarjeta(CardPaymentRequest req, String deviceId, String clientIp) throws MPException, MPApiException;
 
     Map<String, Object> consultarPago(String paymentId) throws MPException, MPApiException;
 

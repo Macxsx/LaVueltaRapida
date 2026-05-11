@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.config.MercadoPagoConfig;
 import com.example.demo.dto.CardPaymentRequest;
+import com.example.demo.dto.MpPayerRequest;
 import com.example.demo.dto.MpPreferenceRequest;
 import com.example.demo.entitys.Comida;
 import com.example.demo.entitys.LineaPedido;
@@ -31,6 +32,7 @@ import com.example.demo.entitys.LineaPedidoAdicional;
 import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.PedidoRepository;
+import com.mercadopago.core.MPRequestOptions;
 import com.mercadopago.client.common.AddressRequest;
 import com.mercadopago.client.common.IdentificationRequest;
 import com.mercadopago.client.common.PhoneRequest;
@@ -40,6 +42,8 @@ import com.mercadopago.client.payment.PaymentItemRequest;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.payment.PaymentCreateRequest;
 import com.mercadopago.client.payment.PaymentPayerRequest;
+import com.mercadopago.client.payment.PaymentReceiverAddressRequest;
+import com.mercadopago.client.payment.PaymentShipmentsRequest;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
@@ -119,10 +123,24 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
         if (req.getPayer() != null && req.getPayer().getEmail() != null
                 && !req.getPayer().getEmail().isBlank()) {
-            builder.payer(PreferencePayerRequest.builder()
-                    .name(req.getPayer().getName())
-                    .email(req.getPayer().getEmail())
-                    .build());
+            MpPayerRequest mp = req.getPayer();
+            PreferencePayerRequest.PreferencePayerRequestBuilder payerBuilder =
+                    PreferencePayerRequest.builder()
+                            .name(mp.getName())
+                            .surname(mp.getSurname())
+                            .email(mp.getEmail());
+            if (mp.getPhone() != null && mp.getPhone().getNumber() != null) {
+                payerBuilder.phone(PhoneRequest.builder()
+                        .areaCode(mp.getPhone().getArea_code())
+                        .number(mp.getPhone().getNumber())
+                        .build());
+            }
+            if (mp.getAddress() != null && mp.getAddress().getStreet_name() != null) {
+                payerBuilder.address(AddressRequest.builder()
+                        .streetName(mp.getAddress().getStreet_name())
+                        .build());
+            }
+            builder.payer(payerBuilder.build());
         }
 
         String backendUrl = mpConfig.getBackendUrl();
@@ -148,7 +166,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
     @Override
     @Transactional
-    public Map<String, Object> procesarPagoConTarjeta(CardPaymentRequest req) throws MPException, MPApiException {
+    public Map<String, Object> procesarPagoConTarjeta(CardPaymentRequest req, String deviceId, String clientIp) throws MPException, MPApiException {
         if (req.getToken() == null || req.getToken().isBlank()) {
             throw new IllegalArgumentException("Falta el campo 'token'.");
         }
@@ -239,6 +257,17 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                     PaymentAdditionalInfoRequest.builder();
             if (!infoItems.isEmpty()) infoBuilder.items(infoItems);
             if (infoPayerTieneData) infoBuilder.payer(infoPayer.build());
+            if (clientIp != null && !clientIp.isBlank()) infoBuilder.ipAddress(clientIp);
+            if (pedido.getCliente() != null) {
+                com.example.demo.entitys.Cliente c = pedido.getCliente();
+                if (c.getDireccion() != null && !c.getDireccion().isBlank()) {
+                    infoBuilder.shipments(PaymentShipmentsRequest.builder()
+                            .receiverAddress(PaymentReceiverAddressRequest.builder()
+                                    .streetName(c.getDireccion())
+                                    .build())
+                            .build());
+                }
+            }
             additionalInfo = infoBuilder.build();
         }
 
@@ -263,20 +292,33 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         }
 
         PaymentCreateRequest paymentRequest = builder.build();
-        log.info("Enviando pago a MP → amount={}, method={}, installments={}, payer={}",
+        log.info("Enviando pago a MP → amount={}, method={}, installments={}, payer={}, ip={}, deviceId={}",
                 paymentRequest.getTransactionAmount(),
                 paymentRequest.getPaymentMethodId(),
                 paymentRequest.getInstallments(),
-                paymentRequest.getPayer() != null ? paymentRequest.getPayer().getEmail() : "null");
+                paymentRequest.getPayer() != null ? paymentRequest.getPayer().getEmail() : "null",
+                clientIp != null ? clientIp : "N/A",
+                deviceId != null ? deviceId.substring(0, Math.min(deviceId.length(), 20)) + "..." : "N/A");
 
         Payment payment;
         try {
-            payment = paymentClient.create(paymentRequest);
+            if (deviceId != null && !deviceId.isBlank()) {
+                Map<String, String> customHeaders = new HashMap<>();
+                customHeaders.put("X-meli-session-id", deviceId);
+                MPRequestOptions options = MPRequestOptions.builder()
+                        .customHeaders(customHeaders)
+                        .build();
+                log.info("Enviando pago a MP con Device ID: {}", deviceId);
+                payment = paymentClient.create(paymentRequest, options);
+            } else {
+                log.warn("Device ID no disponible al crear pago con tarjeta. La tasa de aprobación puede verse afectada.");
+                payment = paymentClient.create(paymentRequest);
+            }
         } catch (MPApiException e) {
             String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
             if (e.getStatusCode() >= 400 && e.getStatusCode() < 500) {
                 log.warn("Pago rechazado por Mercado Pago: status={}, body={}", e.getStatusCode(), detail);
-                throw new IllegalArgumentException("Pago rechazado por Mercado Pago.");
+                throw new IllegalArgumentException(detail != null ? detail : "Pago rechazado por Mercado Pago.");
             }
             throw e;
         }
