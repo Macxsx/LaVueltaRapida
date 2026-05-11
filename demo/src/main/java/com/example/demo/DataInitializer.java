@@ -199,7 +199,7 @@ public class DataInitializer {
             // ==========================================
             // 4. CLIENTES
             // ==========================================
-            clienteRepo.save(new Cliente("Pablo",    "García",    "PabloGarcia21@gmail.com",        "pablo123",  "123456",    "Cra 7 #40-62, Bogotá",        "3001234567"));
+            clienteRepo.save(new Cliente("Pablo",    "García",    "oboetube123@gmail.com",        "pablo123",  "123456",    "Cra 7 #40-62, Bogotá",        "3001234567"));
             clienteRepo.save(new Cliente("María",    "Gómez",     "maria.gomez@email.com",          "maria123",  "maria2024", "Cl 45 #12-30, Medellín",      "3019876543"));
             clienteRepo.save(new Cliente("Andrés",   "Martínez",  "andres.martinez@email.com",      "andres123", "andres789", "Av 68 #23-10, Cali",          "3024567890"));
             clienteRepo.save(new Cliente("Laura",    "Ramírez",   "laura.ramirez@email.com",        "laura123",  "lauraPass", "Cra 15 #88-21, Barranquilla", "3106543210"));
