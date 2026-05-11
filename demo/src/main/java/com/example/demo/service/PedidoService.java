@@ -48,4 +48,10 @@ public interface PedidoService {
      * Lanza IllegalStateException si no hay domiciliarios disponibles al pasar a ENVIADO.
      */
     Pedido actualizarEstado(Long id, String estadoStr);
+
+    /**
+     * Cancela el pedido por rechazo del sistema de pagos. No-op si ya está en estado terminal.
+     * Libera el domiciliario asignado si lo hay.
+     */
+    void cancelarPorPago(Long pedidoId);
 }

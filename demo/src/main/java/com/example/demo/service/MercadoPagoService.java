@@ -24,4 +24,12 @@ public interface MercadoPagoService {
                          String dataIdQuery,
                          String typeQuery,
                          Map<String, Object> body);
+
+    /**
+     * Consulta el estado actual del pago en MP para el pedido dado y actualiza
+     * el pedido en base de datos (estadoPago, y estado=CANCELADO si fue rechazado).
+     * Retorna el pedido actualizado.
+     * Lanza NoSuchElementException si el pedido no existe o no tiene mpPaymentId.
+     */
+    Map<String, Object> sincronizarPago(Long pedidoId) throws MPException, MPApiException;
 }

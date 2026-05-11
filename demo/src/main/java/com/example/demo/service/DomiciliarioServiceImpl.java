@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class DomiciliarioServiceImpl implements DomiciliarioService {
         if (!repo.existsById(id)) {
             throw new NoSuchElementException("Domiciliario no encontrado.");
         }
-        if (pedidoRepository.existsByDomiciliarioIdAndEstadoNot(id, EstadoPedido.ENTREGADO)) {
+        if (pedidoRepository.existsByDomiciliarioIdAndEstadoNotIn(id, EnumSet.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO))) {
             throw new IllegalStateException(
                     "No se puede eliminar el domiciliario porque tiene un pedido en curso.");
         }

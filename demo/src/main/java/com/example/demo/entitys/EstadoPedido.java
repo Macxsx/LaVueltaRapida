@@ -9,7 +9,8 @@ public enum EstadoPedido {
     RECIBIDO,
     COCINANDO,
     ENVIADO,
-    ENTREGADO;
+    ENTREGADO,
+    CANCELADO;
 
     /** Retorna el único estado al que puede avanzar este pedido, o null si ya es el estado final. */
     public EstadoPedido siguiente() {
@@ -17,7 +18,7 @@ public enum EstadoPedido {
             case RECIBIDO  -> COCINANDO;
             case COCINANDO -> ENVIADO;
             case ENVIADO   -> ENTREGADO;
-            case ENTREGADO -> null;
+            case ENTREGADO, CANCELADO -> null;
         };
     }
 }

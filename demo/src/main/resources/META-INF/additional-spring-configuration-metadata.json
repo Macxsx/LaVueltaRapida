@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "app.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Comma-separated list of allowed CORS origin patterns. Supports wildcards (e.g. https://*.devtunnels.ms). Set via CORS_ALLOWED_ORIGINS env var."
+    }
+  ]
+}

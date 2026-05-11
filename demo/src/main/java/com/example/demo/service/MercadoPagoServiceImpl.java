@@ -32,6 +32,8 @@ import com.example.demo.entitys.MetodoPago;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.repository.PedidoRepository;
 import com.mercadopago.client.common.IdentificationRequest;
+import com.mercadopago.client.payment.PaymentAdditionalInfoRequest;
+import com.mercadopago.client.payment.PaymentItemRequest;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.payment.PaymentCreateRequest;
 import com.mercadopago.client.payment.PaymentPayerRequest;
@@ -54,6 +56,9 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
     @Autowired
     private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @Autowired
     private MercadoPagoConfig mpConfig;
@@ -88,7 +93,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                     "y 'app.frontend-url' no está configurado.");
         }
 
-        Pedido pedido = pedidoRepository.findById(req.getPedidoId())
+        Pedido pedido = pedidoRepository.findByIdConLineas(req.getPedidoId())
                 .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));
 
         List<PreferenceItemRequest> items = construirItems(pedido);
@@ -107,7 +112,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .externalReference(String.valueOf(pedido.getId()))
                 .statementDescriptor(STATEMENT_DESCRIPTOR)
                 .backUrls(backUrls)
-                .autoReturn("approved");
+                .autoReturn("all");
 
         if (req.getPayer() != null && req.getPayer().getEmail() != null
                 && !req.getPayer().getEmail().isBlank()) {
@@ -165,10 +170,49 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                     .build());
         }
 
+        String descripcionPago = "Pedido La Vuelta Rápida";
+        PaymentAdditionalInfoRequest additionalInfo = null;
+        if (req.getPedidoId() != null) {
+            Pedido pedido = pedidoRepository.findByIdConLineas(req.getPedidoId()).orElse(null);
+            if (pedido != null && !pedido.getLineasPedido().isEmpty()) {
+                List<PaymentItemRequest> infoItems = new ArrayList<>();
+                for (LineaPedido lp : pedido.getLineasPedido()) {
+                    Comida comida = lp.getComida();
+                    if (comida == null) continue;
+                    double precioAdic = 0.0;
+                    if (lp.getAdicionales() != null) {
+                        for (LineaPedidoAdicional a : lp.getAdicionales()) {
+                            if (a.getAdicional() != null) precioAdic += a.getAdicional().getPrice();
+                        }
+                    }
+                    BigDecimal unitPrice = BigDecimal.valueOf(comida.getPrice() + precioAdic)
+                            .setScale(2, RoundingMode.HALF_UP);
+                    String categoryId = normalizarCategoria(
+                            comida.getCategory() != null ? comida.getCategory().getName() : null);
+                    infoItems.add(PaymentItemRequest.builder()
+                            .id(String.valueOf(comida.getId()))
+                            .title(comida.getName())
+                            .description(construirDescripcion(comida, lp))
+                            .categoryId(categoryId)
+                            .quantity(lp.getCantidad() != null ? lp.getCantidad() : 1)
+                            .unitPrice(unitPrice)
+                            .build());
+                }
+                if (!infoItems.isEmpty()) {
+                    additionalInfo = PaymentAdditionalInfoRequest.builder()
+                            .items(infoItems)
+                            .build();
+                    descripcionPago = pedido.getLineasPedido().size() == 1
+                            ? pedido.getLineasPedido().get(0).getComida().getName()
+                            : pedido.getLineasPedido().size() + " productos — La Vuelta Rápida";
+                }
+            }
+        }
+
         PaymentCreateRequest.PaymentCreateRequestBuilder builder = PaymentCreateRequest.builder()
                 .transactionAmount(req.getTransactionAmount())
                 .token(req.getToken())
-                .description("Pedido La Vuelta Rápida")
+                .description(descripcionPago)
                 .installments(req.getInstallments() != null ? req.getInstallments() : 1)
                 .paymentMethodId(req.getPaymentMethodId())
                 .payer(payerBuilder.build())
@@ -176,6 +220,9 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
         if (req.getPedidoId() != null) {
             builder.externalReference(String.valueOf(req.getPedidoId()));
+        }
+        if (additionalInfo != null) {
+            builder.additionalInfo(additionalInfo);
         }
 
         Payment payment;
@@ -194,8 +241,8 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
         // Actualizar el pedido de forma síncrona (sin esperar webhook)
         if (req.getPedidoId() != null) {
+            String estadoMapeado = mapearEstado(payment.getStatus());
             pedidoRepository.findById(req.getPedidoId()).ifPresent(pedido -> {
-                String estadoMapeado = mapearEstado(payment.getStatus());
                 pedido.setEstadoPago(estadoMapeado);
                 pedido.setMpPaymentId(String.valueOf(payment.getId()));
                 pedido.setMpPaymentMethod(payment.getPaymentMethodId());
@@ -210,6 +257,10 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 pedidoRepository.save(pedido);
                 log.info("Pedido {} actualizado tras pago con tarjeta → estadoPago={}", pedido.getId(), estadoMapeado);
             });
+            if (esPagoRechazado(payment.getStatus())) {
+                pedidoService.cancelarPorPago(req.getPedidoId());
+                log.info("Pedido {} cancelado por rechazo de pago con tarjeta (status={}).", req.getPedidoId(), payment.getStatus());
+            }
         }
 
         return mapPaymentToResponse(payment);
@@ -265,6 +316,12 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 return;
             }
 
+            boolean liveMode = extraerLiveMode(body);
+            if (!liveMode) {
+                log.info("Webhook MP de prueba (live_mode=false, data.id={}). Se ignora.", dataId);
+                return;
+            }
+
             Long paymentIdLong;
             try {
                 paymentIdLong = Long.parseLong(dataId);
@@ -309,10 +366,57 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
             }
             pedidoRepository.save(pedido);
             log.info("Webhook MP procesado: pedido {} → estadoPago={}", pedidoId, estadoMapeado);
+
+            if (esPagoRechazado(payment.getStatus())) {
+                pedidoService.cancelarPorPago(pedidoId);
+                log.info("Pedido {} cancelado por rechazo de pago MP (status={}).", pedidoId, payment.getStatus());
+            }
         } catch (Exception e) {
             // Nunca propagar: MP reintenta al recibir error.
             log.error("Error procesando webhook MP: {}", e.getMessage(), e);
         }
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> sincronizarPago(Long pedidoId) throws MPException, MPApiException {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));
+
+        if (pedido.getMpPaymentId() == null || pedido.getMpPaymentId().isBlank()) {
+            throw new NoSuchElementException("El pedido no tiene un pago de Mercado Pago asociado.");
+        }
+
+        Long paymentId;
+        try {
+            paymentId = Long.parseLong(pedido.getMpPaymentId());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("mpPaymentId inválido: " + pedido.getMpPaymentId());
+        }
+
+        Payment payment = paymentClient.get(paymentId);
+
+        String estadoMapeado = mapearEstado(payment.getStatus());
+        pedido.setEstadoPago(estadoMapeado);
+        pedido.setMpPaymentMethod(payment.getPaymentMethodId());
+        pedido.setMpPaymentType(payment.getPaymentTypeId());
+        if (payment.getTransactionAmount() != null) {
+            pedido.setTotalPagado(payment.getTransactionAmount());
+        }
+        if ("APROBADO".equals(estadoMapeado) && payment.getDateApproved() != null) {
+            pedido.setFechaPago(payment.getDateApproved()
+                    .atZoneSameInstant(ZoneId.systemDefault())
+                    .toLocalDateTime());
+        }
+        pedidoRepository.save(pedido);
+        log.info("Sincronización manual: pedido {} → estadoPago={} (MP status={})",
+                pedidoId, estadoMapeado, payment.getStatus());
+
+        if (esPagoRechazado(payment.getStatus())) {
+            pedidoService.cancelarPorPago(pedidoId);
+        }
+
+        return mapPaymentToResponse(payment);
     }
 
     // ───────────────────────── helpers ─────────────────────────
@@ -342,8 +446,11 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
     private List<PreferenceItemRequest> construirItems(Pedido pedido) {
         List<LineaPedido> lineas = pedido.getLineasPedido();
+        log.info("construirItems → pedido={}, lineas={}", pedido.getId(),
+                lineas == null ? "null" : lineas.size());
 
         if (lineas == null || lineas.isEmpty()) {
+            log.warn("construirItems → pedido={} sin líneas, usando item genérico", pedido.getId());
             BigDecimal total = calcularTotalDesdeBd(pedido);
             return List.of(PreferenceItemRequest.builder()
                     .id(String.valueOf(pedido.getId()))
@@ -378,6 +485,8 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
             String description = construirDescripcion(comida, lp);
 
+            log.info("  item → id={}, title={}, description={}, categoryId={}, qty={}, unitPrice={}, currency={}",
+                    comida.getId(), comida.getName(), description, categoryId, cantidad, unitPrice, CURRENCY);
             items.add(PreferenceItemRequest.builder()
                     .id(String.valueOf(comida.getId()))
                     .title(comida.getName())
@@ -453,6 +562,12 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         return resp;
     }
 
+    private boolean esPagoRechazado(String status) {
+        if (status == null) return false;
+        String s = status.toLowerCase();
+        return s.equals("rejected") || s.equals("cancelled");
+    }
+
     private String mapearEstado(String status) {
         if (status == null) return "PENDIENTE";
         switch (status.toLowerCase()) {
@@ -470,6 +585,14 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
             default:
                 return "PENDIENTE";
         }
+    }
+
+    private boolean extraerLiveMode(Map<String, Object> body) {
+        if (body == null) return true;
+        Object liveMode = body.get("live_mode");
+        if (liveMode instanceof Boolean) return (Boolean) liveMode;
+        if (liveMode instanceof String) return Boolean.parseBoolean((String) liveMode);
+        return true;
     }
 
     private String extraerDataId(String fromQuery, Map<String, Object> body) {

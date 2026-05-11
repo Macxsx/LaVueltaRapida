@@ -54,9 +54,12 @@ public class PedidoServiceImpl implements PedidoService {
         return pedidoRepository.findAll(pageable);
     }
 
+    private static final java.util.Set<EstadoPedido> ESTADOS_ACTIVOS = EnumSet.of(
+            EstadoPedido.RECIBIDO, EstadoPedido.COCINANDO, EstadoPedido.ENVIADO);
+
     @Override
     public List<Pedido> findActivos() {
-        return pedidoRepository.findByEstadoNotOrderByFechaCreacionAsc(EstadoPedido.ENTREGADO);
+        return pedidoRepository.findByEstadoInOrderByFechaCreacionAsc(ESTADOS_ACTIVOS);
     }
 
     @Override
@@ -198,10 +201,16 @@ public class PedidoServiceImpl implements PedidoService {
             nuevoEstado = EstadoPedido.valueOf(estadoStr.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
-                    "Estado inválido: '" + estadoStr + "'. Valores válidos: RECIBIDO, COCINANDO, ENVIADO, ENTREGADO");
+                    "Estado inválido: '" + estadoStr + "'. Valores válidos: RECIBIDO, COCINANDO, ENVIADO, ENTREGADO, CANCELADO");
         }
 
         EstadoPedido estadoActual = pedido.getEstado();
+
+        if (nuevoEstado == EstadoPedido.CANCELADO) {
+            throw new IllegalArgumentException(
+                    "El estado CANCELADO es asignado automáticamente por el sistema de pagos y no puede establecerse manualmente.");
+        }
+
         if (nuevoEstado != estadoActual.siguiente()) {
             String siguiente = estadoActual.siguiente() != null
                     ? estadoActual.siguiente().name()
@@ -238,5 +247,23 @@ public class PedidoServiceImpl implements PedidoService {
         }
 
         return pedidoRepository.save(pedido);
+    }
+
+    @Override
+    @Transactional
+    public void cancelarPorPago(Long pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));
+        if (pedido.getEstado() == EstadoPedido.CANCELADO || pedido.getEstado() == EstadoPedido.ENTREGADO) {
+            return;
+        }
+        if (pedido.getDomiciliario() != null) {
+            Domiciliario asignado = pedido.getDomiciliario();
+            asignado.setDisponible(true);
+            domiciliarioService.save(asignado);
+            pedido.setDomiciliario(null);
+        }
+        pedido.setEstado(EstadoPedido.CANCELADO);
+        pedidoRepository.save(pedido);
     }
 }

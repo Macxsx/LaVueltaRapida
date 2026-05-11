@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +119,7 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente stored = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Cliente no encontrado."));
 
-        if (pedidoRepo.existsByClienteIdAndEstadoNot(id, EstadoPedido.ENTREGADO)) {
+        if (pedidoRepo.existsByClienteIdAndEstadoNotIn(id, EnumSet.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO))) {
             throw new IllegalStateException(
                     "No se puede eliminar la cuenta porque tiene pedidos activos.");
         }

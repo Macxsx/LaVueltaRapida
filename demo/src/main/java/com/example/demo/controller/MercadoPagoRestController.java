@@ -98,13 +98,42 @@ public class MercadoPagoRestController {
         }
     }
 
+    @PostMapping("/sincronizar/{pedidoId}")
+    public ResponseEntity<?> sincronizarPago(@PathVariable Long pedidoId) {
+        try {
+            return ResponseEntity.ok(mercadoPagoService.sincronizarPago(pedidoId));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(ApiError.of(e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
+        } catch (MPApiException e) {
+            String detail = e.getApiResponse() != null ? e.getApiResponse().getContent() : null;
+            log.error("Error API MP sincronizando pedido {}: status={}, body={}", pedidoId, e.getStatusCode(), detail);
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo consultar el estado del pago.", detail));
+        } catch (MPException e) {
+            log.error("Error SDK MP sincronizando pedido {}: {}", pedidoId, e.getMessage());
+            return ResponseEntity.status(500).body(ApiError.of("No se pudo consultar el estado del pago.", e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error inesperado sincronizando pedido {}: {}", pedidoId, e.getMessage(), e);
+            return ResponseEntity.status(500).body(ApiError.of("Error inesperado.", e.getMessage()));
+        }
+    }
+
     @PostMapping("/webhook")
     public ResponseEntity<Void> webhook(
             @RequestHeader(value = "x-signature", required = false) String xSignature,
             @RequestHeader(value = "x-request-id", required = false) String xRequestId,
-            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(required = false) String type,
             @RequestParam(value = "data.id", required = false) String dataId,
             @RequestBody(required = false) Map<String, Object> body) {
+        log.info("=== WEBHOOK MP RECIBIDO ===");
+        log.info("  x-signature  : {}", xSignature);
+        log.info("  x-request-id : {}", xRequestId);
+        log.info("  type (query) : {}", type);
+        log.info("  data.id (query): {}", dataId);
+        log.info("  body         : {}", body);
+        log.info("==========================");
+
         // Contrato: SIEMPRE devolver 200, incluso si el servicio escapa con excepción.
         // MP reintenta el webhook ante cualquier respuesta != 2xx.
         try {
