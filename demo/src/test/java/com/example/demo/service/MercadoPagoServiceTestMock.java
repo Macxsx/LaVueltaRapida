@@ -138,7 +138,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setToken(null);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -147,7 +147,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setToken("   ");
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -156,7 +156,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setTransactionAmount(null);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -165,7 +165,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setTransactionAmount(BigDecimal.ZERO);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -174,7 +174,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPaymentMethodId(null);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -183,7 +183,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPayer(null);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -192,7 +192,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.getPayer().setEmail("   ");
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -201,7 +201,7 @@ public class MercadoPagoServiceTestMock {
         MPResponse fakeResp = new MPResponse(422, null, "{\"message\":\"bad request\"}");
         when(paymentClient.create(any())).thenThrow(new MPApiException("bad request", fakeResp));
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(buildCardPaymentRequest()))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(buildCardPaymentRequest(), "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
 
         verify(pedidoRepository, never()).save(any());
@@ -217,7 +217,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPedidoId(1L);
 
-        service.procesarPagoConTarjeta(req);
+        service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1");
 
         Assertions.assertThat(pedido.getEstadoPago()).isEqualTo("APROBADO");
         Assertions.assertThat(pedido.getMpPaymentId()).isEqualTo("55555");
@@ -231,7 +231,7 @@ public class MercadoPagoServiceTestMock {
     public void MercadoPagoService_procesarPagoConTarjeta_DoesNotUpdatePedidoWhenNoPedidoId() throws Exception {
         when(paymentClient.create(any())).thenReturn(buildFakePayment(55555L, "approved", "visa", "credit_card"));
 
-        service.procesarPagoConTarjeta(buildCardPaymentRequest());
+        service.procesarPagoConTarjeta(buildCardPaymentRequest(), "device-123", "192.168.1.1");
 
         verify(pedidoRepository, never()).findById(any());
         verify(pedidoRepository, never()).save(any());
@@ -247,7 +247,7 @@ public class MercadoPagoServiceTestMock {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPedidoId(1L);
 
-        service.procesarPagoConTarjeta(req);
+        service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1");
 
         Assertions.assertThat(pedido.getEstadoPago()).isEqualTo("RECHAZADO");
     }

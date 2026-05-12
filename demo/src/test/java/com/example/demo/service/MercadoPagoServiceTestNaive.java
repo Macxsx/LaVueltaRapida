@@ -98,7 +98,7 @@ public class MercadoPagoServiceTestNaive {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setToken(null);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -107,7 +107,7 @@ public class MercadoPagoServiceTestNaive {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setTransactionAmount(BigDecimal.ZERO);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -116,7 +116,7 @@ public class MercadoPagoServiceTestNaive {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPaymentMethodId(null);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -125,7 +125,7 @@ public class MercadoPagoServiceTestNaive {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.getPayer().setEmail(null);
 
-        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req))
+        Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -139,7 +139,7 @@ public class MercadoPagoServiceTestNaive {
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPedidoId(pedidoId);
 
-        service.procesarPagoConTarjeta(req);
+        service.procesarPagoConTarjeta(req, "device-123", "192.168.1.1");
 
         Pedido pedidoActualizado = pedidoRepository.findById(pedidoId).get();
         Assertions.assertThat(pedidoActualizado.getEstadoPago()).isEqualTo("APROBADO");

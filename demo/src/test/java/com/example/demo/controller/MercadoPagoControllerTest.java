@@ -208,7 +208,7 @@ public class MercadoPagoControllerTest {
         resp.put("status_detail", "accredited");
         resp.put("payment_method_id", "visa");
         resp.put("transaction_amount", new BigDecimal("45000"));
-        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class))).thenReturn(resp);
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class), any(), any())).thenReturn(resp);
 
         mockMvc.perform(post("/api/mp/payment")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -221,7 +221,7 @@ public class MercadoPagoControllerTest {
 
     @Test
     void cardPayment_argumentoInvalido_retorna400() throws Exception {
-        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class)))
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class), any(), any()))
                 .thenThrow(new IllegalArgumentException("Token de tarjeta requerido."));
 
         mockMvc.perform(post("/api/mp/payment")
@@ -233,7 +233,7 @@ public class MercadoPagoControllerTest {
 
     @Test
     void cardPayment_pedidoNoExiste_retorna404() throws Exception {
-        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class)))
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class), any(), any()))
                 .thenThrow(new NoSuchElementException("Pedido no encontrado."));
 
         mockMvc.perform(post("/api/mp/payment")
@@ -245,7 +245,7 @@ public class MercadoPagoControllerTest {
 
     @Test
     void cardPayment_mpException_retorna500() throws Exception {
-        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class)))
+        when(mercadoPagoService.procesarPagoConTarjeta(any(CardPaymentRequest.class), any(), any()))
                 .thenThrow(new MPException("timeout"));
 
         mockMvc.perform(post("/api/mp/payment")

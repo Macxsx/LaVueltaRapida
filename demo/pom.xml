@@ -69,12 +69,6 @@
         <version>3.6.1</version>
       </dependency>
 
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <scope>test</scope>
-      </dependency>
-
         <dependency>
            <groupId>com.mercadopago</groupId>
            <artifactId>sdk-java</artifactId>
@@ -86,7 +80,7 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        		<dependency>
+    	<dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
 			<version>4.11.0</version>
