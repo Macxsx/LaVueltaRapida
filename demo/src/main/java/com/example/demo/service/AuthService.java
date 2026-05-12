@@ -8,6 +8,9 @@ public interface AuthService {
      */
     LoginResult login(String usuario, String contrasena);
 
+    /** Retorna true si el usuario existe en la BD con el rol indicado. */
+    boolean verify(String username, String role);
+
     class LoginResult {
         public final String username;
         public final String role;

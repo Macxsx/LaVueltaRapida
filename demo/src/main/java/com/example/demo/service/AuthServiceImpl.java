@@ -52,4 +52,15 @@ public class AuthServiceImpl implements AuthService {
 
         throw new SecurityException("Usuario o contraseña incorrectos.");
     }
+
+    @Override
+    public boolean verify(String username, String role) {
+        if (username == null || role == null) return false;
+        return switch (role) {
+            case "admin"    -> administradorService.findByUsuario(username).isPresent();
+            case "operador" -> operadorService.findByUsuario(username).isPresent();
+            case "cliente"  -> clienteService.findByUsername(username) != null;
+            default         -> false;
+        };
+    }
 }
