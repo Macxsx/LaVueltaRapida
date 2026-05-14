@@ -135,6 +135,7 @@ public class MercadoPagoServiceTestNaive {
 
         Payment fakePayment = buildMockPayment(55555L, "approved", "visa", "credit_card");
         when(paymentClient.create(any())).thenReturn(fakePayment);
+        when(paymentClient.create(any(), any())).thenReturn(fakePayment);
 
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPedidoId(pedidoId);

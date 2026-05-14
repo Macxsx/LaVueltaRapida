@@ -48,6 +48,9 @@ public class MercadoPagoServiceTestMock {
     private PedidoRepository pedidoRepository;
 
     @Mock
+    private PedidoService pedidoService;
+
+    @Mock
     private PreferenceClient preferenceClient;
 
     @Mock
@@ -57,11 +60,12 @@ public class MercadoPagoServiceTestMock {
     void setUp() {
         mpConfig = new MercadoPagoConfig();
         ReflectionTestUtils.setField(mpConfig, "frontendUrl", "http://localhost:4200");
-        ReflectionTestUtils.setField(mpConfig, "backendUrl", "");
+        ReflectionTestUtils.setField(mpConfig, "backendUrl", "http://localhost:8090");
         ReflectionTestUtils.setField(mpConfig, "webhookSecret", "");
 
         service = new MercadoPagoServiceImpl();
         ReflectionTestUtils.setField(service, "pedidoRepository", pedidoRepository);
+        ReflectionTestUtils.setField(service, "pedidoService", pedidoService);
         ReflectionTestUtils.setField(service, "mpConfig", mpConfig);
         ReflectionTestUtils.setField(service, "preferenceClient", preferenceClient);
         ReflectionTestUtils.setField(service, "paymentClient", paymentClient);
@@ -85,7 +89,7 @@ public class MercadoPagoServiceTestMock {
 
     @Test
     public void MercadoPagoService_crearPreferencia_ThrowsWhenPedidoNotFound() throws Exception {
-        when(pedidoRepository.findById(999L)).thenReturn(Optional.empty());
+        when(pedidoRepository.findByIdConLineas(999L)).thenReturn(Optional.empty());
 
         MpPreferenceRequest req = new MpPreferenceRequest();
         req.setPedidoId(999L);
@@ -112,7 +116,7 @@ public class MercadoPagoServiceTestMock {
     @Test
     public void MercadoPagoService_crearPreferencia_SetsMpPreferenceIdAndMetodoPago() throws Exception {
         Pedido pedido = buildPedidoConLinea(1L);
-        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        when(pedidoRepository.findByIdConLineas(1L)).thenReturn(Optional.of(pedido));
 
         Preference fakePreference = buildFakePreference("PREF-ABC", "https://mp.com/checkout", "https://sandbox.mp.com/checkout");
         when(preferenceClient.create(any())).thenReturn(fakePreference);
@@ -199,7 +203,7 @@ public class MercadoPagoServiceTestMock {
     @Test
     public void MercadoPagoService_procesarPagoConTarjeta_ThrowsWhenMpReturns4xx() throws Exception {
         MPResponse fakeResp = new MPResponse(422, null, "{\"message\":\"bad request\"}");
-        when(paymentClient.create(any())).thenThrow(new MPApiException("bad request", fakeResp));
+        when(paymentClient.create(any(), any())).thenThrow(new MPApiException("bad request", fakeResp));
 
         Assertions.assertThatThrownBy(() -> service.procesarPagoConTarjeta(buildCardPaymentRequest(), "device-123", "192.168.1.1"))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -212,7 +216,7 @@ public class MercadoPagoServiceTestMock {
         Pedido pedido = new Pedido();
         pedido.setId(1L);
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
-        when(paymentClient.create(any())).thenReturn(buildFakePayment(55555L, "approved", "visa", "credit_card"));
+        when(paymentClient.create(any(), any())).thenReturn(buildFakePayment(55555L, "approved", "visa", "credit_card"));
 
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPedidoId(1L);
@@ -229,7 +233,7 @@ public class MercadoPagoServiceTestMock {
 
     @Test
     public void MercadoPagoService_procesarPagoConTarjeta_DoesNotUpdatePedidoWhenNoPedidoId() throws Exception {
-        when(paymentClient.create(any())).thenReturn(buildFakePayment(55555L, "approved", "visa", "credit_card"));
+        when(paymentClient.create(any(), any())).thenReturn(buildFakePayment(55555L, "approved", "visa", "credit_card"));
 
         service.procesarPagoConTarjeta(buildCardPaymentRequest(), "device-123", "192.168.1.1");
 
@@ -242,7 +246,7 @@ public class MercadoPagoServiceTestMock {
         Pedido pedido = new Pedido();
         pedido.setId(1L);
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
-        when(paymentClient.create(any())).thenReturn(buildFakePayment(55555L, "rejected", "visa", "credit_card"));
+        when(paymentClient.create(any(), any())).thenReturn(buildFakePayment(55555L, "rejected", "visa", "credit_card"));
 
         CardPaymentRequest req = buildCardPaymentRequest();
         req.setPedidoId(1L);
@@ -371,6 +375,7 @@ public class MercadoPagoServiceTestMock {
     private Pedido buildPedidoConLinea(Long pedidoId) {
         Comida comida = new Comida();
         comida.setId(1L);
+        comida.setName("Pizza Test");
         comida.setPrice(25000);
 
         Pedido pedido = new Pedido();

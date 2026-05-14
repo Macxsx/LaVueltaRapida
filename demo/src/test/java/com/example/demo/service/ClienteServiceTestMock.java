@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -328,7 +329,7 @@ public class ClienteServiceTestMock {
     public void ClienteService_deleteOrDeactivate_DeletesWhenNoPedidos() {
         Cliente cliente = buildCliente(1L, "pablo", "p@x.com", "123456", true);
         when(repo.findById(1L)).thenReturn(Optional.of(cliente));
-        when(pedidoRepo.existsByClienteIdAndEstadoNot(1L, EstadoPedido.ENTREGADO)).thenReturn(false);
+        when(pedidoRepo.existsByClienteIdAndEstadoNotIn(1L, EnumSet.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO))).thenReturn(false);
         when(pedidoRepo.existsByClienteId(1L)).thenReturn(false);
 
         service.deleteOrDeactivate(1L);
@@ -341,7 +342,7 @@ public class ClienteServiceTestMock {
     public void ClienteService_deleteOrDeactivate_DeactivatesWhenHasOnlyDeliveredPedidos() {
         Cliente cliente = buildCliente(1L, "pablo", "p@x.com", "123456", true);
         when(repo.findById(1L)).thenReturn(Optional.of(cliente));
-        when(pedidoRepo.existsByClienteIdAndEstadoNot(1L, EstadoPedido.ENTREGADO)).thenReturn(false);
+        when(pedidoRepo.existsByClienteIdAndEstadoNotIn(1L, EnumSet.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO))).thenReturn(false);
         when(pedidoRepo.existsByClienteId(1L)).thenReturn(true);
 
         Assertions.assertThatThrownBy(() -> service.deleteOrDeactivate(1L))
@@ -356,7 +357,7 @@ public class ClienteServiceTestMock {
     public void ClienteService_deleteOrDeactivate_ThrowsWhenHasActivePedidos() {
         Cliente cliente = buildCliente(1L, "pablo", "p@x.com", "123456", true);
         when(repo.findById(1L)).thenReturn(Optional.of(cliente));
-        when(pedidoRepo.existsByClienteIdAndEstadoNot(1L, EstadoPedido.ENTREGADO)).thenReturn(true);
+        when(pedidoRepo.existsByClienteIdAndEstadoNotIn(1L, EnumSet.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO))).thenReturn(true);
 
         Assertions.assertThatThrownBy(() -> service.deleteOrDeactivate(1L))
                 .isInstanceOf(IllegalStateException.class);

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -126,7 +127,8 @@ public class PedidoServiceTestMock {
                 buildPedido(1L, EstadoPedido.RECIBIDO, null),
                 buildPedido(2L, EstadoPedido.COCINANDO, null)
         );
-        when(pedidoRepository.findByEstadoNotOrderByFechaCreacionAsc(EstadoPedido.ENTREGADO))
+        when(pedidoRepository.findByEstadoInOrderByFechaCreacionAsc(
+                EnumSet.of(EstadoPedido.RECIBIDO, EstadoPedido.COCINANDO, EstadoPedido.ENVIADO)))
                 .thenReturn(activos);
 
         List<Pedido> result = service.findActivos();

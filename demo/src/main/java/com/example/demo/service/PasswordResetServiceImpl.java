@@ -77,7 +77,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = IllegalArgumentException.class)
     public void resetContrasena(String token, String nuevaContrasena) {
         PasswordResetToken prt = tokenRepo.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("El enlace de recuperación no es válido."));

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -225,7 +226,7 @@ public class DomiciliarioServiceTestMock {
     @Test
     public void DomiciliarioService_delete_DeletesWhenNoActivePedidos() {
         when(repo.existsById(1L)).thenReturn(true);
-        when(pedidoRepository.existsByDomiciliarioIdAndEstadoNot(1L, EstadoPedido.ENTREGADO))
+        when(pedidoRepository.existsByDomiciliarioIdAndEstadoNotIn(1L, EnumSet.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO)))
                 .thenReturn(false);
 
         service.delete(1L);
@@ -246,7 +247,7 @@ public class DomiciliarioServiceTestMock {
     @Test
     public void DomiciliarioService_delete_ThrowsWhenHasActivePedido() {
         when(repo.existsById(1L)).thenReturn(true);
-        when(pedidoRepository.existsByDomiciliarioIdAndEstadoNot(1L, EstadoPedido.ENTREGADO))
+        when(pedidoRepository.existsByDomiciliarioIdAndEstadoNotIn(1L, EnumSet.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO)))
                 .thenReturn(true);
 
         Assertions.assertThatThrownBy(() -> service.delete(1L))
