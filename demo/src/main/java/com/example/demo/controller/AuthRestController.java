@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.config.JwtService;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.RecuperarContrasenaRequest;
@@ -29,6 +30,9 @@ public class AuthRestController {
     private AuthService authService;
 
     @Autowired
+    private JwtService jwtService;
+
+    @Autowired
     private PasswordResetService passwordResetService;
 
     @GetMapping("/verify")
@@ -42,7 +46,8 @@ public class AuthRestController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             LoginResult result = authService.login(request.usuario, request.contrasena);
-            return ResponseEntity.ok(new LoginResponse(result.username, result.role, result.clienteId, result.carritoId));
+            String token = jwtService.generateToken(result);
+            return ResponseEntity.ok(new LoginResponse(token, result.username, result.role, result.clienteId, result.carritoId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiError.of(e.getMessage()));
         } catch (IllegalStateException e) {

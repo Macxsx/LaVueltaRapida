@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entitys.Carrito;
@@ -26,6 +27,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
     private PedidoRepository pedidoRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Collection<Cliente> findAll() {
@@ -58,6 +62,7 @@ public class ClienteServiceImpl implements ClienteService {
             throw new IllegalStateException(
                     "El correo '" + cliente.getEmail() + "' ya está registrado.");
         }
+        cliente.setPassword(passwordEncoder.encode(cliente.getPassword()));
         Cliente guardado = repo.save(cliente);
         if (carritoRepo.findByClienteId(guardado.getId()).isEmpty()) {
             Carrito carrito = new Carrito(guardado);
@@ -73,7 +78,7 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente stored = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Cliente no encontrado."));
 
-        if (currentPassword != null && !stored.getPassword().equals(currentPassword)) {
+        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getPassword())) {
             throw new SecurityException("La contraseña actual es incorrecta.");
         }
         Cliente byUsername = repo.findByUsername(username);
@@ -92,7 +97,7 @@ public class ClienteServiceImpl implements ClienteService {
         stored.setEmail(email);
         stored.setUsername(username);
         if (password != null && !password.isBlank()) {
-            stored.setPassword(password);
+            stored.setPassword(passwordEncoder.encode(password));
         }
         stored.setDireccion(direccion);
         stored.setTelefono(telefono);
@@ -105,7 +110,7 @@ public class ClienteServiceImpl implements ClienteService {
             throw new IllegalArgumentException("Se requieren usuario y contraseña.");
         }
         Cliente cliente = repo.findByUsername(username);
-        if (cliente == null || !cliente.getPassword().equals(password)) {
+        if (cliente == null || !passwordEncoder.matches(password, cliente.getPassword())) {
             throw new SecurityException("Usuario o contraseña incorrectos.");
         }
         if (!cliente.isActivo()) {

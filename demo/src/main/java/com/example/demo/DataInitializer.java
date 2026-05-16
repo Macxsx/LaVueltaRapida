@@ -32,6 +32,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @Profile("default")
@@ -49,7 +50,8 @@ public class DataInitializer {
             CarritoRepository carritoRepo,
             LineaPedidoRepository lineaPedidoRepo,
             LineaPedidoAdicionalRepository lineaPedidoAdicionalRepo,
-            PedidoRepository pedidoRepo
+            PedidoRepository pedidoRepo,
+            PasswordEncoder encoder
     ) {
         return args -> {
 
@@ -199,16 +201,16 @@ public class DataInitializer {
             // ==========================================
             // 4. CLIENTES
             // ==========================================
-            clienteRepo.save(new Cliente("Pablo",    "García",    "oboetube123@gmail.com",        "pablo123",  "123456",    "Cra 7 #40-62, Bogotá",        "3001234567"));
-            clienteRepo.save(new Cliente("María",    "Gómez",     "maria.gomez@email.com",          "maria123",  "maria2024", "Cl 45 #12-30, Medellín",      "3019876543"));
-            clienteRepo.save(new Cliente("Andrés",   "Martínez",  "andres.martinez@email.com",      "andres123", "andres789", "Av 68 #23-10, Cali",          "3024567890"));
-            clienteRepo.save(new Cliente("Laura",    "Ramírez",   "laura.ramirez@email.com",        "laura123",  "lauraPass", "Cra 15 #88-21, Barranquilla", "3106543210"));
-            clienteRepo.save(new Cliente("Camilo",   "Torres",    "camilo.torres@email.com",        "camilito20","camilo123", "Cl 100 #19-50, Bucaramanga",  "3157891234"));
-            clienteRepo.save(new Cliente("Valentina","López",     "valentina.lopez@email.com",      "vale456",   "valePass1", "Cra 50 #32-15, Pereira",      "3201234567"));
-            clienteRepo.save(new Cliente("Santiago", "Hernández", "santiago.hernandez@email.com",   "santi789",  "santiClave","Cl 72 #10-45, Cartagena",     "3112345678"));
-            clienteRepo.save(new Cliente("Daniela",  "Castro",    "daniela.castro@email.com",       "dani321",   "daniSecure","Av 30 #15-80, Manizales",     "3009876543"));
-            clienteRepo.save(new Cliente("Sebastián","Morales",   "sebastian.morales@email.com",    "sebas007",  "sebasKey",  "Cra 25 #60-12, Santa Marta",  "3178901234"));
-            clienteRepo.save(new Cliente("Carolina", "Díaz",      "carolina.diaz@email.com",        "caro2024",  "caroPass",  "Cl 85 #42-30, Ibagué",        "3145678901"));
+            clienteRepo.save(new Cliente("Pablo",    "García",    "oboetube123@gmail.com",        "pablo123",  encoder.encode("123456"),    "Cra 7 #40-62, Bogotá",        "3001234567"));
+            clienteRepo.save(new Cliente("María",    "Gómez",     "maria.gomez@email.com",          "maria123",  encoder.encode("maria2024"), "Cl 45 #12-30, Medellín",      "3019876543"));
+            clienteRepo.save(new Cliente("Andrés",   "Martínez",  "andres.martinez@email.com",      "andres123", encoder.encode("andres789"), "Av 68 #23-10, Cali",          "3024567890"));
+            clienteRepo.save(new Cliente("Laura",    "Ramírez",   "laura.ramirez@email.com",        "laura123",  encoder.encode("lauraPass"), "Cra 15 #88-21, Barranquilla", "3106543210"));
+            clienteRepo.save(new Cliente("Camilo",   "Torres",    "camilo.torres@email.com",        "camilito20",encoder.encode("camilo123"), "Cl 100 #19-50, Bucaramanga",  "3157891234"));
+            clienteRepo.save(new Cliente("Valentina","López",     "valentina.lopez@email.com",      "vale456",   encoder.encode("valePass1"), "Cra 50 #32-15, Pereira",      "3201234567"));
+            clienteRepo.save(new Cliente("Santiago", "Hernández", "santiago.hernandez@email.com",   "santi789",  encoder.encode("santiClave"),"Cl 72 #10-45, Cartagena",     "3112345678"));
+            clienteRepo.save(new Cliente("Daniela",  "Castro",    "daniela.castro@email.com",       "dani321",   encoder.encode("daniSecure"),"Av 30 #15-80, Manizales",     "3009876543"));
+            clienteRepo.save(new Cliente("Sebastián","Morales",   "sebastian.morales@email.com",    "sebas007",  encoder.encode("sebasKey"),  "Cra 25 #60-12, Santa Marta",  "3178901234"));
+            clienteRepo.save(new Cliente("Carolina", "Díaz",      "carolina.diaz@email.com",        "caro2024",  encoder.encode("caroPass"),  "Cl 85 #42-30, Ibagué",        "3145678901"));
 
             // ==========================================
             // 5. CARRITOS (uno por cliente)
@@ -222,26 +224,27 @@ public class DataInitializer {
             // ==========================================
             // 6. OPERADORES
             // ==========================================
-            operadorRepo.save(new Operador("Carlos Ruiz",       "op1",  "123"));
-            operadorRepo.save(new Operador("Laura Sánchez",     "op2",  "123"));
-            operadorRepo.save(new Operador("Andrés Mora",       "op3",  "123"));
-            operadorRepo.save(new Operador("Sofía Vargas",      "op4",  "123"));
-            operadorRepo.save(new Operador("Juan Prada",        "op5",  "123"));
-            operadorRepo.save(new Operador("Natalia Cárdenas",  "op6",  "123"));
-            operadorRepo.save(new Operador("Ricardo Peña",      "op7",  "123"));
-            operadorRepo.save(new Operador("Valentina Cruz",    "op8",  "123"));
-            operadorRepo.save(new Operador("Felipe Gómez",      "op9",  "123"));
-            operadorRepo.save(new Operador("Mariana Ospina",    "op10", "123"));
-            operadorRepo.save(new Operador("Diego Salcedo",     "op11", "123"));
-            operadorRepo.save(new Operador("Isabela Ríos",      "op12", "123"));
-            operadorRepo.save(new Operador("Tomás Bejarano",    "op13", "123"));
-            operadorRepo.save(new Operador("Lucía Montoya",     "op14", "123"));
-            operadorRepo.save(new Operador("Esteban Guerrero",  "op15", "123"));
-            operadorRepo.save(new Operador("Paula Herrera",     "op16", "123"));
-            operadorRepo.save(new Operador("Julián Acosta",     "op17", "123"));
-            operadorRepo.save(new Operador("Camila Nieto",      "op18", "123"));
-            operadorRepo.save(new Operador("Alejandro Duque",   "op19", "123"));
-            operadorRepo.save(new Operador("Sara Quintero",     "op20", "123"));
+            String pw123 = encoder.encode("123");
+            operadorRepo.save(new Operador("Carlos Ruiz",       "op1",  pw123));
+            operadorRepo.save(new Operador("Laura Sánchez",     "op2",  pw123));
+            operadorRepo.save(new Operador("Andrés Mora",       "op3",  pw123));
+            operadorRepo.save(new Operador("Sofía Vargas",      "op4",  pw123));
+            operadorRepo.save(new Operador("Juan Prada",        "op5",  pw123));
+            operadorRepo.save(new Operador("Natalia Cárdenas",  "op6",  pw123));
+            operadorRepo.save(new Operador("Ricardo Peña",      "op7",  pw123));
+            operadorRepo.save(new Operador("Valentina Cruz",    "op8",  pw123));
+            operadorRepo.save(new Operador("Felipe Gómez",      "op9",  pw123));
+            operadorRepo.save(new Operador("Mariana Ospina",    "op10", pw123));
+            operadorRepo.save(new Operador("Diego Salcedo",     "op11", pw123));
+            operadorRepo.save(new Operador("Isabela Ríos",      "op12", pw123));
+            operadorRepo.save(new Operador("Tomás Bejarano",    "op13", pw123));
+            operadorRepo.save(new Operador("Lucía Montoya",     "op14", pw123));
+            operadorRepo.save(new Operador("Esteban Guerrero",  "op15", pw123));
+            operadorRepo.save(new Operador("Paula Herrera",     "op16", pw123));
+            operadorRepo.save(new Operador("Julián Acosta",     "op17", pw123));
+            operadorRepo.save(new Operador("Camila Nieto",      "op18", pw123));
+            operadorRepo.save(new Operador("Alejandro Duque",   "op19", pw123));
+            operadorRepo.save(new Operador("Sara Quintero",     "op20", pw123));
 
             // ==========================================
             // 6. DOMICILIARIOS
@@ -255,11 +258,11 @@ public class DataInitializer {
             // ==========================================
             // 7. ADMINISTRADORES
             // ==========================================
-            adminRepo.save(new Administrador("admin1", "123"));
-            adminRepo.save(new Administrador("admin2", "123"));
-            adminRepo.save(new Administrador("admin3", "123"));
-            adminRepo.save(new Administrador("admin4", "123"));
-            adminRepo.save(new Administrador("admin5", "123"));
+            adminRepo.save(new Administrador("admin1", pw123));
+            adminRepo.save(new Administrador("admin2", pw123));
+            adminRepo.save(new Administrador("admin3", pw123));
+            adminRepo.save(new Administrador("admin4", pw123));
+            adminRepo.save(new Administrador("admin5", pw123));
 
             // ==========================================
             // 8. PEDIDOS DE EJEMPLO (20 pedidos)

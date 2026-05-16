@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,9 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     @Autowired
     private ClienteRepository clienteRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired(required = false)
     private JavaMailSender mailSender;
@@ -92,7 +96,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             throw new NoSuchElementException("No existe una cuenta asociada a este enlace.");
         }
 
-        cliente.setPassword(nuevaContrasena);
+        cliente.setPassword(passwordEncoder.encode(nuevaContrasena));
         clienteRepo.save(cliente);
         tokenRepo.delete(prt);
     }

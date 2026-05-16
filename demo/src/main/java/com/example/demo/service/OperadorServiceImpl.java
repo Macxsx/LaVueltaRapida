@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entitys.Operador;
@@ -15,6 +16,9 @@ public class OperadorServiceImpl implements OperadorService {
 
     @Autowired
     private OperadorRepository repo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<Operador> findAll() {
@@ -37,6 +41,7 @@ public class OperadorServiceImpl implements OperadorService {
             throw new IllegalStateException(
                     "Ya existe un operador con el usuario '" + operador.getUsuario() + "'.");
         }
+        operador.setContrasena(passwordEncoder.encode(operador.getContrasena()));
         return repo.save(operador);
     }
 
@@ -45,7 +50,7 @@ public class OperadorServiceImpl implements OperadorService {
         Operador stored = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Operador no encontrado."));
 
-        if (currentPassword != null && !stored.getContrasena().equals(currentPassword)) {
+        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getContrasena())) {
             throw new SecurityException("La contraseña actual es incorrecta.");
         }
         repo.findByUsuario(usuario)
@@ -56,7 +61,7 @@ public class OperadorServiceImpl implements OperadorService {
         stored.setNombre(nombre);
         stored.setUsuario(usuario);
         if (contrasena != null && !contrasena.isBlank()) {
-            stored.setContrasena(contrasena);
+            stored.setContrasena(passwordEncoder.encode(contrasena));
         }
         return repo.save(stored);
     }

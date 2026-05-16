@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entitys.Administrador;
@@ -15,6 +16,9 @@ public class AdministradorServiceImpl implements AdministradorService {
 
     @Autowired
     private AdministradorRepository repo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<Administrador> findAll() {
@@ -36,7 +40,7 @@ public class AdministradorServiceImpl implements AdministradorService {
         Administrador stored = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Administrador no encontrado."));
 
-        if (currentPassword != null && !stored.getContrasena().equals(currentPassword)) {
+        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getContrasena())) {
             throw new SecurityException("La contraseña actual es incorrecta.");
         }
         repo.findByUsuario(usuario)
@@ -46,7 +50,7 @@ public class AdministradorServiceImpl implements AdministradorService {
 
         stored.setUsuario(usuario);
         if (contrasena != null && !contrasena.isBlank()) {
-            stored.setContrasena(contrasena);
+            stored.setContrasena(passwordEncoder.encode(contrasena));
         }
         return repo.save(stored);
     }
