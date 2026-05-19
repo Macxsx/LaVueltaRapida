@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,25 +16,63 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.config.JwtService;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
+import com.example.demo.dto.MeResponse;
 import com.example.demo.dto.RecuperarContrasenaRequest;
 import com.example.demo.dto.ResetContrasenaRequest;
+import com.example.demo.entitys.Role;
 import com.example.demo.error.ApiError;
+import com.example.demo.service.AdministradorService;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.AuthService.LoginResult;
+import com.example.demo.service.ClienteService;
+import com.example.demo.service.OperadorService;
 import com.example.demo.service.PasswordResetService;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthRestController {
 
-    @Autowired
-    private AuthService authService;
+    @Autowired private AuthService authService;
+    @Autowired private JwtService jwtService;
+    @Autowired private PasswordResetService passwordResetService;
+    @Autowired private ClienteService clienteService;
+    @Autowired private AdministradorService administradorService;
+    @Autowired private OperadorService operadorService;
 
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private PasswordResetService passwordResetService;
+    @GetMapping("/me")
+    public ResponseEntity<MeResponse> me(Authentication auth) {
+        String username = auth.getName();
+        String roleStr = auth.getAuthorities().stream()
+                .findFirst()
+                .map(a -> a.getAuthority().replace("ROLE_", ""))
+                .orElse("");
+        try {
+            Role role = Role.valueOf(roleStr);
+            MeResponse res = new MeResponse();
+            res.role = role.value();
+            switch (role) {
+                case CLIENTE -> {
+                    var c = clienteService.findByUsername(username);
+                    res.id = c.getId(); res.username = c.getUsername();
+                    res.name = c.getName(); res.apellido = c.getApellido();
+                    res.email = c.getEmail(); res.direccion = c.getDireccion();
+                    res.telefono = c.getTelefono();
+                }
+                case ADMIN -> {
+                    var a = administradorService.findByUsuario(username).orElseThrow();
+                    res.id = a.getId(); res.username = a.getUsuario();
+                }
+                case OPERADOR -> {
+                    var o = operadorService.findByUsuario(username).orElseThrow();
+                    res.id = o.getId(); res.username = o.getUsuario();
+                    res.name = o.getNombre();
+                }
+            }
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/verify")
     public ResponseEntity<?> verify(@RequestParam String username, @RequestParam String role) {

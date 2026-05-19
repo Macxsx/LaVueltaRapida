@@ -46,6 +46,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
 
                 // ── Público ─────────────────────────────────────────────────
+                .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/h2/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/comidas/**", "/categorias/**", "/adicionales/**").permitAll()
@@ -54,6 +55,7 @@ public class SecurityConfig {
                 // ── Perfil propio ────────────────────────────────────────────
                 .requestMatchers(HttpMethod.GET, "/clientes/me").hasAnyRole("ADMIN", "CLIENTE")
                 .requestMatchers(HttpMethod.GET, "/operadores/me").hasAnyRole("ADMIN", "OPERADOR")
+                .requestMatchers(HttpMethod.GET, "/administradores/me").hasRole("ADMIN")
 
                 // ── Solo ADMIN ───────────────────────────────────────────────
                 .requestMatchers("/administradores/**", "/operadores/**").hasRole("ADMIN")
