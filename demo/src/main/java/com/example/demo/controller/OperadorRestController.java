@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,13 +26,6 @@ public class OperadorRestController {
 
     @Autowired
     private OperadorService operadorService;
-
-    @GetMapping("/me")
-    public ResponseEntity<Operador> getMe(Authentication authentication) {
-        return operadorService.findByUsuario(authentication.getName())
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
 
     @GetMapping
     public ResponseEntity<Collection<Operador>> findAll() {
