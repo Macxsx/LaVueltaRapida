@@ -19,6 +19,7 @@ import com.example.demo.dto.CreateClienteRequest;
 import com.example.demo.dto.UpdateClienteRequest;
 import com.example.demo.entitys.Cliente;
 import com.example.demo.error.ApiError;
+import com.example.demo.exception.CuentaDesactivadaException;
 import com.example.demo.service.ClienteService;
 
 @RestController
@@ -75,6 +76,8 @@ public class ClienteRestController {
             return ResponseEntity.noContent().build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        } catch (CuentaDesactivadaException e) {
+            return ResponseEntity.noContent().build();
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }

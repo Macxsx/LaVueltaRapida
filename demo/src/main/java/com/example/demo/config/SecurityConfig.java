@@ -60,7 +60,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/comidas/**", "/categorias/**", "/adicionales/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/domiciliarios", "/domiciliarios/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/domiciliarios", "/domiciliarios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/clientes", "/clientes/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/clientes").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAnyRole("ADMIN", "CLIENTE")
 
                 // ── ADMIN + OPERADOR ─────────────────────────────────────────
                 .requestMatchers("/domiciliarios/**").hasAnyRole("ADMIN", "OPERADOR")
