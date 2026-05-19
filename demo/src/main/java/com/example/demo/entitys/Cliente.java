@@ -50,8 +50,33 @@ public class Cliente {
         this.telefono = telefono;
     }
 
+    public Cliente(String name, String apellido, String email,
+                   String username, String password,
+                   String direccion, String telefono) {
+        this.name = name;
+        this.apellido = apellido;
+        this.email = email;
+        this.usuario = new Usuario(username, password, null);
+        this.direccion = direccion;
+        this.telefono = telefono;
+    }
+
     public String getUsername() {
         return usuario != null ? usuario.getUsername() : null;
+    }
+
+    public void setUsername(String username) {
+        if (this.usuario == null) this.usuario = new Usuario();
+        this.usuario.setUsername(username);
+    }
+
+    public String getPassword() {
+        return usuario != null ? usuario.getPassword() : null;
+    }
+
+    public void setPassword(String password) {
+        if (this.usuario == null) this.usuario = new Usuario();
+        this.usuario.setPassword(password);
     }
 
     public boolean isActivo() {

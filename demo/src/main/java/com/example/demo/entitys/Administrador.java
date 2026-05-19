@@ -27,4 +27,17 @@ public class Administrador {
     public Administrador(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public Administrador(String username, String password) {
+        this.usuario = new Usuario(username, password, null);
+    }
+
+    public Administrador(long id, String username, String password) {
+        this.id = id;
+        this.usuario = new Usuario(username, password, null);
+    }
+
+    public String getContrasena() {
+        return usuario != null ? usuario.getPassword() : null;
+    }
 }

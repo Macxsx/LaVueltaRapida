@@ -95,7 +95,7 @@ public class OperadorServiceTestMock {
         when(repo.findByUsuario("opNuevo")).thenReturn(Optional.empty());
         when(repo.save(nuevo)).thenReturn(saved);
 
-        Operador result = service.create(nuevo);
+        Operador result = service.create("Op Nuevo", "opNuevo", "123");
 
         Assertions.assertThat(result).isSameAs(saved);
         verify(repo).save(nuevo);
@@ -103,11 +103,10 @@ public class OperadorServiceTestMock {
 
     @Test
     public void OperadorService_create_ThrowsWhenUsuarioAlreadyExists() {
-        Operador nuevo = new Operador(null, "Op Nuevo", "op1", "123");
-        Operador otro  = new Operador(1L,   "Op Uno",   "op1", "123");
+        Operador otro  = new Operador(1L, "Op Uno", "op1", "123");
         when(repo.findByUsuario("op1")).thenReturn(Optional.of(otro));
 
-        Assertions.assertThatThrownBy(() -> service.create(nuevo))
+        Assertions.assertThatThrownBy(() -> service.create("Op Nuevo", "op1", "123"))
                 .isInstanceOf(IllegalStateException.class);
 
         verify(repo, never()).save(any(Operador.class));

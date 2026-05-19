@@ -75,9 +75,7 @@ public class OperadorServiceTestNaive {
 
     @Test
     public void OperadorService_create_CreatesSuccessfully() {
-        Operador nuevo = new Operador("Nuevo Operador", "opNuevo", "pass123");
-
-        Operador result = service.create(nuevo);
+        Operador result = service.create("Nuevo Operador", "opNuevo", "pass123");
 
         Assertions.assertThat(result.getId()).isNotNull();
         Assertions.assertThat(result.getUsuario()).isEqualTo("opNuevo");
@@ -85,9 +83,7 @@ public class OperadorServiceTestNaive {
 
     @Test
     public void OperadorService_create_ThrowsWhenUsuarioTaken() {
-        Operador duplicado = new Operador("Otro", "op1", "pass");
-
-        Assertions.assertThatThrownBy(() -> service.create(duplicado))
+        Assertions.assertThatThrownBy(() -> service.create("Otro", "op1", "pass"))
                 .isInstanceOf(IllegalStateException.class);
     }
 

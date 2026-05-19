@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -112,7 +111,7 @@ public class OperadorControllerTest {
     @Test
     public void OperadorController_add_CreaOperadorYRetorna200() throws Exception {
         Operador nuevo = buildOperador(null, "Carlos", "operador1");
-        when(operadorService.create(any(Operador.class)))
+        when(operadorService.create(anyString(), anyString(), anyString()))
                 .thenReturn(buildOperador(99L, "Carlos", "operador1"));
 
         mockMvc.perform(post("/operadores")
@@ -127,7 +126,7 @@ public class OperadorControllerTest {
     @Test
     public void OperadorController_add_Retorna409CuandoUsuarioYaExiste() throws Exception {
         Operador nuevo = buildOperador(null, "Carlos", "operador1");
-        when(operadorService.create(any(Operador.class)))
+        when(operadorService.create(anyString(), anyString(), anyString()))
                 .thenThrow(new IllegalStateException("El usuario ya está en uso."));
 
         mockMvc.perform(post("/operadores")

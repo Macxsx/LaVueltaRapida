@@ -128,7 +128,7 @@ public class ClienteServiceTestMock {
         when(repo.save(nuevo)).thenReturn(guardado);
         when(carritoRepo.findByClienteId(7L)).thenReturn(Optional.empty());
 
-        Cliente result = service.create(nuevo);
+        Cliente result = service.create("Pablo", "Perez", "p@x.com", "pablo", "123456", "calle 1", "111");
 
         Assertions.assertThat(result).isSameAs(guardado);
         ArgumentCaptor<Carrito> captor = ArgumentCaptor.forClass(Carrito.class);
@@ -148,17 +148,16 @@ public class ClienteServiceTestMock {
         when(repo.save(nuevo)).thenReturn(guardado);
         when(carritoRepo.findByClienteId(7L)).thenReturn(Optional.of(new Carrito()));
 
-        service.create(nuevo);
+        service.create("Pablo", "Perez", "p@x.com", "pablo", "123456", "calle 1", "111");
 
         verify(carritoRepo, never()).save(any(Carrito.class));
     }
 
     @Test
     public void ClienteService_create_ThrowsWhenUsernameAlreadyExists() {
-        Cliente nuevo = buildCliente(null, "pablo", "p@x.com", "123456", true);
         when(repo.findByUsername("pablo")).thenReturn(buildCliente(99L, "pablo", "x@x.com", "p", true));
 
-        Assertions.assertThatThrownBy(() -> service.create(nuevo))
+        Assertions.assertThatThrownBy(() -> service.create("Pablo", "Perez", "p@x.com", "pablo", "123456", "calle 1", "111"))
                 .isInstanceOf(IllegalStateException.class);
 
         verify(repo, never()).save(any(Cliente.class));
@@ -166,11 +165,10 @@ public class ClienteServiceTestMock {
 
     @Test
     public void ClienteService_create_ThrowsWhenEmailAlreadyExists() {
-        Cliente nuevo = buildCliente(null, "pablo", "p@x.com", "123456", true);
         when(repo.findByUsername("pablo")).thenReturn(null);
         when(repo.findByEmail("p@x.com")).thenReturn(buildCliente(99L, "otro", "p@x.com", "p", true));
 
-        Assertions.assertThatThrownBy(() -> service.create(nuevo))
+        Assertions.assertThatThrownBy(() -> service.create("Pablo", "Perez", "p@x.com", "pablo", "123456", "calle 1", "111"))
                 .isInstanceOf(IllegalStateException.class);
 
         verify(repo, never()).save(any(Cliente.class));

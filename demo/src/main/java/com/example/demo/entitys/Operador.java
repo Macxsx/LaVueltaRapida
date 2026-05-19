@@ -30,4 +30,19 @@ public class Operador {
         this.nombre = nombre;
         this.usuario = usuario;
     }
+
+    public Operador(String nombre, String username, String password) {
+        this.nombre = nombre;
+        this.usuario = new Usuario(username, password, null);
+    }
+
+    public Operador(Long id, String nombre, String username, String password) {
+        this.id = id;
+        this.nombre = nombre;
+        this.usuario = new Usuario(username, password, null);
+    }
+
+    public String getContrasena() {
+        return usuario != null ? usuario.getPassword() : null;
+    }
 }

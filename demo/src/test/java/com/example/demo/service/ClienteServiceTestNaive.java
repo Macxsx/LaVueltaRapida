@@ -93,9 +93,7 @@ public class ClienteServiceTestNaive {
 
     @Test
     public void ClienteService_create_CreatesSuccessfully() {
-        Cliente nuevo = new Cliente("Nuevo", "Cliente", "nuevo@mail.com", "nuevou", "newPass", "Calle Z", "3009999999");
-
-        Cliente result = service.create(nuevo);
+        Cliente result = service.create("Nuevo", "Cliente", "nuevo@mail.com", "nuevou", "newPass", "Calle Z", "3009999999");
 
         Assertions.assertThat(result.getId()).isNotNull();
         Assertions.assertThat(result.getUsername()).isEqualTo("nuevou");
@@ -103,17 +101,13 @@ public class ClienteServiceTestNaive {
 
     @Test
     public void ClienteService_create_ThrowsWhenUsernameTaken() {
-        Cliente duplicado = new Cliente("X", "X", "otro@mail.com", "pablo123", "pass", "Calle Z", "3009999998");
-
-        Assertions.assertThatThrownBy(() -> service.create(duplicado))
+        Assertions.assertThatThrownBy(() -> service.create("X", "X", "otro@mail.com", "pablo123", "pass", "Calle Z", "3009999998"))
                 .isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     public void ClienteService_create_ThrowsWhenEmailTaken() {
-        Cliente duplicado = new Cliente("X", "X", "PabloGarcia21@gmail.com", "otrousuario", "pass", "Calle Z", "3009999997");
-
-        Assertions.assertThatThrownBy(() -> service.create(duplicado))
+        Assertions.assertThatThrownBy(() -> service.create("X", "X", "PabloGarcia21@gmail.com", "otrousuario", "pass", "Calle Z", "3009999997"))
                 .isInstanceOf(IllegalStateException.class);
     }
 

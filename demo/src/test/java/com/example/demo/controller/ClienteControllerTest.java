@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -119,7 +118,7 @@ public class ClienteControllerTest {
     @Test
     public void ClienteController_add_CreaClienteYRetorna200() throws Exception {
         Cliente nuevo = buildCliente(null, "pablo123", "pablo@x.com");
-        when(clienteService.create(any(Cliente.class))).thenReturn(buildCliente(99L, "pablo123", "pablo@x.com"));
+        when(clienteService.create(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(buildCliente(99L, "pablo123", "pablo@x.com"));
 
         mockMvc.perform(post("/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -132,7 +131,7 @@ public class ClienteControllerTest {
     @Test
     public void ClienteController_add_Retorna409CuandoUsuarioOEmailYaExiste() throws Exception {
         Cliente nuevo = buildCliente(null, "pablo123", "pablo@x.com");
-        when(clienteService.create(any(Cliente.class)))
+        when(clienteService.create(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenThrow(new IllegalStateException("El username o email ya están en uso."));
 
         mockMvc.perform(post("/clientes")
