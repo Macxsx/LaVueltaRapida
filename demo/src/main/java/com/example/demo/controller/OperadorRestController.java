@@ -40,9 +40,9 @@ public class OperadorRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody Operador operador) {
+    public ResponseEntity<?> add(@RequestBody UpdateOperadorRequest req) {
         try {
-            return ResponseEntity.ok(operadorService.create(operador));
+            return ResponseEntity.ok(operadorService.create(req.nombre, req.usuario, req.contrasena));
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }

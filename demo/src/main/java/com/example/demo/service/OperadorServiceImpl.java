@@ -9,16 +9,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entitys.Operador;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 import com.example.demo.repository.OperadorRepository;
+import com.example.demo.repository.RolRepository;
+import com.example.demo.repository.UsuarioRepository;
 
 @Service
 public class OperadorServiceImpl implements OperadorService {
 
-    @Autowired
-    private OperadorRepository repo;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private OperadorRepository repo;
+    @Autowired private RolRepository rolRepo;
+    @Autowired private UsuarioRepository usuarioRepo;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Override
     public List<Operador> findAll() {
@@ -36,13 +39,15 @@ public class OperadorServiceImpl implements OperadorService {
     }
 
     @Override
-    public Operador create(Operador operador) {
-        if (repo.findByUsuario(operador.getUsuario()).isPresent()) {
+    public Operador create(String nombre, String usuario, String contrasena) {
+        if (usuarioRepo.findByUsername(usuario).isPresent()) {
             throw new IllegalStateException(
-                    "Ya existe un operador con el usuario '" + operador.getUsuario() + "'.");
+                    "Ya existe un operador con el usuario '" + usuario + "'.");
         }
-        operador.setContrasena(passwordEncoder.encode(operador.getContrasena()));
-        return repo.save(operador);
+        Rol rolOperador = rolRepo.findByNombre("OPERADOR")
+                .orElseThrow(() -> new IllegalStateException("Rol OPERADOR no encontrado en la base de datos."));
+        Usuario u = new Usuario(usuario, passwordEncoder.encode(contrasena), rolOperador);
+        return repo.save(new Operador(nombre, u));
     }
 
     @Override
@@ -50,18 +55,19 @@ public class OperadorServiceImpl implements OperadorService {
         Operador stored = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Operador no encontrado."));
 
-        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getContrasena())) {
+        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getUsuario().getPassword())) {
             throw new SecurityException("La contraseña actual es incorrecta.");
         }
-        repo.findByUsuario(usuario)
-                .filter(o -> !o.getId().equals(id))
-                .ifPresent(o -> { throw new IllegalStateException(
+
+        usuarioRepo.findByUsername(usuario)
+                .filter(u -> !u.getId().equals(stored.getUsuario().getId()))
+                .ifPresent(u -> { throw new IllegalStateException(
                         "Ya existe un operador con el usuario '" + usuario + "'."); });
 
         stored.setNombre(nombre);
-        stored.setUsuario(usuario);
+        stored.getUsuario().setUsername(usuario);
         if (contrasena != null && !contrasena.isBlank()) {
-            stored.setContrasena(passwordEncoder.encode(contrasena));
+            stored.getUsuario().setPassword(passwordEncoder.encode(contrasena));
         }
         return repo.save(stored);
     }

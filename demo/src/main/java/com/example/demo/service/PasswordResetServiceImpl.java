@@ -96,7 +96,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             throw new NoSuchElementException("No existe una cuenta asociada a este enlace.");
         }
 
-        cliente.setPassword(passwordEncoder.encode(nuevaContrasena));
+        cliente.getUsuario().setPassword(passwordEncoder.encode(nuevaContrasena));
         clienteRepo.save(cliente);
         tokenRepo.delete(prt);
     }

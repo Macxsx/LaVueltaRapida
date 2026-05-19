@@ -1,74 +1,69 @@
 package com.example.demo.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entitys.Administrador;
 import com.example.demo.entitys.Cliente;
-import com.example.demo.entitys.Operador;
-import com.example.demo.entitys.Role;
+import com.example.demo.entitys.Usuario;
+import com.example.demo.repository.ClienteRepository;
+import com.example.demo.repository.UsuarioRepository;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private AdministradorService administradorService;
-
-    @Autowired
-    private OperadorService operadorService;
-
-    @Autowired
-    private ClienteService clienteService;
-
-    @Autowired
-    private CarritoService carritoService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private UsuarioRepository usuarioRepo;
+    @Autowired private ClienteRepository clienteRepo;
+    @Autowired private CarritoService carritoService;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Override
-    public LoginResult login(String usuario, String contrasena) {
-        if (usuario == null || contrasena == null) {
+    public LoginResult login(String identifier, String contrasena) {
+        if (identifier == null || contrasena == null) {
             throw new IllegalArgumentException("Se requieren usuario y contraseña.");
         }
-        Administrador admin = administradorService.findByUsuario(usuario).orElse(null);
-        if (admin != null && passwordEncoder.matches(contrasena, admin.getContrasena())) {
-            return new LoginResult(admin.getUsuario(), Role.ADMIN.value());
+
+        Usuario usuario = resolverUsuario(identifier);
+
+        if (usuario == null || !passwordEncoder.matches(contrasena, usuario.getPassword())) {
+            throw new SecurityException("Usuario o contraseña incorrectos.");
+        }
+        if (!usuario.isActivo()) {
+            throw new IllegalStateException("Esta cuenta ha sido desactivada.");
         }
 
-        Operador operador = operadorService.findByUsuario(usuario).orElse(null);
-        if (operador != null && passwordEncoder.matches(contrasena, operador.getContrasena())) {
-            return new LoginResult(operador.getUsuario(), Role.OPERADOR.value());
-        }
+        String rolNombre = usuario.getRol().getNombre();
 
-        Cliente cliente = usuario.contains("@")
-                ? clienteService.findByEmail(usuario)
-                : clienteService.findByUsername(usuario);
-        if (cliente != null && passwordEncoder.matches(contrasena, cliente.getPassword())) {
-            if (!cliente.isActivo()) {
-                throw new IllegalStateException("Esta cuenta ha sido desactivada.");
-            }
+        if ("CLIENTE".equals(rolNombre)) {
+            Cliente cliente = clienteRepo.findByUsuario(usuario)
+                    .orElseThrow(() -> new SecurityException("Usuario o contraseña incorrectos."));
             Long carritoId = carritoService.findByClienteId(cliente.getId())
-                    .map(c -> c.getId())
-                    .orElse(null);
-            return new LoginResult(cliente.getUsername(), Role.CLIENTE.value(), cliente.getId(), carritoId);
+                    .map(c -> c.getId()).orElse(null);
+            return new LoginResult(usuario.getUsername(), rolNombre.toLowerCase(), cliente.getId(), carritoId);
         }
 
-        throw new SecurityException("Usuario o contraseña incorrectos.");
+        return new LoginResult(usuario.getUsername(), rolNombre.toLowerCase());
     }
 
     @Override
     public boolean verify(String username, String role) {
         if (username == null || role == null) return false;
-        try {
-            return switch (Role.valueOf(role.toUpperCase())) {
-                case ADMIN    -> administradorService.findByUsuario(username).isPresent();
-                case OPERADOR -> operadorService.findByUsuario(username).isPresent();
-                case CLIENTE  -> clienteService.findByUsername(username) != null;
-            };
-        } catch (IllegalArgumentException e) {
-            return false;
+        return usuarioRepo.findByUsername(username)
+                .map(u -> u.getRol().getNombre().equalsIgnoreCase(role))
+                .orElse(false);
+    }
+
+    private Usuario resolverUsuario(String identifier) {
+        Optional<Usuario> porUsername = usuarioRepo.findByUsername(identifier);
+        if (porUsername.isPresent()) return porUsername.get();
+
+        if (identifier.contains("@")) {
+            Cliente cliente = clienteRepo.findByEmail(identifier);
+            if (cliente != null) return cliente.getUsuario();
         }
+
+        return null;
     }
 }

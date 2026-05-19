@@ -14,7 +14,7 @@ public interface OperadorService {
     Optional<Operador> findByUsuario(String usuario);
 
     /** Lanza IllegalStateException si el usuario ya está en uso. */
-    Operador create(Operador operador);
+    Operador create(String nombre, String usuario, String contrasena);
 
     /**
      * Lanza NoSuchElementException si no existe.

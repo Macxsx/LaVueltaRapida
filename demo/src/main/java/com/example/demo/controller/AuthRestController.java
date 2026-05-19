@@ -19,7 +19,6 @@ import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.MeResponse;
 import com.example.demo.dto.RecuperarContrasenaRequest;
 import com.example.demo.dto.ResetContrasenaRequest;
-import com.example.demo.entitys.Role;
 import com.example.demo.error.ApiError;
 import com.example.demo.service.AdministradorService;
 import com.example.demo.service.AuthService;
@@ -44,27 +43,26 @@ public class AuthRestController {
         String username = auth.getName();
         String roleStr = auth.getAuthorities().stream()
                 .findFirst()
-                .map(a -> a.getAuthority().replace("ROLE_", ""))
+                .map(a -> a.getAuthority().replace("ROLE_", "").toLowerCase())
                 .orElse("");
         try {
-            Role role = Role.valueOf(roleStr);
             MeResponse res = new MeResponse();
-            res.role = role.value();
-            switch (role) {
-                case CLIENTE -> {
+            res.role = roleStr;
+            switch (roleStr) {
+                case "cliente" -> {
                     var c = clienteService.findByUsername(username);
                     res.id = c.getId(); res.username = c.getUsername();
                     res.name = c.getName(); res.apellido = c.getApellido();
                     res.email = c.getEmail(); res.direccion = c.getDireccion();
                     res.telefono = c.getTelefono();
                 }
-                case ADMIN -> {
+                case "admin" -> {
                     var a = administradorService.findByUsuario(username).orElseThrow();
-                    res.id = a.getId(); res.username = a.getUsuario();
+                    res.id = a.getId(); res.username = a.getUsuario().getUsername();
                 }
-                case OPERADOR -> {
+                case "operador" -> {
                     var o = operadorService.findByUsuario(username).orElseThrow();
-                    res.id = o.getId(); res.username = o.getUsuario();
+                    res.id = o.getId(); res.username = o.getUsuario().getUsername();
                     res.name = o.getNombre();
                 }
             }

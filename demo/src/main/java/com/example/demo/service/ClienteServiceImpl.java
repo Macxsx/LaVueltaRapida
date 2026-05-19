@@ -10,26 +10,25 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entitys.Carrito;
 import com.example.demo.entitys.Cliente;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 import com.example.demo.exception.CuentaDesactivadaException;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.PedidoRepository;
+import com.example.demo.repository.RolRepository;
+import com.example.demo.repository.UsuarioRepository;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
-    @Autowired
-    private ClienteRepository repo;
-
-    @Autowired
-    private CarritoRepository carritoRepo;
-
-    @Autowired
-    private PedidoRepository pedidoRepo;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private ClienteRepository repo;
+    @Autowired private CarritoRepository carritoRepo;
+    @Autowired private PedidoRepository pedidoRepo;
+    @Autowired private RolRepository rolRepo;
+    @Autowired private UsuarioRepository usuarioRepo;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Override
     public Collection<Cliente> findAll() {
@@ -53,17 +52,23 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente create(Cliente cliente) {
-        if (repo.findByUsername(cliente.getUsername()) != null) {
+    public Cliente create(String name, String apellido, String email,
+                          String username, String password, String direccion, String telefono) {
+        if (usuarioRepo.findByUsername(username).isPresent()) {
             throw new IllegalStateException(
-                    "El nombre de usuario '" + cliente.getUsername() + "' ya está en uso.");
+                    "El nombre de usuario '" + username + "' ya está en uso.");
         }
-        if (repo.findByEmail(cliente.getEmail()) != null) {
+        if (repo.findByEmail(email) != null) {
             throw new IllegalStateException(
-                    "El correo '" + cliente.getEmail() + "' ya está registrado.");
+                    "El correo '" + email + "' ya está registrado.");
         }
-        cliente.setPassword(passwordEncoder.encode(cliente.getPassword()));
+
+        Rol rolCliente = rolRepo.findByNombre("CLIENTE")
+                .orElseThrow(() -> new IllegalStateException("Rol CLIENTE no encontrado en la base de datos."));
+        Usuario usuario = new Usuario(username, passwordEncoder.encode(password), rolCliente);
+        Cliente cliente = new Cliente(name, apellido, email, usuario, direccion, telefono);
         Cliente guardado = repo.save(cliente);
+
         if (carritoRepo.findByClienteId(guardado.getId()).isEmpty()) {
             Carrito carrito = new Carrito(guardado);
             carrito.setActivo(false);
@@ -78,14 +83,15 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente stored = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Cliente no encontrado."));
 
-        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getPassword())) {
+        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getUsuario().getPassword())) {
             throw new SecurityException("La contraseña actual es incorrecta.");
         }
-        Cliente byUsername = repo.findByUsername(username);
-        if (byUsername != null && !byUsername.getId().equals(id)) {
-            throw new IllegalStateException(
-                    "El nombre de usuario '" + username + "' ya está en uso.");
-        }
+
+        usuarioRepo.findByUsername(username)
+                .filter(u -> !u.getId().equals(stored.getUsuario().getId()))
+                .ifPresent(u -> { throw new IllegalStateException(
+                        "El nombre de usuario '" + username + "' ya está en uso."); });
+
         Cliente byEmail = repo.findByEmail(email);
         if (byEmail != null && !byEmail.getId().equals(id)) {
             throw new IllegalStateException(
@@ -95,9 +101,9 @@ public class ClienteServiceImpl implements ClienteService {
         stored.setName(name);
         stored.setApellido(apellido);
         stored.setEmail(email);
-        stored.setUsername(username);
+        stored.getUsuario().setUsername(username);
         if (password != null && !password.isBlank()) {
-            stored.setPassword(passwordEncoder.encode(password));
+            stored.getUsuario().setPassword(passwordEncoder.encode(password));
         }
         stored.setDireccion(direccion);
         stored.setTelefono(telefono);
@@ -110,7 +116,7 @@ public class ClienteServiceImpl implements ClienteService {
             throw new IllegalArgumentException("Se requieren usuario y contraseña.");
         }
         Cliente cliente = repo.findByUsername(username);
-        if (cliente == null || !passwordEncoder.matches(password, cliente.getPassword())) {
+        if (cliente == null || !passwordEncoder.matches(password, cliente.getUsuario().getPassword())) {
             throw new SecurityException("Usuario o contraseña incorrectos.");
         }
         if (!cliente.isActivo()) {

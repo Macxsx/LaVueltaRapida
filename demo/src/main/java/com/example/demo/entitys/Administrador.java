@@ -1,59 +1,30 @@
 package com.example.demo.entitys;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
 
 @Data
 @Entity
-public class Administrador implements UserDetails {
+public class Administrador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String usuario;
+    @OneToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "usuario_id", unique = true)
+    private Usuario usuario;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String contrasena;
+    public Administrador() {}
 
-    public Administrador() {
-    }
-
-    public Administrador(Long id, String usuario, String contrasena) {
-        this.id = id;
+    public Administrador(Usuario usuario) {
         this.usuario = usuario;
-        this.contrasena = contrasena;
     }
-
-    public Administrador(String usuario, String contrasena) {
-        this.usuario = usuario;
-        this.contrasena = contrasena;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(Role.ADMIN.authority()));
-    }
-
-    @Override
-    @JsonIgnore
-    public String getPassword() { return contrasena; }
-
-    @Override
-    public String getUsername() { return usuario; }
 }

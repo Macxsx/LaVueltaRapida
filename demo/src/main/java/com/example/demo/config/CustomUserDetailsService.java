@@ -7,32 +7,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entitys.Cliente;
-import com.example.demo.repository.AdministradorRepository;
 import com.example.demo.repository.ClienteRepository;
-import com.example.demo.repository.OperadorRepository;
+import com.example.demo.repository.UsuarioRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired private AdministradorRepository adminRepo;
-    @Autowired private OperadorRepository operadorRepo;
+    @Autowired private UsuarioRepository usuarioRepo;
     @Autowired private ClienteRepository clienteRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Administrador
-        var admin = adminRepo.findByUsuario(username);
-        if (admin.isPresent()) return admin.get();
+        var u = usuarioRepo.findByUsername(username);
+        if (u.isPresent()) return u.get();
 
-        // Operador
-        var operador = operadorRepo.findByUsuario(username);
-        if (operador.isPresent()) return operador.get();
-
-        // Cliente (por username o email)
-        Cliente cliente = username.contains("@")
-                ? clienteRepo.findByEmail(username)
-                : clienteRepo.findByUsername(username);
-        if (cliente != null) return cliente;
+        // Soporte para login de clientes con email
+        if (username.contains("@")) {
+            Cliente cliente = clienteRepo.findByEmail(username);
+            if (cliente != null) return cliente.getUsuario();
+        }
 
         throw new UsernameNotFoundException("Usuario no encontrado: " + username);
     }

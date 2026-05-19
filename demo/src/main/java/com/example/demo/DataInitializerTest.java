@@ -12,6 +12,8 @@ import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
 import com.example.demo.entitys.Operador;
 import com.example.demo.entitys.Pedido;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 import com.example.demo.repository.AdicionalRepository;
 import com.example.demo.repository.AdministradorRepository;
 import com.example.demo.repository.CarritoRepository;
@@ -23,6 +25,7 @@ import com.example.demo.repository.LineaPedidoAdicionalRepository;
 import com.example.demo.repository.LineaPedidoRepository;
 import com.example.demo.repository.OperadorRepository;
 import com.example.demo.repository.PedidoRepository;
+import com.example.demo.repository.RolRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
@@ -46,9 +49,17 @@ public class DataInitializerTest {
             CarritoRepository carritoRepo,
             LineaPedidoRepository lineaPedidoRepo,
             LineaPedidoAdicionalRepository lineaPedidoAdicionalRepo,
-            PedidoRepository pedidoRepo
+            PedidoRepository pedidoRepo,
+            RolRepository rolRepo
     ) {
         return args -> {
+
+            // ==========================================
+            // 0. ROLES
+            // ==========================================
+            Rol rolAdmin    = rolRepo.save(new Rol("ADMIN"));
+            Rol rolOperador = rolRepo.save(new Rol("OPERADOR"));
+            Rol rolCliente  = rolRepo.save(new Rol("CLIENTE"));
 
             // ==========================================
             // 1. CATEGORÍAS
@@ -194,24 +205,26 @@ public class DataInitializerTest {
             comidaRepo.save(new Comida("Monaco Macarons (Set de 3)", "Macarons de pistacho, frambuesa y limón, elegantes como el paddock.", 24900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313142/Monaco_Macarons_gshgmt.png", true, postres));
 
             // ==========================================
-            // 4. CLIENTES
+            // 7. CLIENTES
             // ==========================================
-            clienteRepo.save(new Cliente("Pablo",    "García",    "PabloGarcia21@gmail.com",        "pablo123",  "123456",    "Cra 7 #40-62, Bogotá",        "3001234567"));
-            clienteRepo.save(new Cliente("María",    "Gómez",     "maria.gomez@email.com",          "maria123",  "maria2024", "Cl 45 #12-30, Medellín",      "3019876543"));
-            clienteRepo.save(new Cliente("Andrés",   "Martínez",  "andres.martinez@email.com",      "andres123", "andres789", "Av 68 #23-10, Cali",          "3024567890"));
-            clienteRepo.save(new Cliente("Laura",    "Ramírez",   "laura.ramirez@email.com",        "laura123",  "lauraPass", "Cra 15 #88-21, Barranquilla", "3106543210"));
-            clienteRepo.save(new Cliente("Camilo",   "Torres",    "camilo.torres@email.com",        "camilito20","camilo123", "Cl 100 #19-50, Bucaramanga",  "3157891234"));
-            clienteRepo.save(new Cliente("Valentina","López",     "valentina.lopez@email.com",      "vale456",   "valePass1", "Cra 50 #32-15, Pereira",      "3201234567"));
-            clienteRepo.save(new Cliente("Santiago", "Hernández", "santiago.hernandez@email.com",   "santi789",  "santiClave","Cl 72 #10-45, Cartagena",     "3112345678"));
-            clienteRepo.save(new Cliente("Daniela",  "Castro",    "daniela.castro@email.com",       "dani321",   "daniSecure","Av 30 #15-80, Manizales",     "3009876543"));
-            clienteRepo.save(new Cliente("Sebastián","Morales",   "sebastian.morales@email.com",    "sebas007",  "sebasKey",  "Cra 25 #60-12, Santa Marta",  "3178901234"));
-            clienteRepo.save(new Cliente("Carolina", "Díaz",      "carolina.diaz@email.com",        "caro2024",  "caroPass",  "Cl 85 #42-30, Ibagué",        "3145678901"));
+            clienteRepo.save(new Cliente("Pablo",     "García",    "PabloGarcia21@gmail.com",       new Usuario("pablo123",   "123456",    rolCliente), "Cra 7 #40-62, Bogotá",        "3001234567"));
+            clienteRepo.save(new Cliente("María",     "Gómez",     "maria.gomez@email.com",          new Usuario("maria123",   "maria2024", rolCliente), "Cl 45 #12-30, Medellín",      "3019876543"));
+            clienteRepo.save(new Cliente("Andrés",    "Martínez",  "andres.martinez@email.com",      new Usuario("andres123",  "andres789", rolCliente), "Av 68 #23-10, Cali",          "3024567890"));
+            clienteRepo.save(new Cliente("Laura",     "Ramírez",   "laura.ramirez@email.com",        new Usuario("laura123",   "lauraPass", rolCliente), "Cra 15 #88-21, Barranquilla", "3106543210"));
+            clienteRepo.save(new Cliente("Camilo",    "Torres",    "camilo.torres@email.com",        new Usuario("camilito20", "camilo123", rolCliente), "Cl 100 #19-50, Bucaramanga",  "3157891234"));
+            clienteRepo.save(new Cliente("Valentina", "López",     "valentina.lopez@email.com",      new Usuario("vale456",    "valePass1", rolCliente), "Cra 50 #32-15, Pereira",      "3201234567"));
+            clienteRepo.save(new Cliente("Santiago",  "Hernández", "santiago.hernandez@email.com",   new Usuario("santi789",   "santiClave",rolCliente), "Cl 72 #10-45, Cartagena",     "3112345678"));
+            clienteRepo.save(new Cliente("Daniela",   "Castro",    "daniela.castro@email.com",       new Usuario("dani321",    "daniSecure",rolCliente), "Av 30 #15-80, Manizales",     "3009876543"));
+            clienteRepo.save(new Cliente("Sebastián", "Morales",   "sebastian.morales@email.com",    new Usuario("sebas007",   "sebasKey",  rolCliente), "Cra 25 #60-12, Santa Marta",  "3178901234"));
+            clienteRepo.save(new Cliente("Carolina",  "Díaz",      "carolina.diaz@email.com",        new Usuario("caro2024",   "caroPass",  rolCliente), "Cl 85 #42-30, Ibagué",        "3145678901"));
 
-            Cliente clienteInactivo = new Cliente("Cuenta", "Inactiva", "inactivo@test.com", "inactivo", "inacPass", "Calle X", "0000000000");
+            Cliente clienteInactivo = new Cliente("Cuenta", "Inactiva", "inactivo@test.com",
+                    new Usuario("inactivo", "inacPass", rolCliente), "Calle X", "0000000000");
             clienteInactivo.setActivo(false);
             clienteRepo.save(clienteInactivo);
 
-            Cliente clienteHistorial = clienteRepo.save(new Cliente("Solo", "Historial", "historial@test.com", "historial", "histPass", "Calle Y", "1111111111"));
+            Cliente clienteHistorial = clienteRepo.save(new Cliente("Solo", "Historial", "historial@test.com",
+                    new Usuario("historial", "histPass", rolCliente), "Calle Y", "1111111111"));
             Pedido pedidoHistorial = new Pedido();
             pedidoHistorial.setCliente(clienteHistorial);
             pedidoHistorial.setEstado(EstadoPedido.ENTREGADO);
@@ -220,7 +233,7 @@ public class DataInitializerTest {
             pedidoRepo.save(pedidoHistorial);
 
             // ==========================================
-            // 5. CARRITOS (uno por cliente)
+            // 8. CARRITOS (uno por cliente)
             // ==========================================
             clienteRepo.findAll().forEach(c -> {
                 Carrito carrito = new Carrito(c);
@@ -229,31 +242,31 @@ public class DataInitializerTest {
             });
 
             // ==========================================
-            // 6. OPERADORES
+            // 9. OPERADORES
             // ==========================================
-            operadorRepo.save(new Operador("Carlos Ruiz",       "op1",  "123"));
-            operadorRepo.save(new Operador("Laura Sánchez",     "op2",  "123"));
-            operadorRepo.save(new Operador("Andrés Mora",       "op3",  "123"));
-            operadorRepo.save(new Operador("Sofía Vargas",      "op4",  "123"));
-            operadorRepo.save(new Operador("Juan Prada",        "op5",  "123"));
-            operadorRepo.save(new Operador("Natalia Cárdenas",  "op6",  "123"));
-            operadorRepo.save(new Operador("Ricardo Peña",      "op7",  "123"));
-            operadorRepo.save(new Operador("Valentina Cruz",    "op8",  "123"));
-            operadorRepo.save(new Operador("Felipe Gómez",      "op9",  "123"));
-            operadorRepo.save(new Operador("Mariana Ospina",    "op10", "123"));
-            operadorRepo.save(new Operador("Diego Salcedo",     "op11", "123"));
-            operadorRepo.save(new Operador("Isabela Ríos",      "op12", "123"));
-            operadorRepo.save(new Operador("Tomás Bejarano",    "op13", "123"));
-            operadorRepo.save(new Operador("Lucía Montoya",     "op14", "123"));
-            operadorRepo.save(new Operador("Esteban Guerrero",  "op15", "123"));
-            operadorRepo.save(new Operador("Paula Herrera",     "op16", "123"));
-            operadorRepo.save(new Operador("Julián Acosta",     "op17", "123"));
-            operadorRepo.save(new Operador("Camila Nieto",      "op18", "123"));
-            operadorRepo.save(new Operador("Alejandro Duque",   "op19", "123"));
-            operadorRepo.save(new Operador("Sara Quintero",     "op20", "123"));
+            operadorRepo.save(new Operador("Carlos Ruiz",       new Usuario("op1",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Laura Sánchez",     new Usuario("op2",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Andrés Mora",       new Usuario("op3",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Sofía Vargas",      new Usuario("op4",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Juan Prada",        new Usuario("op5",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Natalia Cárdenas",  new Usuario("op6",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Ricardo Peña",      new Usuario("op7",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Valentina Cruz",    new Usuario("op8",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Felipe Gómez",      new Usuario("op9",  "123", rolOperador)));
+            operadorRepo.save(new Operador("Mariana Ospina",    new Usuario("op10", "123", rolOperador)));
+            operadorRepo.save(new Operador("Diego Salcedo",     new Usuario("op11", "123", rolOperador)));
+            operadorRepo.save(new Operador("Isabela Ríos",      new Usuario("op12", "123", rolOperador)));
+            operadorRepo.save(new Operador("Tomás Bejarano",    new Usuario("op13", "123", rolOperador)));
+            operadorRepo.save(new Operador("Lucía Montoya",     new Usuario("op14", "123", rolOperador)));
+            operadorRepo.save(new Operador("Esteban Guerrero",  new Usuario("op15", "123", rolOperador)));
+            operadorRepo.save(new Operador("Paula Herrera",     new Usuario("op16", "123", rolOperador)));
+            operadorRepo.save(new Operador("Julián Acosta",     new Usuario("op17", "123", rolOperador)));
+            operadorRepo.save(new Operador("Camila Nieto",      new Usuario("op18", "123", rolOperador)));
+            operadorRepo.save(new Operador("Alejandro Duque",   new Usuario("op19", "123", rolOperador)));
+            operadorRepo.save(new Operador("Sara Quintero",     new Usuario("op20", "123", rolOperador)));
 
             // ==========================================
-            // 6. DOMICILIARIOS
+            // 10. DOMICILIARIOS
             // ==========================================
             domiciliarioRepo.save(new Domiciliario("Luis Ramírez",   "1001001", "3001111111", true));
             domiciliarioRepo.save(new Domiciliario("Pedro Suárez",   "1002002", "3002222222", true));
@@ -262,16 +275,16 @@ public class DataInitializerTest {
             domiciliarioRepo.save(new Domiciliario("Valeria Torres", "1005005", "3005555555", true));
 
             // ==========================================
-            // 7. ADMINISTRADORES
+            // 11. ADMINISTRADORES
             // ==========================================
-            adminRepo.save(new Administrador("admin1", "123"));
-            adminRepo.save(new Administrador("admin2", "123"));
-            adminRepo.save(new Administrador("admin3", "123"));
-            adminRepo.save(new Administrador("admin4", "123"));
-            adminRepo.save(new Administrador("admin5", "123"));
+            adminRepo.save(new Administrador(new Usuario("admin1", "123", rolAdmin)));
+            adminRepo.save(new Administrador(new Usuario("admin2", "123", rolAdmin)));
+            adminRepo.save(new Administrador(new Usuario("admin3", "123", rolAdmin)));
+            adminRepo.save(new Administrador(new Usuario("admin4", "123", rolAdmin)));
+            adminRepo.save(new Administrador(new Usuario("admin5", "123", rolAdmin)));
 
             // ==========================================
-            // 8. PEDIDOS DE EJEMPLO (20 pedidos)
+            // 12. PEDIDOS DE EJEMPLO (20 pedidos)
             // ==========================================
             List<Cliente> clientes = clienteRepo.findAll();
             List<Comida> comidas   = comidaRepo.findAll();
@@ -321,8 +334,6 @@ public class DataInitializerTest {
                 if (estado == EstadoPedido.ENTREGADO) {
                     pedido.setFechaEntrega(LocalDateTime.now().minusMinutes(minutosAtras / 3));
                 }
-                // Invariante: solo los pedidos en estado ENVIADO pueden tener
-                // domiciliario asignado, y ese domiciliario queda ocupado.
                 if (estado == EstadoPedido.ENVIADO && domIdx >= 0) {
                     Domiciliario d = domiciliarios.get(domIdx);
                     d.setDisponible(false);

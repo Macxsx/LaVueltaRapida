@@ -16,7 +16,8 @@ public interface ClienteService {
     Cliente findByEmail(String email);
 
     /** Lanza IllegalStateException si el usuario o email ya están en uso. */
-    Cliente create(Cliente cliente);
+    Cliente create(String name, String apellido, String email,
+                   String username, String password, String direccion, String telefono);
 
     /**
      * Lanza NoSuchElementException si no existe.

@@ -10,15 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entitys.Administrador;
 import com.example.demo.repository.AdministradorRepository;
+import com.example.demo.repository.UsuarioRepository;
 
 @Service
 public class AdministradorServiceImpl implements AdministradorService {
 
-    @Autowired
-    private AdministradorRepository repo;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private AdministradorRepository repo;
+    @Autowired private UsuarioRepository usuarioRepo;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Override
     public List<Administrador> findAll() {
@@ -40,17 +39,18 @@ public class AdministradorServiceImpl implements AdministradorService {
         Administrador stored = repo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Administrador no encontrado."));
 
-        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getContrasena())) {
+        if (currentPassword != null && !passwordEncoder.matches(currentPassword, stored.getUsuario().getPassword())) {
             throw new SecurityException("La contraseña actual es incorrecta.");
         }
-        repo.findByUsuario(usuario)
-                .filter(a -> !a.getId().equals(id))
-                .ifPresent(a -> { throw new IllegalStateException(
+
+        usuarioRepo.findByUsername(usuario)
+                .filter(u -> !u.getId().equals(stored.getUsuario().getId()))
+                .ifPresent(u -> { throw new IllegalStateException(
                         "Ya existe un administrador con el usuario '" + usuario + "'."); });
 
-        stored.setUsuario(usuario);
+        stored.getUsuario().setUsername(usuario);
         if (contrasena != null && !contrasena.isBlank()) {
-            stored.setContrasena(passwordEncoder.encode(contrasena));
+            stored.getUsuario().setPassword(passwordEncoder.encode(contrasena));
         }
         return repo.save(stored);
     }

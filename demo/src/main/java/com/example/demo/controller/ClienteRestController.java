@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.CreateClienteRequest;
 import com.example.demo.dto.UpdateClienteRequest;
 import com.example.demo.entitys.Cliente;
 import com.example.demo.error.ApiError;
@@ -42,9 +43,11 @@ public class ClienteRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> add(@RequestBody CreateClienteRequest req) {
         try {
-            return ResponseEntity.ok(clienteService.create(cliente));
+            return ResponseEntity.ok(clienteService.create(
+                    req.name, req.apellido, req.email, req.username, req.password,
+                    req.direccion, req.telefono));
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
