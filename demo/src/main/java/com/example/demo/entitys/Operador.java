@@ -1,5 +1,7 @@
 package com.example.demo.entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,9 +22,15 @@ public class Operador {
 
     private String nombre;
 
+    @JsonIgnore
     @OneToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;
+
+    @JsonProperty("usuario")
+    public String getUsuarioUsername() {
+        return usuario != null ? usuario.getUsername() : null;
+    }
 
     public Operador() {}
 
