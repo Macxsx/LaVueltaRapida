@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ComidaDetalleResponse;
 import com.example.demo.dto.ComidaRequest;
 import com.example.demo.entitys.Comida;
 import com.example.demo.error.ApiError;
@@ -33,9 +34,9 @@ public class ComidaRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comida> findById(@PathVariable Long id) {
+    public ResponseEntity<ComidaDetalleResponse> findById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(comidaService.findById(id));
+            return ResponseEntity.ok(ComidaDetalleResponse.from(comidaService.findById(id)));
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }

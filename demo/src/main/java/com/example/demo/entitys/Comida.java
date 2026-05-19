@@ -25,7 +25,7 @@ public class Comida {
     private String image;
     private boolean available;
 
-    @ManyToOne // <--- ESTO ES LO QUE FALTABA PARA QUE FUNCIONE CON LA NUEVA CATEGORIA
+    @ManyToOne
     @JoinColumn(nullable = false)
     private Categoria category;
 

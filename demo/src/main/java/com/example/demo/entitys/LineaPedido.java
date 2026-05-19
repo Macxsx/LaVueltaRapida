@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -28,7 +27,6 @@ public class LineaPedido {
 
     private Integer cantidad;
 
-    @JsonIgnoreProperties("category")
     @ManyToOne
     @JoinColumn(name = "comida_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
