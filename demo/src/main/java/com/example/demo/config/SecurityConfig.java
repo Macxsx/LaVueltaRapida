@@ -51,6 +51,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/comidas/**", "/categorias/**", "/adicionales/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/clientes").permitAll()
 
+                // ── Perfil propio ────────────────────────────────────────────
+                .requestMatchers(HttpMethod.GET, "/clientes/me").hasAnyRole("ADMIN", "CLIENTE")
+                .requestMatchers(HttpMethod.GET, "/operadores/me").hasAnyRole("ADMIN", "OPERADOR")
+
                 // ── Solo ADMIN ───────────────────────────────────────────────
                 .requestMatchers("/administradores/**", "/operadores/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/comidas/**", "/categorias/**", "/adicionales/**").hasRole("ADMIN")
