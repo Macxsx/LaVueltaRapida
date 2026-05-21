@@ -20,18 +20,22 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.demo.config.JwtService;
 import com.example.demo.dto.UpdateAdminRequest;
 import com.example.demo.entitys.Administrador;
 import com.example.demo.service.AdministradorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = AdministradorRestController.class)
+@WebMvcTest(controllers = AdministradorRestController.class,
+            excludeAutoConfiguration = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class})
 @ActiveProfiles("test")
 public class AdministradorControllerTest {
 
@@ -43,6 +47,9 @@ public class AdministradorControllerTest {
 
     @MockitoBean
     private AdministradorService administradorService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
 
     private UpdateAdminRequest buildRequest(String usuario, String contrasena, String currentPassword) {

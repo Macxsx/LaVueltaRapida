@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.example.demo.entitys.Carrito;
 import com.example.demo.entitys.Cliente;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 
 @DataJpaTest
 public class CarritoRepositoryTest {
@@ -20,13 +22,17 @@ public class CarritoRepositoryTest {
     @Autowired
     private ClienteRepository clienteRepo;
 
+    @Autowired
+    private RolRepository rolRepo;
+
     private Cliente cliente1;
     private Cliente cliente2;
 
     @BeforeEach
     public void setUp() {
-        cliente1 = clienteRepo.save(new Cliente("Juan", "Pérez", "juan@mail.com", "juanp", "pass1", "Calle 1", "3001000000"));
-        cliente2 = clienteRepo.save(new Cliente("Ana", "Gómez", "ana@mail.com", "anag", "pass2", "Calle 2", "3002000000"));
+        Rol rol = rolRepo.save(new Rol("CLIENTE"));
+        cliente1 = clienteRepo.save(new Cliente("Juan", "Pérez", "juan@mail.com", new Usuario("juanp", "pass1", rol), "Calle 1", "3001000000"));
+        cliente2 = clienteRepo.save(new Cliente("Ana",  "Gómez", "ana@mail.com",  new Usuario("anag",  "pass2", rol), "Calle 2", "3002000000"));
 
         carritoRepo.save(new Carrito(cliente1));
         carritoRepo.save(new Carrito(cliente2));

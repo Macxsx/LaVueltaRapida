@@ -1,5 +1,7 @@
 package com.example.demo.entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,6 +20,7 @@ public class Administrador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @OneToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;
@@ -35,6 +38,11 @@ public class Administrador {
     public Administrador(long id, String username, String password) {
         this.id = id;
         this.usuario = new Usuario(username, password, null);
+    }
+
+    @JsonProperty("usuario")
+    public String getUsuarioUsername() {
+        return usuario != null ? usuario.getUsername() : null;
     }
 
     public String getContrasena() {

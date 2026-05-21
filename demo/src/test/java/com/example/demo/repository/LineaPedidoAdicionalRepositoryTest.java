@@ -16,6 +16,8 @@ import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.LineaPedidoAdicional;
 import com.example.demo.entitys.Pedido;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 
 @DataJpaTest
 public class LineaPedidoAdicionalRepositoryTest {
@@ -27,6 +29,7 @@ public class LineaPedidoAdicionalRepositoryTest {
     @Autowired private ComidaRepository               comidaRepo;
     @Autowired private CategoriaRepository            catRepo;
     @Autowired private ClienteRepository              clienteRepo;
+    @Autowired private RolRepository                  rolRepo;
 
     private Adicional adicional;
     private Comida comida;
@@ -37,7 +40,8 @@ public class LineaPedidoAdicionalRepositoryTest {
         Categoria categoria = catRepo.save(new Categoria("Clásicas"));
         comida    = comidaRepo.save(new Comida("Margarita", "Tomate y queso", 25000, null, true, categoria));
         adicional = adicionalRepo.save(new Adicional("Extra queso", 2000, true));
-        cliente   = clienteRepo.save(new Cliente("Juan", "Pérez", "juan@mail.com", "juanp", "pass1", "Calle 1", "3001000000"));
+        Rol rol = rolRepo.save(new Rol("CLIENTE"));
+        cliente   = clienteRepo.save(new Cliente("Juan", "Pérez", "juan@mail.com", new Usuario("juanp", "pass1", rol), "Calle 1", "3001000000"));
     }
 
     @Test

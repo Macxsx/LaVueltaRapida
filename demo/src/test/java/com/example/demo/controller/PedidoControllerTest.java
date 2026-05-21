@@ -19,6 +19,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,13 +29,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.demo.config.JwtService;
 import com.example.demo.entitys.Cliente;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.Pedido;
 import com.example.demo.service.PedidoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = PedidoRestController.class)
+@WebMvcTest(controllers = PedidoRestController.class,
+            excludeAutoConfiguration = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class})
 @ActiveProfiles("test")
 public class PedidoControllerTest {
 
@@ -45,6 +49,9 @@ public class PedidoControllerTest {
 
     @MockitoBean
     private PedidoService pedidoService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
 
     private Cliente buildCliente(Long id) {

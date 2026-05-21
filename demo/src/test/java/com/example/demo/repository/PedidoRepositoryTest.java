@@ -13,22 +13,27 @@ import com.example.demo.entitys.Cliente;
 import com.example.demo.entitys.Domiciliario;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.Pedido;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 
 @DataJpaTest
 public class PedidoRepositoryTest {
 
-    @Autowired private PedidoRepository      pedidoRepo;
-    @Autowired private ClienteRepository     clienteRepo;
+    @Autowired private PedidoRepository       pedidoRepo;
+    @Autowired private ClienteRepository      clienteRepo;
     @Autowired private DomiciliarioRepository domiciliarioRepo;
+    @Autowired private RolRepository          rolRepo;
 
     private Cliente     cliente1;
     private Cliente     cliente2;
     private Domiciliario domiciliario;
+    private Rol         rolCliente;
 
     @BeforeEach
     public void setUp() {
-        cliente1     = clienteRepo.save(new Cliente("Juan",  "Pérez", "juan@mail.com",  "juanp",  "pass1", "Calle 1", "3001000001"));
-        cliente2     = clienteRepo.save(new Cliente("Ana",   "Gómez", "ana@mail.com",   "anag",   "pass2", "Calle 2", "3001000002"));
+        rolCliente   = rolRepo.save(new Rol("CLIENTE"));
+        cliente1     = clienteRepo.save(new Cliente("Juan", "Pérez", "juan@mail.com", new Usuario("juanp", "pass1", rolCliente), "Calle 1", "3001000001"));
+        cliente2     = clienteRepo.save(new Cliente("Ana",  "Gómez", "ana@mail.com",  new Usuario("anag",  "pass2", rolCliente), "Calle 2", "3001000002"));
         domiciliario = domiciliarioRepo.save(new Domiciliario("Carlos Ruiz", "123456", "3101000001", true));
 
         pedidoRepo.save(new Pedido(LocalDateTime.now().minusHours(3), null, EstadoPedido.ENTREGADO, cliente1));
@@ -101,7 +106,7 @@ public class PedidoRepositoryTest {
     @Test
     public void PedidoRepository_existsByClienteIdAndEstadoNot_ReturnsFalseWhenAllOrdersAreExcludedEstado() {
 
-        Cliente clienteSoloEntregados = clienteRepo.save(new Cliente("Luis", "Torres", "luis@mail.com", "luist", "pass4", "Calle 4", "3001000004"));
+        Cliente clienteSoloEntregados = clienteRepo.save(new Cliente("Luis", "Torres", "luis@mail.com", new Usuario("luist", "pass4", rolCliente), "Calle 4", "3001000004"));
         pedidoRepo.save(new Pedido(LocalDateTime.now(), null, EstadoPedido.ENTREGADO, clienteSoloEntregados));
 
         boolean result = pedidoRepo.existsByClienteIdAndEstadoNot(clienteSoloEntregados.getId(), EstadoPedido.ENTREGADO);

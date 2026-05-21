@@ -22,12 +22,15 @@ import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.demo.config.JwtService;
 import com.example.demo.dto.CardPaymentRequest;
 import com.example.demo.dto.MpItemRequest;
 import com.example.demo.dto.MpPayerRequest;
@@ -36,7 +39,8 @@ import com.example.demo.service.MercadoPagoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mercadopago.exceptions.MPException;
 
-@WebMvcTest(controllers = MercadoPagoRestController.class)
+@WebMvcTest(controllers = MercadoPagoRestController.class,
+            excludeAutoConfiguration = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class})
 @ActiveProfiles("test")
 public class MercadoPagoControllerTest {
 
@@ -48,6 +52,9 @@ public class MercadoPagoControllerTest {
 
     @MockitoBean
     private MercadoPagoService mercadoPagoService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     private MpPreferenceRequest buildRequest() {
         MpPreferenceRequest req = new MpPreferenceRequest();

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.example.demo.entitys.Administrador;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 
 @DataJpaTest
 public class AdministradorRepositoryTest {
@@ -16,11 +18,17 @@ public class AdministradorRepositoryTest {
     @Autowired
     private AdministradorRepository adminRepo;
 
+    @Autowired
+    private RolRepository rolRepo;
+
+    private Rol rolAdmin;
+
     @BeforeEach
     public void setUp() {
-        adminRepo.save(new Administrador("admin1", "pass123"));
-        adminRepo.save(new Administrador("admin2", "pass456"));
-        adminRepo.save(new Administrador("superadmin", "root999"));
+        rolAdmin = rolRepo.save(new Rol("ADMIN"));
+        adminRepo.save(new Administrador(new Usuario("admin1",     "pass123", rolAdmin)));
+        adminRepo.save(new Administrador(new Usuario("admin2",     "pass456", rolAdmin)));
+        adminRepo.save(new Administrador(new Usuario("superadmin", "root999", rolAdmin)));
     }
 
     @Test
@@ -29,7 +37,7 @@ public class AdministradorRepositoryTest {
         Optional<Administrador> result = adminRepo.findByUsuario("admin1");
 
         Assertions.assertThat(result).isPresent();
-        Assertions.assertThat(result.get().getUsuario()).isEqualTo("admin1");
+        Assertions.assertThat(result.get().getUsuario().getUsername()).isEqualTo("admin1");
     }
 
     @Test

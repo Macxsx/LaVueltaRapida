@@ -14,21 +14,28 @@ import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.demo.config.JwtService;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RecuperarContrasenaRequest;
 import com.example.demo.dto.ResetContrasenaRequest;
+import com.example.demo.service.AdministradorService;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.AuthService.LoginResult;
+import com.example.demo.service.ClienteService;
+import com.example.demo.service.OperadorService;
 import com.example.demo.service.PasswordResetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = AuthRestController.class)
+@WebMvcTest(controllers = AuthRestController.class,
+            excludeAutoConfiguration = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class})
 @ActiveProfiles("test")
 public class AuthControllerTest {
 
@@ -43,6 +50,18 @@ public class AuthControllerTest {
 
     @MockitoBean
     private PasswordResetService passwordResetService;
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private ClienteService clienteService;
+
+    @MockitoBean
+    private AdministradorService administradorService;
+
+    @MockitoBean
+    private OperadorService operadorService;
 
 
     private LoginRequest buildRequest(String usuario, String contrasena) {

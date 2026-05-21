@@ -11,16 +11,20 @@ import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.demo.config.JwtService;
 import com.example.demo.entitys.Categoria;
 import com.example.demo.service.CategoriaService;
 
-@WebMvcTest(controllers = CategoriaRestController.class)
+@WebMvcTest(controllers = CategoriaRestController.class,
+            excludeAutoConfiguration = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class})
 @ActiveProfiles("test")
 public class CategoriaControllerTest {
 
@@ -29,6 +33,9 @@ public class CategoriaControllerTest {
 
     @MockitoBean
     private CategoriaService categoriaService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
 
     @Test

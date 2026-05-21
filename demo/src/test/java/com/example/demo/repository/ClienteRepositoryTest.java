@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.example.demo.entitys.Cliente;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 
 @DataJpaTest
 public class ClienteRepositoryTest {
@@ -14,11 +16,17 @@ public class ClienteRepositoryTest {
     @Autowired
     private ClienteRepository clienteRepo;
 
+    @Autowired
+    private RolRepository rolRepo;
+
+    private Rol rolCliente;
+
     @BeforeEach
     public void setUp() {
-        clienteRepo.save(new Cliente("Juan",  "Pérez", "juan@mail.com",  "juanp",  "pass1", "Calle 1", "3001000001"));
-        clienteRepo.save(new Cliente("Ana",   "Gómez", "ana@mail.com",   "anag",   "pass2", "Calle 2", "3001000002"));
-        clienteRepo.save(new Cliente("Pedro", "Díaz",  "pedro@mail.com", "pedrod", "pass3", "Calle 3", "3001000003"));
+        rolCliente = rolRepo.save(new Rol("CLIENTE"));
+        clienteRepo.save(new Cliente("Juan",  "Pérez", "juan@mail.com",  new Usuario("juanp",  "pass1", rolCliente), "Calle 1", "3001000001"));
+        clienteRepo.save(new Cliente("Ana",   "Gómez", "ana@mail.com",   new Usuario("anag",   "pass2", rolCliente), "Calle 2", "3001000002"));
+        clienteRepo.save(new Cliente("Pedro", "Díaz",  "pedro@mail.com", new Usuario("pedrod", "pass3", rolCliente), "Calle 3", "3001000003"));
     }
 
     @Test

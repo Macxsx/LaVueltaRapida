@@ -16,6 +16,8 @@ import com.example.demo.entitys.Comida;
 import com.example.demo.entitys.EstadoPedido;
 import com.example.demo.entitys.LineaPedido;
 import com.example.demo.entitys.Pedido;
+import com.example.demo.entitys.Rol;
+import com.example.demo.entitys.Usuario;
 
 @DataJpaTest
 public class LineaPedidoRepositoryTest {
@@ -26,6 +28,7 @@ public class LineaPedidoRepositoryTest {
     @Autowired private ComidaRepository      comidaRepo;
     @Autowired private CategoriaRepository   catRepo;
     @Autowired private ClienteRepository     clienteRepo;
+    @Autowired private RolRepository         rolRepo;
 
     private Carrito carrito1;
     private Carrito carrito2;
@@ -39,10 +42,11 @@ public class LineaPedidoRepositoryTest {
         comida1 = comidaRepo.save(new Comida("Margarita",  "Tomate y queso",  25000, null, true, categoria));
         comida2 = comidaRepo.save(new Comida("Pepperoni",  "Pepperoni extra", 28000, null, true, categoria));
 
-        cliente  = clienteRepo.save(new Cliente("Juan", "Pérez", "juan@mail.com", "juanp", "pass1", "Calle 1", "3001000000"));
+        Rol rol = rolRepo.save(new Rol("CLIENTE"));
+        cliente  = clienteRepo.save(new Cliente("Juan", "Pérez", "juan@mail.com", new Usuario("juanp", "pass1", rol), "Calle 1", "3001000000"));
         carrito1 = carritoRepo.save(new Carrito(cliente));
         carrito2 = carritoRepo.save(new Carrito(clienteRepo.save(
-                new Cliente("Ana", "Gómez", "ana@mail.com", "anag", "pass2", "Calle 2", "3002000000"))));
+                new Cliente("Ana", "Gómez", "ana@mail.com", new Usuario("anag", "pass2", rol), "Calle 2", "3002000000"))));
 
         lineaPedidoRepo.save(new LineaPedido(1, comida1, carrito1, null));
         lineaPedidoRepo.save(new LineaPedido(2, comida2, carrito1, null));

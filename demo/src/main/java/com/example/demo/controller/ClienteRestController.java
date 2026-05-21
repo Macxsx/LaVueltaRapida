@@ -77,7 +77,7 @@ public class ClienteRestController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (CuentaDesactivadaException e) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(java.util.Map.of("mensaje", e.getMessage()));
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError.of(e.getMessage()));
         }
