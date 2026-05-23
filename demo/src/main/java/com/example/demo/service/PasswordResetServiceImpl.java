@@ -33,7 +33,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Autowired(required = false)
     private JavaMailSender mailSender;
 
-    @Value("${app.frontend-url:https://hg6k75cd-4200.use2.devtunnels.ms}")
+    @Value("${app.frontend-url:http://localhost:4200}")
     private String frontendUrl;
 
     @Value("${app.mail.from:noreply@lavueltarapida.com}")
