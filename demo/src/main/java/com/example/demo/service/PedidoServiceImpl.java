@@ -251,6 +251,39 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
+    public Pedido cancelarPorCliente(Long pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));
+
+        if (pedido.getEstado() != EstadoPedido.RECIBIDO) {
+            throw new IllegalStateException(
+                    "El pedido no puede cancelarse: ya está en estado '" + pedido.getEstado() + "'.");
+        }
+
+        Carrito carrito = carritoRepository.findByClienteId(pedido.getCliente().getId())
+                .orElseThrow(() -> new NoSuchElementException("Carrito del cliente no encontrado."));
+
+        for (LineaPedido lp : pedido.getLineasPedido()) {
+            LineaPedido nuevaLinea = new LineaPedido();
+            nuevaLinea.setComida(lp.getComida());
+            nuevaLinea.setCantidad(lp.getCantidad());
+            nuevaLinea.setCarrito(carrito);
+            for (LineaPedidoAdicional lpa : lp.getAdicionales()) {
+                LineaPedidoAdicional nuevaLpa = new LineaPedidoAdicional();
+                nuevaLpa.setAdicional(lpa.getAdicional());
+                nuevaLpa.setLineaPedido(nuevaLinea);
+                nuevaLinea.getAdicionales().add(nuevaLpa);
+            }
+            carrito.getLineasPedido().add(nuevaLinea);
+        }
+        carritoRepository.save(carrito);
+
+        pedido.setEstado(EstadoPedido.CANCELADO);
+        return pedidoRepository.save(pedido);
+    }
+
+    @Override
+    @Transactional
     public void cancelarPorPago(Long pedidoId) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado."));

@@ -54,4 +54,11 @@ public interface PedidoService {
      * Libera el domiciliario asignado si lo hay.
      */
     void cancelarPorPago(Long pedidoId);
+
+    /**
+     * Cancela un pedido en estado RECIBIDO iniciado por el cliente y restaura los ítems al carrito.
+     * Lanza NoSuchElementException si el pedido o el carrito no existen.
+     * Lanza IllegalStateException si el pedido ya no está en estado RECIBIDO.
+     */
+    Pedido cancelarPorCliente(Long pedidoId);
 }

@@ -99,6 +99,17 @@ public class PedidoRestController {
         }
     }
 
+    @PatchMapping("/{id}/cancelar-cliente")
+    public ResponseEntity<?> cancelarPorCliente(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(pedidoService.cancelarPorCliente(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(409).body(ApiError.of(e.getMessage()));
+        }
+    }
+
     @PatchMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstado(@PathVariable Long id,
                                               @RequestBody Map<String, String> body) {
