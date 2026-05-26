@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -20,6 +22,8 @@ import com.example.demo.repository.PasswordResetTokenRepository;
 
 @Service
 public class PasswordResetServiceImpl implements PasswordResetService {
+
+    private static final Logger log = LoggerFactory.getLogger(PasswordResetServiceImpl.class);
 
     @Autowired
     private PasswordResetTokenRepository tokenRepo;
@@ -76,7 +80,8 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         try {
             mailSender.send(mensaje);
         } catch (MailException e) {
-            throw new IllegalStateException("No se pudo enviar el correo. Verifica la configuración SMTP.");
+            log.error("SMTP error al enviar a {}: {}", email, e.getMessage(), e);
+            throw new IllegalStateException("No se pudo enviar el correo. Verifica la configuración SMTP.", e);
         }
     }
 
