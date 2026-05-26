@@ -156,58 +156,58 @@ public class DataInitializer {
             // ==========================================
             // 2. CLÁSICAS
             // ==========================================
-            comidaRepo.save(new Comida("Margherita Monza", "Salsa de tomate, mozzarella fresca, albahaca y aceite de oliva extra virgen.", 48900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303592/Margherita_Monza_zbrnpy.png", true, clasicas));
-            comidaRepo.save(new Comida("Pepperoni Paddock", "Salsa de tomate, mozzarella y pepperoni italiano crujiente.", 54900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303592/Pepperoni_Paddock_mmial0.png", true, clasicas));
-            comidaRepo.save(new Comida("Napolitana Nürburgring", "Tomate, mozzarella, anchoas, aceitunas negras y orégano.", 57900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303592/Napolitana_N%C3%BCrburgring_slqfhu.png", true, clasicas));
-            comidaRepo.save(new Comida("Cuatro Quesos Qualy", "Mozzarella, gorgonzola, parmesano y provolone.", 59900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303591/Cuatro_Quesos_Qualy_rt7fto.png", true, clasicas));
-            comidaRepo.save(new Comida("Hawaiana Hungaroring", "Jamón ahumado, piña asada y mozzarella.", 54900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303591/Hawaiana_Hungaroring_usmcnr.png", true, clasicas));
-            comidaRepo.save(new Comida("Vegetariana Valencia", "Pimientos, champiñones, cebolla morada, aceitunas y mozzarella.", 56900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303591/Vegetariana_Valencia_hrj9qx.png", true, clasicas));
-            comidaRepo.save(new Comida("Bianca Barcelona", "Base blanca, ricotta, mozzarella y espinaca fresca.", 57900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303591/Bianca_Barcelona_h4wlba.png", true, clasicas));
-            comidaRepo.save(new Comida("Prosciutto Pole Position", "Prosciutto italiano, rúcula fresca y parmesano.", 64900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303591/Prosciutto_Pole_Position_dgzw1l.png", true, clasicas));
-            comidaRepo.save(new Comida("Suprema Silverstone", "Pepperoni, jamón, champiñones y pimientos.", 59900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303590/Suprema_Silverstone_udkmhg.png", true, clasicas));
-            comidaRepo.save(new Comida("Clásica Circuito Central", "Salsa de tomate, doble mozzarella y orégano especial.", 51900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303591/Cl%C3%A1sica_Circuito_Central_vnwjbx.png", true, clasicas));
-            comidaRepo.save(new Comida("Bacon Brake Point", "Tocineta ahumada al maple, extra mozzarella y salsa de tomate San Marzano.", 58900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777303590/Bacon_Brake_Point_i5rbp8.png", true, clasicas));
+            comidaRepo.save(new Comida("Margherita Monza", "Salsa de tomate, mozzarella fresca, albahaca y aceite de oliva extra virgen.", 48900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720189/Margherita_Monza_vfdsfn.webp", true, clasicas));
+            comidaRepo.save(new Comida("Pepperoni Paddock", "Salsa de tomate, mozzarella y pepperoni italiano crujiente.", 54900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720190/Pepperoni_Paddock_xqonlm.webp", true, clasicas));
+            comidaRepo.save(new Comida("Napolitana Nürburgring", "Tomate, mozzarella, anchoas, aceitunas negras y orégano.", 57900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720190/Napolitana_N%C3%BCrburgring_tcpx01.webp", true, clasicas));
+            comidaRepo.save(new Comida("Cuatro Quesos Qualy", "Mozzarella, gorgonzola, parmesano y provolone.", 59900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720188/Cuatro_Quesos_Qualy_gxzrwz.webp", true, clasicas));
+            comidaRepo.save(new Comida("Hawaiana Hungaroring", "Jamón ahumado, piña asada y mozzarella.", 54900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720189/Hawaiana_Hungaroring_gv7a55.webp", true, clasicas));
+            comidaRepo.save(new Comida("Vegetariana Valencia", "Pimientos, champiñones, cebolla morada, aceitunas y mozzarella.", 56900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720192/Vegetariana_Valencia_sfhoc6.webp", true, clasicas));
+            comidaRepo.save(new Comida("Bianca Barcelona", "Base blanca, ricotta, mozzarella y espinaca fresca.", 57900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720186/Bianca_Barcelona_jw8rfh.webp", true, clasicas));
+            comidaRepo.save(new Comida("Prosciutto Pole Position", "Prosciutto italiano, rúcula fresca y parmesano.", 64900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720191/Prosciutto_Pole_Position_us1soi.webp", true, clasicas));
+            comidaRepo.save(new Comida("Suprema Silverstone", "Pepperoni, jamón, champiñones y pimientos.", 59900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720191/Suprema_Silverstone_tvby7t.webp", true, clasicas));
+            comidaRepo.save(new Comida("Clásica Circuito Central", "Salsa de tomate, doble mozzarella y orégano especial.", 51900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720188/Cl%C3%A1sica_Circuito_Central_hs1vxr.webp", true, clasicas));
+            comidaRepo.save(new Comida("Bacon Brake Point", "Tocineta ahumada al maple, extra mozzarella y salsa de tomate San Marzano.", 58900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720186/Bacon_Brake_Point_bzm2nr.webp", true, clasicas));
             // ==========================================
             // 3. ESPECIALES
             // ==========================================
-            comidaRepo.save(new Comida("Turbo Trufa GP", "Salsa blanca, mozzarella, aceite de trufa y champiñones.", 74900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307155/Turbo_Trufa_GP_t8fc3q.png", true, especiales));
-            comidaRepo.save(new Comida("Carbonara Chicane", "Salsa cremosa, panceta crujiente, parmesano y huevo central.", 71900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307154/Carbonara_Chicane_ugh8zh.png", true, especiales));
-            comidaRepo.save(new Comida("BBQ Bahrain Boost", "Salsa BBQ, pollo grillado y cebolla caramelizada.", 68900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307153/BBQ_Bahrain_Boost_sqnuve.png", true, especiales));
-            comidaRepo.save(new Comida("Pesto Pit Stop", "Base pesto, mozzarella, tomates cherry y burrata fresca.", 70900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307154/Pesto_Pit_Stop_zx3ibd.png", true, especiales));
-            comidaRepo.save(new Comida("Deluxe DRS", "Carne premium, mozzarella, cebolla crispy y salsa especial.", 75900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307153/Deluxe_DRS_ra23xs.png", true, especiales));
-            comidaRepo.save(new Comida("Overcut de Salmón", "Salmón ahumado premium, crema de eneldo, alcaparras y base crujiente.", 78900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307152/Overcut_de_Salm%C3%B3n_bajmj1.png", true, especiales));
-            comidaRepo.save(new Comida("Fungi Force Feedback", "Mezcla de hongos silvestres, aceite de ajo negro y tomillo fresco.", 69900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307152/Fungi_Force_Feedback_rweqkv.png", true, especiales));
+            comidaRepo.save(new Comida("Turbo Trufa GP", "Salsa blanca, mozzarella, aceite de trufa y champiñones.", 74900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720185/Turbo_Trufa_GP_reuuoy.webp", true, especiales));
+            comidaRepo.save(new Comida("Carbonara Chicane", "Salsa cremosa, panceta crujiente, parmesano y huevo central.", 71900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720182/Carbonara_Chicane_lxyfoc.webp", true, especiales));
+            comidaRepo.save(new Comida("BBQ Bahrain Boost", "Salsa BBQ, pollo grillado y cebolla caramelizada.", 68900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720181/BBQ_Bahrain_Boost_xjauan.webp", true, especiales));
+            comidaRepo.save(new Comida("Pesto Pit Stop", "Base pesto, mozzarella, tomates cherry y burrata fresca.", 70900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720184/Pesto_Pit_Stop_shikr5.webp", true, especiales));
+            comidaRepo.save(new Comida("Deluxe DRS", "Carne premium, mozzarella, cebolla crispy y salsa especial.", 75900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720182/Deluxe_DRS_md6shb.webp", true, especiales));
+            comidaRepo.save(new Comida("Overcut de Salmón", "Salmón ahumado premium, crema de eneldo, alcaparras y base crujiente.", 78900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720184/Overcut_de_Salm%C3%B3n_ndfnbw.webp", true, especiales));
+            comidaRepo.save(new Comida("Fungi Force Feedback", "Mezcla de hongos silvestres, aceite de ajo negro y tomillo fresco.", 69900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720183/Fungi_Force_Feedback_wlozxb.webp", true, especiales));
             // ==========================================
             // 4. PICANTES
             // ==========================================
-            comidaRepo.save(new Comida("Diablo Drag Zone", "Salsa picante, pepperoni, jalapeños y chile seco.", 69900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307191/Diablo_Drag_Zone_ujzqeo.png", true, picantes));
-            comidaRepo.save(new Comida("Red Flag Fire", "Salsa arrabbiata, salami picante y guindillas.", 71900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307190/Red_Flag_Fire_z6n21b.png", true, picantes));
-            comidaRepo.save(new Comida("México Monaco Heat", "Chorizo picante, jalapeños frescos y salsa roja intensa.", 68900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307189/M%C3%A9xico_Monaco_Heat_flcwwc.png", true, picantes));
-            comidaRepo.save(new Comida("Inferno Imola", "Salsa picante extrema, carne sazonada y chile habanero.", 72900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307189/Inferno_Imola_tgc8ub.png", true, picantes));
-            comidaRepo.save(new Comida("Scuderia Spice", "Pepperoni picante, pimientos asados y salsa especial.", 69900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307188/Scuderia_Spice_lhe5yj.png", true, picantes));
-            comidaRepo.save(new Comida("Suzuka Spice S-Curves", "Salsa de curry rojo tailandés, pollo marinado y chiles ojo de pájaro.", 72900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307187/Suzuka_Spice_S-Curves_jbblg2.png", true, picantes));
-            comidaRepo.save(new Comida("Interlagos Rain Master", "Carne desmechada picante, cebolla morada encurtida y jalapeños rojos.", 73900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777307186/Interlagos_Rain_Master_fxgpmk.png", true, picantes));
+            comidaRepo.save(new Comida("Diablo Drag Zone", "Salsa picante, pepperoni, jalapeños y chile seco.", 69900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720157/Diablo_Drag_Zone_dlx2up.webp", true, picantes));
+            comidaRepo.save(new Comida("Red Flag Fire", "Salsa arrabbiata, salami picante y guindillas.", 71900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720158/Red_Flag_Fire_du59wf.webp", true, picantes));
+            comidaRepo.save(new Comida("México Monaco Heat", "Chorizo picante, jalapeños frescos y salsa roja intensa.", 68900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720157/M%C3%A9xico_Monaco_Heat_wlmhg6.webp", true, picantes));
+            comidaRepo.save(new Comida("Inferno Imola", "Salsa picante extrema, carne sazonada y chile habanero.", 72900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720157/Inferno_Imola_y7v48v.webp", true, picantes));
+            comidaRepo.save(new Comida("Scuderia Spice", "Pepperoni picante, pimientos asados y salsa especial.", 69900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720158/Scuderia_Spice_nblfrn.webp", true, picantes));
+            comidaRepo.save(new Comida("Suzuka Spice S-Curves", "Salsa de curry rojo tailandés, pollo marinado y chiles ojo de pájaro.", 72900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720158/Suzuka_Spice_S-Curves_cunevb.webp", true, picantes));
+            comidaRepo.save(new Comida("Interlagos Rain Master", "Carne desmechada picante, cebolla morada encurtida y jalapeños rojos.", 73900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720157/Interlagos_Rain_Master_omgpf7.webp", true, picantes));
             // ==========================================
             // 5. BEBIDAS
             // ==========================================
-            comidaRepo.save(new Comida("Podium Cola", "Refresco clásico.", 8900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777310648/Podium_Cola_vgtmqk.png", true, bebidas));
-            comidaRepo.save(new Comida("Energy Drink Apex", "Bebida energética premium.", 12900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777310646/Energy_Drink_Apex_q0xqlg.png", true, bebidas));
-            comidaRepo.save(new Comida("Limonada Lap", "Limonada natural fresca.", 10900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777310645/Limonada_Lap_wxetkv.png", true, bebidas));
-            comidaRepo.save(new Comida("Agua Grid", "Agua mineral.", 7900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777310645/Agua_Grid_i5quku.png", true, bebidas));
-            comidaRepo.save(new Comida("Iced Tea Telemetry", "Té frío artesanal.", 10900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777310645/Iced_Tea_Telemetry_ojwagy.png", true, bebidas));
-            comidaRepo.save(new Comida("Smooth Operator Shake", "Malteada cremosa de vainilla con trozos de galleta artesanal.", 15900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777310644/Smooth_Operator_Shake_vh7unw.png", true, bebidas));
-            comidaRepo.save(new Comida("Pit Wall Coffee", "Espresso doble con un toque de caramelo salado para mantener la alerta.", 9900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777310644/Pit_Wall_Coffee_jkfm4o.png", true, bebidas));
+            comidaRepo.save(new Comida("Podium Cola", "Refresco clásico.", 8900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720196/Podium_Cola_mhnfgu.webp", true, bebidas));
+            comidaRepo.save(new Comida("Energy Drink Apex", "Bebida energética premium.", 12900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720193/Energy_Drink_Apex_qf3x4l.webp", true, bebidas));
+            comidaRepo.save(new Comida("Limonada Lap", "Limonada natural fresca.", 10900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720195/Limonada_Lap_cwembq.webp", true, bebidas));
+            comidaRepo.save(new Comida("Agua Grid", "Agua mineral.", 7900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720192/Agua_Grid_oyby2q.webp", true, bebidas));
+            comidaRepo.save(new Comida("Iced Tea Telemetry", "Té frío artesanal.", 10900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720194/Iced_Tea_Telemetry_srm1uw.webp", true, bebidas));
+            comidaRepo.save(new Comida("Smooth Operator Shake", "Malteada cremosa de vainilla con trozos de galleta artesanal.", 15900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720196/Smooth_Operator_Shake_afkylk.webp", true, bebidas));
+            comidaRepo.save(new Comida("Pit Wall Coffee", "Espresso doble con un toque de caramelo salado para mantener la alerta.", 9900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720195/Pit_Wall_Coffee_od7i83.webp", true, bebidas));
             // ==========================================
             // 6. POSTRES
             // ==========================================
-            comidaRepo.save(new Comida("Tiramisú Trophy", "Clásico italiano con café y mascarpone.", 18900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313144/Tiramis%C3%BA_Trophy_k2cqxj.png", true, postres));
-            comidaRepo.save(new Comida("Brownie Burnout", "Brownie caliente con helado de vainilla.", 20900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313143/Brownie_Burnout_vns6gd.png", true, postres));
-            comidaRepo.save(new Comida("Cheesecake Circuit", "Cheesecake cremoso con frutos rojos.", 18900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313143/Cheesecake_Circuit_ltqhb6.png", true, postres));
-            comidaRepo.save(new Comida("Lava Cake Launch", "Pastel de chocolate con centro líquido.", 21900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313143/Lava_Cake_Launch_yqbdwp.png", true, postres));
-            comidaRepo.save(new Comida("Panna Cotta Pitlane", "Panna cotta con salsa de frutos del bosque.", 17900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313143/Panna_Cotta_Pitlane_xivr6d.png", true, postres));
-            comidaRepo.save(new Comida("Chassis Chocolate Cake", "Bizcocho denso de chocolate 70% cacao con estructura de ganache.", 22900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313142/Chassis_Chocolate_Cake_qujuy3.png", true, postres));
-            comidaRepo.save(new Comida("Aero Apple Tart", "Tarta de manzana fina con láminas dispuestas aerodinámicamente.", 19900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313142/Aero_Apple_Tart_tctmrj.png", true, postres));
-            comidaRepo.save(new Comida("Monaco Macarons (Set de 3)", "Macarons de pistacho, frambuesa y limón, elegantes como el paddock.", 24900, "https://res.cloudinary.com/diuxjivje/image/upload/v1777313142/Monaco_Macarons_gshgmt.png", true, postres));
+            comidaRepo.save(new Comida("Tiramisú Trophy", "Clásico italiano con café y mascarpone.", 18900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720181/Tiramis%C3%BA_Trophy_erkusb.webp", true, postres));
+            comidaRepo.save(new Comida("Brownie Burnout", "Brownie caliente con helado de vainilla.", 20900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720179/Brownie_Burnout_corw53.webp", true, postres));
+            comidaRepo.save(new Comida("Cheesecake Circuit", "Cheesecake cremoso con frutos rojos.", 18900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720179/Cheesecake_Circuit_f5bvku.webp", true, postres));
+            comidaRepo.save(new Comida("Lava Cake Launch", "Pastel de chocolate con centro líquido.", 21900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720180/Lava_Cake_Launch_ubjlga.webp", true, postres));
+            comidaRepo.save(new Comida("Panna Cotta Pitlane", "Panna cotta con salsa de frutos del bosque.", 17900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720187/Panna_Cotta_Pitlane_d0bfp2.webp", true, postres));
+            comidaRepo.save(new Comida("Chassis Chocolate Cake", "Bizcocho denso de chocolate 70% cacao con estructura de ganache.", 22900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720181/Chassis_Chocolate_Cake_vrqmu0.webp", true, postres));
+            comidaRepo.save(new Comida("Aero Apple Tart", "Tarta de manzana fina con láminas dispuestas aerodinámicamente.", 19900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720179/Aero_Apple_Tart_c8jaxn.webp", true, postres));
+            comidaRepo.save(new Comida("Monaco Macarons (Set de 3)", "Macarons de pistacho, frambuesa y limón, elegantes como el paddock.", 24900, "https://res.cloudinary.com/dtrlo3tzz/image/upload/v1779720187/Monaco_Macarons_fmjju3.webp", true, postres));
 
             // ==========================================
             // 7. CLIENTES
